@@ -1,0 +1,7 @@
+bin
+classes
+tmp
+.settings
+docroot/WEB-INF/classes
+
+dist

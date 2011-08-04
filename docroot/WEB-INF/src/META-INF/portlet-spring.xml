@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" default-destroy-method="destroy" default-init-method="afterPropertiesSet" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<bean id="com.liferay.timesheet.service.ExpenseLocalService" class="com.liferay.timesheet.service.impl.ExpenseLocalServiceImpl" />
+	<bean id="com.liferay.timesheet.service.ExpenseLocalServiceUtil" class="com.liferay.timesheet.service.ExpenseLocalServiceUtil">
+		<property name="service" ref="com.liferay.timesheet.service.ExpenseLocalService" />
+	</bean>
+	<bean id="com.liferay.timesheet.service.persistence.ExpensePersistence" class="com.liferay.timesheet.service.persistence.ExpensePersistenceImpl" parent="basePersistence" />
+	<bean id="com.liferay.timesheet.service.ProjectLocalService" class="com.liferay.timesheet.service.impl.ProjectLocalServiceImpl" />
+	<bean id="com.liferay.timesheet.service.ProjectLocalServiceUtil" class="com.liferay.timesheet.service.ProjectLocalServiceUtil">
+		<property name="service" ref="com.liferay.timesheet.service.ProjectLocalService" />
+	</bean>
+	<bean id="com.liferay.timesheet.service.persistence.ProjectPersistence" class="com.liferay.timesheet.service.persistence.ProjectPersistenceImpl" parent="basePersistence" />
+	<bean id="com.liferay.timesheet.service.TaskLocalService" class="com.liferay.timesheet.service.impl.TaskLocalServiceImpl" />
+	<bean id="com.liferay.timesheet.service.TaskLocalServiceUtil" class="com.liferay.timesheet.service.TaskLocalServiceUtil">
+		<property name="service" ref="com.liferay.timesheet.service.TaskLocalService" />
+	</bean>
+	<bean id="com.liferay.timesheet.service.persistence.TaskPersistence" class="com.liferay.timesheet.service.persistence.TaskPersistenceImpl" parent="basePersistence" />
+</beans>

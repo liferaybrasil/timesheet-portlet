@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 6.0.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_6_0_0.dtd">
+
+<service-builder package-path="com.liferay.timesheet">
+	<namespace>Timesheet</namespace>
+	<entity name="Project" local-service="true" remote-service="false">
+
+		<!-- PK fields -->
+
+		<column name="projectId" type="long" primary="true" />
+
+		<!-- Audit fields -->
+
+		<column name="userId" type="long" />
+
+		<!-- Other fields -->
+
+		<column name="description" type="String" />
+		<column name="endDate" type="Date" />
+		<column name="name" type="String" />
+		<column name="startDate" type="Date" />
+		<column name="wage" type="double" />		
+
+		<!-- Order -->
+
+		<order by="desc">
+			<order-column name="startDate" />
+		</order>
+	</entity>
+	<entity name="Task" local-service="true" remote-service="false">
+	
+		<!-- PK fields -->
+	
+		<column name="taskId" type="long" primary="true" />
+		
+		<!-- Other fields -->
+		
+		<column name="endDate" type="Date" />
+		<column name="name" type="String" />
+		<column name="projectId" type="long" />
+		<column name="startDate" type="Date" />
+		<column name="type" type="int" />
+		
+		<!-- Order -->
+		
+		<order by="desc">
+			<order-column name="startDate" />
+		</order>
+		
+		<!-- Finder methods -->
+
+		<finder name="ProjectId" return-type="Collection">
+			<finder-column name="projectId" />
+		</finder>
+	</entity>
+	<entity name="Expense" local-service="true" remote-service="false">
+	
+		<!-- PK fields -->
+	
+		<column name="expenseId" type="long" primary="true" />
+		
+		<!-- Other fields -->
+		
+		<column name="billedDate" type="Date" />
+		<column name="description" type="String" />
+		<column name="projectId" type="long" />
+		<column name="type" type="int" />
+		<column name="value" type="double" />
+		<column name="dlFieldEntryId" type="long" />
+		
+		<!-- Order -->
+		
+		<order by="desc">
+			<order-column name="billedDate" />
+		</order>
+		
+		<!-- Finder methods -->
+
+		<finder name="ProjectId" return-type="Collection">
+			<finder-column name="projectId" />
+		</finder>
+	</entity>
+	<exceptions>
+		<exception>InvalidDates</exception>
+		<exception>InvalidDescription</exception>
+		<exception>InvalidName</exception>
+		<exception>InvalidMoneyFormat</exception>
+	</exceptions>
+</service-builder>
