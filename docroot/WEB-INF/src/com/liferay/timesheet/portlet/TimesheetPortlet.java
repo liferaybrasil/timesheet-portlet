@@ -43,7 +43,7 @@ public class TimesheetPortlet extends MVCPortlet {
 
 	public void deleteExpense (
 			ActionRequest actionRequest, ActionResponse actionResponse)
-	throws Exception {
+		throws Exception {
 
 		long expenseId = ParamUtil.getLong(actionRequest, "expenseId");
 
@@ -52,7 +52,7 @@ public class TimesheetPortlet extends MVCPortlet {
 
 	public void deleteProject(
 			ActionRequest actionRequest, ActionResponse actionResponse)
-	throws Exception {
+		throws Exception {
 
 		long projectId = ParamUtil.getLong(actionRequest, "projectId");
 
@@ -61,7 +61,7 @@ public class TimesheetPortlet extends MVCPortlet {
 
 	public void deleteTask(
 			ActionRequest actionRequest, ActionResponse actionResponse)
-	throws Exception {
+		throws Exception {
 
 		long taskId = ParamUtil.getLong(actionRequest, "taskId");
 
@@ -70,7 +70,7 @@ public class TimesheetPortlet extends MVCPortlet {
 
 	public void updateExpense(
 			ActionRequest actionRequest, ActionResponse actionResponse)
-	throws Exception {
+		throws Exception {
 
 		String currentUrl = ParamUtil.getString(actionRequest, "currentUrl");
 
@@ -128,7 +128,7 @@ public class TimesheetPortlet extends MVCPortlet {
 
 	public void updateProject(
 			ActionRequest actionRequest, ActionResponse actionResponse)
-	throws Exception {
+		throws Exception {
 
 		String currentUrl = ParamUtil.getString(actionRequest, "currentUrl");
 
@@ -166,9 +166,9 @@ public class TimesheetPortlet extends MVCPortlet {
 			}
 		} catch (Exception e) {
 			if (e instanceof InvalidNameException ||
-					e instanceof InvalidDescriptionException ||
-					e instanceof InvalidMoneyFormatException ||
-					e instanceof InvalidDatesException) {
+				e instanceof InvalidDescriptionException ||
+				e instanceof InvalidMoneyFormatException ||
+				e instanceof InvalidDatesException) {
 
 				SessionErrors.add(actionRequest, e.getClass().getName());
 
@@ -182,7 +182,7 @@ public class TimesheetPortlet extends MVCPortlet {
 
 	public void updateTask(
 			ActionRequest actionRequest, ActionResponse actionResponse)
-	throws Exception {
+		throws Exception {
 
 		String currentUrl = ParamUtil.getString(actionRequest, "currentUrl");
 
@@ -239,7 +239,7 @@ public class TimesheetPortlet extends MVCPortlet {
 			}
 		} catch (Exception e) {
 			if (e instanceof InvalidNameException ||
-					e instanceof InvalidDatesException) {
+				e instanceof InvalidDatesException) {
 
 				SessionErrors.add(actionRequest, e.getClass().getName());
 

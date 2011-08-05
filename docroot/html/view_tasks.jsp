@@ -17,10 +17,9 @@
 <%@ include file="/html/init.jsp" %>
 
 <%
-	String redirect = ParamUtil.getString(request, "redirect");
-	long projectId = ParamUtil.getLong(request, "projectId");
-	Project project = ProjectLocalServiceUtil.getProject(projectId);
-	List<Task> tasks = TaskLocalServiceUtil.getTaskByProjectId(projectId);
+	long pId = ParamUtil.getLong(request, "projectId");
+	String urlViewTasks = PortalUtil.getCurrentURL(renderRequest);
+	List<Task> tasks = TaskLocalServiceUtil.getTaskByProjectId(pId);
 	int count = tasks.size();
 	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 %>
@@ -28,8 +27,8 @@
 <aui:button-row>
 	<portlet:renderURL var="addTaskURL">
 		<portlet:param name="jspPage" value="/html/edit_task.jsp" />
-		<portlet:param name="projectId" value="<%= String.valueOf(projectId) %>" />
-		<portlet:param name="redirect" value="<%= HtmlUtil.escapeHREF(currentUrl) %>" />
+		<portlet:param name="projectId" value="<%= String.valueOf(pId) %>" />
+		<portlet:param name="redirect" value="<%= HtmlUtil.escapeHREF(urlViewTasks) %>" />
 	</portlet:renderURL>
 
 	<aui:button value="add-task" onClick="<%= addTaskURL.toString() %>" />

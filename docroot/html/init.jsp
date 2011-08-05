@@ -55,6 +55,3 @@
 
 <portlet:defineObjects/>
 <liferay-theme:defineObjects />
-<%
-String currentUrl = PortalUtil.getCurrentURL(renderRequest);
-%>

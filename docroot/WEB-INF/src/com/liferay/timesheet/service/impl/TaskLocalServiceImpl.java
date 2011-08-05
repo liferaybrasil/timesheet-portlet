@@ -31,11 +31,11 @@ import java.util.List;
  */
 public class TaskLocalServiceImpl extends TaskLocalServiceBaseImpl {
 
-	public Task addTask(long projectId, String name, int type,
-			int startDateMonth, int startDateDay, int startDateYear,
-			int startDateHour, int startDateMinute, int endDateMonth,
-			int endDateDay, int endDateYear, int endDateHour,
-			int endDateMinute)
+	public Task addTask(
+			long projectId, String name, int type, int startDateMonth,
+			int startDateDay, int startDateYear, int startDateHour,
+			int startDateMinute, int endDateMonth, int endDateDay,
+			int endDateYear, int endDateHour, int endDateMinute)
 		throws PortalException, SystemException {
 
 		Task task = null;
@@ -68,7 +68,8 @@ public class TaskLocalServiceImpl extends TaskLocalServiceBaseImpl {
 		return taskPersistence.findByProjectId(projectId);
 	}
 
-	public Task updateTask(long taskId, long projectId, String name, int type,
+	public Task updateTask(
+			long taskId, long projectId, String name, int type,
 			int startDateMonth, int startDateDay, int startDateYear,
 			int startDateHour, int startDateMinute, int endDateMonth,
 			int endDateDay, int endDateYear, int endDateHour,

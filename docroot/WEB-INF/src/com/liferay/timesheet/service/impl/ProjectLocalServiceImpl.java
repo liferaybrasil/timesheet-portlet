@@ -33,10 +33,10 @@ import java.util.Date;
  */
 public class ProjectLocalServiceImpl extends ProjectLocalServiceBaseImpl {
 
-	public Project addProject(long userId, String name, double wage,
-			String description, int startDateMonth, int startDateDay,
-			int startDateYear, int endDateMonth, int endDateDay,
-			int endDateYear)
+	public Project addProject(
+			long userId, String name, double wage, String description,
+			int startDateMonth, int startDateDay, int startDateYear,
+			int endDateMonth, int endDateDay, int endDateYear)
 		throws PortalException, SystemException {
 
 		Project project = null;
@@ -65,10 +65,11 @@ public class ProjectLocalServiceImpl extends ProjectLocalServiceBaseImpl {
 		return project;
 	}
 
-	public Project updateProject(long projectId, long userId, String name,
-			double wage, String description, int startDateMonth,
-			int startDateDay, int startDateYear, int endDateMonth,
-			int endDateDay, int endDateYear)
+	public Project updateProject(
+			long projectId, long userId, String name, double wage,
+			String description, int startDateMonth, int startDateDay,
+			int startDateYear, int endDateMonth, int endDateDay,
+			int endDateYear)
 		throws PortalException, SystemException {
 
 		Project project = projectPersistence.findByPrimaryKey(projectId);
@@ -94,8 +95,9 @@ public class ProjectLocalServiceImpl extends ProjectLocalServiceBaseImpl {
 		return project;
 	}
 
-	protected void validate(String projectName, double wage,
-			String projectDescription, Date startDate, Date endDate)
+	protected void validate(
+			String projectName, double wage, String projectDescription,
+			Date startDate, Date endDate)
 		throws PortalException {
 
 		if (Validator.isNull(projectName)) {
@@ -108,8 +110,8 @@ public class ProjectLocalServiceImpl extends ProjectLocalServiceBaseImpl {
 
 		String wageString = String.valueOf(wage);
 		if (Validator.isNull(wage) ||
-				!Validator.isDigit(wageString.replace(".", "")) ||
-				wage == 0) {
+			!Validator.isDigit(wageString.replace(".", "")) ||
+			wage == 0) {
 			throw new InvalidMoneyFormatException();
 		}
 

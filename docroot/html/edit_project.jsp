@@ -23,6 +23,7 @@
 <%@ include file="/html/init.jsp" %>
 
 <%
+	String currentUrl = PortalUtil.getCurrentURL(renderRequest);
 	String redirect = ParamUtil.getString(request, "redirect");
 	Project project = null;
 	long projectId = ParamUtil.getLong(request, "projectId");

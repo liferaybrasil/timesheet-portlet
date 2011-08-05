@@ -33,9 +33,10 @@ import java.util.List;
  */
 public class ExpenseLocalServiceImpl extends ExpenseLocalServiceBaseImpl {
 
-	public Expense addExpense(long projectId, String description,
-			int billledDateMonth, int billledDateDay, int billledDateYear,
-			int type, double value, File file, long groupId)
+	public Expense addExpense(
+			long projectId, String description, int billledDateMonth,
+			int billledDateDay, int billledDateYear, int type, double value,
+			File file, long groupId)
 		throws PortalException, SystemException {
 
 		Expense expense = null;
@@ -67,14 +68,14 @@ public class ExpenseLocalServiceImpl extends ExpenseLocalServiceBaseImpl {
 	}
 
 	public List<Expense> getExpenseByProjectId(long projectId)
-	throws SystemException {
+		throws SystemException {
 		return expensePersistence.findByProjectId(projectId);
 	}
 
-	public Expense updateExpense(long expenseId, long projectId,
-			String description, int billledDateDay, int billledDateMonth,
-			int billledDateYear, int type, double value, File file,
-			long groupId)
+	public Expense updateExpense(
+			long expenseId, long projectId, String description,
+			int billledDateDay, int billledDateMonth, int billledDateYear,
+			int type, double value, File file, long groupId)
 		throws PortalException, SystemException {
 
 		Expense expense = expensePersistence.findByPrimaryKey(expenseId);
@@ -131,28 +132,32 @@ public class ExpenseLocalServiceImpl extends ExpenseLocalServiceBaseImpl {
 
 	@Override
 	public Expense getExpense(long expenseId)
-	throws PortalException, SystemException {
+		throws PortalException, SystemException {
 
 		Expense expense = super.getExpense(expenseId);
 		//if ( expense.getDlFieldId() > 0) {
-		//DLFileEntry fileEntry = DLFileEntryLocalServiceUtil.getFileEntry(expense.getDlFieldId());
-		//	String filePath = "http://localhost:8080/documents/" + fileEntry.getGroupId() + "/" + fileEntry.getUuid();
+		//DLFileEntry fileEntry = DLFileEntryLocalServiceUtil.getFileEntry(
+		//expense.getDlFieldId());
+		//	String filePath = "http://localhost:8080/documents/" + 
+		//fileEntry.getGroupId() + "/" + fileEntry.getUuid();
 		//expense.setFilePath(filePath);
 		//}
 		return expense;
 	}
 
-	protected void validate(String expenseDescription,
-			double expenseValue) throws PortalException {
+	protected void validate(
+			String expenseDescription, double expenseValue)
+		throws PortalException {
 
 		if (Validator.isNull(expenseDescription)) {
 			throw new InvalidDescriptionException();
 		}
 
 		String valueString = String.valueOf(expenseValue);
+		
 		if (Validator.isNull(expenseValue) ||
-				!Validator.isDigit(valueString.replace(".", "")) ||
-				expenseValue == 0) {
+			!Validator.isDigit(valueString.replace(".", "")) ||
+			expenseValue == 0) {
 
 			throw new InvalidMoneyFormatException("Invalid Value");
 		}

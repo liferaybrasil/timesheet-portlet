@@ -17,10 +17,9 @@
 <%@ include file="/html/init.jsp" %>
 
 <%
-	String redirect = ParamUtil.getString(request, "redirect");
-	long projectId = ParamUtil.getLong(request, "projectId");
-	Project project = ProjectLocalServiceUtil.getProject(projectId);
-	List<Expense> expenses = ExpenseLocalServiceUtil.getExpenseByProjectId(projectId);
+	String urlViewExpenses = PortalUtil.getCurrentURL(renderRequest);
+	long pId = ParamUtil.getLong(request, "projectId");
+	List<Expense> expenses = ExpenseLocalServiceUtil.getExpenseByProjectId(pId);
 	int count = expenses.size();
 	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 %>
@@ -28,8 +27,8 @@
 <aui:button-row>
 	<portlet:renderURL var="addExpenseURL">
 		<portlet:param name="jspPage" value="/html/edit_expense.jsp" />
-		<portlet:param name="projectId" value="<%= String.valueOf(projectId) %>" />
-		<portlet:param name="redirect" value="<%= HtmlUtil.escapeHREF(currentUrl) %>" />
+		<portlet:param name="projectId" value="<%= String.valueOf(pId) %>" />
+		<portlet:param name="redirect" value="<%= HtmlUtil.escapeHREF(urlViewExpenses) %>" />
 	</portlet:renderURL>
 
 	<aui:button value="add-expense" onClick="<%= addExpenseURL.toString() %>" />

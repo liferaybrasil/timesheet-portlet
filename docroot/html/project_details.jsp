@@ -14,20 +14,26 @@
  */
 --%>
 
-<%@ page import="com.liferay.portal.kernel.language.LanguageUtil" %>
-<%@ include file="/html/init.jsp" %>
-
-<liferay-portlet:renderURL var="portletURL" />
+<%@page import="com.liferay.portal.kernel.util.StringUtil"%>
+<%@ page import="com.liferay.portal.kernel.language.LanguageUtil"%>
+<%@ include file="/html/init.jsp"%>
 
 <%
 String redirect = PortalUtil.getCurrentURL(renderRequest);
 long projectId = ParamUtil.getLong(request, "projectId");
 Project project = ProjectLocalServiceUtil.getProject(projectId);
 
-String tabURL = ParamUtil.getString(request, "tab", "/html/view_tasks.jsp");
-System.out.println(tabURL);
-String tabNames = "Tasks,Expenses";
-String tabVal = "/html/view_tasks.jsp,/html/view_expenses.jsp";
+String tabs1Names = "tasks,expenses";
+String[] tabs1NamesArray = StringUtil.split(tabs1Names);
+String tabs1Default = tabs1NamesArray[0];
+
+String tabs1 = ParamUtil.getString(request, "tabs1", tabs1Default);
+PortletURL tabs1URL = renderResponse.createRenderURL();
+tabs1URL.setParameter("tabs1", tabs1);
+
+tabs1URL.setParameter("tasks", "");
+tabs1URL.setParameter("expenses", "");
+
 %>
 
 <liferay-ui:header backURL="<%= redirect %>"
@@ -38,18 +44,26 @@ String tabVal = "/html/view_tasks.jsp,/html/view_expenses.jsp";
 <%= PortalUtil.getUserName(project.getUserId(), "default") %>
 <br />
 
-<liferay-ui:message key='<%= LanguageUtil.format(pageContext, "total-expenses", String.valueOf(project.getTotalExpenseCost())) %>'></liferay-ui:message>
+<liferay-ui:message
+	key='<%= LanguageUtil.format(pageContext, "total-expenses", String.valueOf(project.getTotalExpenseCost())) %>'></liferay-ui:message>
 <br />
-<liferay-ui:message key='<%= LanguageUtil.format(pageContext, "total-tasks", String.valueOf(project.getTotalTaskCost())) %>'></liferay-ui:message>
+<liferay-ui:message
+	key='<%= LanguageUtil.format(pageContext, "total-tasks", String.valueOf(project.getTotalTaskCost())) %>'></liferay-ui:message>
 <br />
-<liferay-ui:message key='<%= LanguageUtil.format(pageContext, "total-project", String.valueOf(project.getTotalProjectCost())) %>'></liferay-ui:message>
+<liferay-ui:message
+	key='<%= LanguageUtil.format(pageContext, "total-project", String.valueOf(project.getTotalProjectCost())) %>'></liferay-ui:message>
 
-<liferay-ui:header backLabel=""
+<liferay-ui:header showBackURL="<%= false %>"
 	title='<%= LanguageUtil.format(pageContext, "details-resources", "") %>' />
 
-
-
-<liferay-ui:tabs names="<%= tabNames %>" tabsValues="<%= tabVal %>" refresh="<%= false %>"
-	param="tab" url="<%= portletURL %>" />
-
-<c:import url="<%= tabURL %>"></c:import>
+<liferay-ui:tabs names="<%= tabs1Names %>"
+	url="<%= tabs1URL.toString() %>" value="<%= tabs1 %>" />
+	
+<c:choose>
+	<c:when test='<%= tabs1.equals("tasks") %>'>
+		<%@ include file="/html/view_tasks.jsp"%>
+	</c:when>
+	<c:when test='<%= tabs1.equals("expenses") %>'>
+		<%@ include file="/html/view_expenses.jsp"%>
+	</c:when>
+</c:choose>
