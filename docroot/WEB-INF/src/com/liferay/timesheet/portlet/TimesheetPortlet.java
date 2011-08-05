@@ -72,6 +72,7 @@ public class TimesheetPortlet extends MVCPortlet {
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
+		// TODO CHECAR CURRENT URL, SE ƒ ASSIM MESMO OU DA PRA FAZER POR REDIRECT
 		String currentUrl = ParamUtil.getString(actionRequest, "currentUrl");
 
 		try {
@@ -79,24 +80,24 @@ public class TimesheetPortlet extends MVCPortlet {
 			long projectId = ParamUtil.getLong(actionRequest, "projectId");
 
 			String description = ParamUtil.getString(
-					actionRequest, "description");
+				actionRequest, "description");
 
 			double value = ParamUtil.getDouble(actionRequest, "value");
 
 			int billedDateMonth = ParamUtil.getInteger(
-					actionRequest, "billedDateMonth");
+				actionRequest, "billedDateMonth");
 			int billedDateDay = ParamUtil.getInteger(
-					actionRequest, "billedDateDay");
+				actionRequest, "billedDateDay");
 			int billedDateYear = ParamUtil.getInteger(
-					actionRequest, "billedDateYear");
+				actionRequest, "billedDateYear");
 
-			UploadPortletRequest uploadRequest = PortalUtil
-			.getUploadPortletRequest(actionRequest);
+			UploadPortletRequest uploadRequest = 
+				PortalUtil.getUploadPortletRequest(actionRequest);
 
 			File file = null;
 
-			ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest
-			.getAttribute(WebKeys.THEME_DISPLAY);
+			ThemeDisplay themeDisplay =
+				(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 
 			long groupId = themeDisplay.getScopeGroupId();
 
@@ -104,15 +105,16 @@ public class TimesheetPortlet extends MVCPortlet {
 
 			if ( expenseId == 0) {
 				ExpenseLocalServiceUtil.addExpense(
-						projectId, description, billedDateMonth, billedDateDay,
-						billedDateYear, type, value, file, groupId);
-			} else {
-				ExpenseLocalServiceUtil.updateExpense(
-						expenseId, projectId, description, billedDateMonth,
-						billedDateDay, billedDateYear, type, value, file,
-						groupId);
+					projectId, description, billedDateMonth, billedDateDay,
+					billedDateYear, type, value, file, groupId);
 			}
-		} catch (Exception e) {
+			else {
+				ExpenseLocalServiceUtil.updateExpense(
+					expenseId, projectId, description, billedDateMonth,
+					billedDateDay, billedDateYear, type, value, file, groupId);
+			}
+		} 
+		catch (Exception e) {
 			if (e instanceof InvalidDescriptionException ||
 				e instanceof InvalidMoneyFormatException) {
 
@@ -140,29 +142,32 @@ public class TimesheetPortlet extends MVCPortlet {
 
 			double wage = ParamUtil.getDouble(actionRequest, "wage");
 			String description = ParamUtil.getString(
-					actionRequest, "description");
+				actionRequest, "description");
 
 			int startDateMonth = ParamUtil.getInteger(
-					actionRequest, "startDateMonth");
+				actionRequest, "startDateMonth");
 			int startDateDay = ParamUtil.getInteger(
-					actionRequest, "startDateDay");
+				actionRequest, "startDateDay");
 			int startDateYear = ParamUtil.getInteger(
-					actionRequest, "startDateYear");
+				actionRequest, "startDateYear");
 
 			int endDateMonth = ParamUtil.getInteger(
-					actionRequest, "endDateMonth");
+				actionRequest, "endDateMonth");
 			int endDateDay = ParamUtil.getInteger(actionRequest, "endDateDay");
 			int endDateYear = ParamUtil.getInteger(
-					actionRequest, "endDateYear");
+				actionRequest, "endDateYear");
 
 			if ( projectId == 0) {
-				ProjectLocalServiceUtil.addProject(userId, name, wage,
-						description, startDateMonth, startDateDay,
-						startDateYear, endDateMonth, endDateDay, endDateYear);
-			} else {
-				ProjectLocalServiceUtil.updateProject(projectId, userId, name,
-						wage, description, startDateMonth, startDateDay,
-						startDateYear, endDateMonth, endDateDay, endDateYear);
+				ProjectLocalServiceUtil.addProject(
+					userId, name, wage, description, startDateMonth,
+					startDateDay, startDateYear, endDateMonth, endDateDay,
+					endDateYear);
+			} 
+			else {
+				ProjectLocalServiceUtil.updateProject(
+					projectId, userId, name, wage, description, startDateMonth,
+					startDateDay, startDateYear, endDateMonth, endDateDay,
+					endDateYear);
 			}
 		} catch (Exception e) {
 			if (e instanceof InvalidNameException ||
@@ -192,33 +197,33 @@ public class TimesheetPortlet extends MVCPortlet {
 			String name = ParamUtil.getString(actionRequest, "name");
 
 			int startDateMonth = ParamUtil.getInteger(
-					actionRequest, "startDateMonth");
+				actionRequest, "startDateMonth");
 			int startDateDay = ParamUtil.getInteger(
-					actionRequest, "startDateDay");
+				actionRequest, "startDateDay");
 			int startDateYear = ParamUtil.getInteger(
-					actionRequest, "startDateYear");
+				actionRequest, "startDateYear");
 			int startDateHour = ParamUtil.getInteger(
-					actionRequest, "startDateHour");
+				actionRequest, "startDateHour");
 			int startDateMinute = ParamUtil.getInteger(
-					actionRequest, "startDateMinute");
+				actionRequest, "startDateMinute");
 			int startDateAmPm = ParamUtil.getInteger(
-					actionRequest, "startDateAmPm");
+				actionRequest, "startDateAmPm");
 
 			if (startDateAmPm == Calendar.PM) {
 				startDateHour += 12;
 			}
 
 			int endDateMonth = ParamUtil.getInteger(
-					actionRequest, "endDateMonth");
+				actionRequest, "endDateMonth");
 			int endDateDay = ParamUtil.getInteger(actionRequest, "endDateDay");
 			int endDateYear = ParamUtil.getInteger(
-					actionRequest, "endDateYear");
+				actionRequest, "endDateYear");
 			int endDateHour = ParamUtil.getInteger(
-					actionRequest, "endDateHour");
+				actionRequest, "endDateHour");
 			int endDateMinute = ParamUtil.getInteger(
-					actionRequest, "endDateMinute");
+				actionRequest, "endDateMinute");
 			int endDateAmPm = ParamUtil.getInteger(
-					actionRequest, "endDateAmPm");
+				actionRequest, "endDateAmPm");
 
 			if (endDateAmPm == Calendar.PM) {
 				endDateHour += 12;
@@ -227,17 +232,19 @@ public class TimesheetPortlet extends MVCPortlet {
 			int type = ParamUtil.getInteger(actionRequest, "type");
 
 			if ( taskId == 0) {
-				TaskLocalServiceUtil.addTask(projectId, name, type,
-						startDateMonth, startDateDay, startDateYear,
-						startDateHour, startDateMinute, endDateMonth,
-						endDateDay, endDateYear, endDateHour, endDateMinute);
-			} else {
-				TaskLocalServiceUtil.updateTask(taskId, projectId, name, type,
-						startDateMonth, startDateDay, startDateYear,
-						startDateHour, startDateMinute, endDateMonth,
-						endDateDay, endDateYear, endDateHour, endDateMinute);
+				TaskLocalServiceUtil.addTask(
+					projectId, name, type, startDateMonth, startDateDay,
+					startDateYear, startDateHour, startDateMinute, endDateMonth,
+					endDateDay, endDateYear, endDateHour, endDateMinute);
+			} 
+			else {
+				TaskLocalServiceUtil.updateTask(
+					taskId, projectId, name, type, startDateMonth, startDateDay,
+					startDateYear, startDateHour, startDateMinute, endDateMonth,
+					endDateDay, endDateYear, endDateHour, endDateMinute);
 			}
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
 			if (e instanceof InvalidNameException ||
 				e instanceof InvalidDatesException) {
 

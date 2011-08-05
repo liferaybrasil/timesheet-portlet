@@ -38,19 +38,18 @@ public class TaskLocalServiceImpl extends TaskLocalServiceBaseImpl {
 			int endDateYear, int endDateHour, int endDateMinute)
 		throws PortalException, SystemException {
 
-		Task task = null;
-
 		Date startDate = PortalUtil.getDate(
-				startDateMonth, startDateDay, startDateYear, startDateHour,
-				startDateMinute, null);
+			startDateMonth, startDateDay, startDateYear, startDateHour,
+			startDateMinute, null);
 		Date endDate = PortalUtil.getDate(
-				endDateMonth, endDateDay, endDateYear, endDateHour,
-				endDateMinute, null);
+			endDateMonth, endDateDay, endDateYear, endDateHour, endDateMinute, 
+			null);
 
 		validate(name, startDate, endDate);
 
 		long taskId = counterLocalService.increment();
-		task = taskPersistence.create(taskId);
+		
+		Task task = taskPersistence.create(taskId);
 
 		task.setProjectId(projectId);
 		task.setName(name);
@@ -63,8 +62,9 @@ public class TaskLocalServiceImpl extends TaskLocalServiceBaseImpl {
 		return task;
 	}
 
-	public List<Task> getTaskByProjectId(long projectId)
+	public List<Task> getTaskByProjectId(long projectId) 
 		throws SystemException {
+
 		return taskPersistence.findByProjectId(projectId);
 	}
 
@@ -78,12 +78,13 @@ public class TaskLocalServiceImpl extends TaskLocalServiceBaseImpl {
 
 		Task task = taskPersistence.findByPrimaryKey(taskId);
 
+		// TODO checa essa null ai
 		Date startDate = PortalUtil.getDate(
-				startDateMonth, startDateDay, startDateYear, startDateHour,
-				startDateMinute, null);
+			startDateMonth, startDateDay, startDateYear, startDateHour,
+			startDateMinute, null);
 		Date endDate = PortalUtil.getDate(
-				endDateMonth, endDateDay, endDateYear, endDateHour,
-				endDateMinute, null);
+			endDateMonth, endDateDay, endDateYear, endDateHour,
+			endDateMinute, null);
 
 		validate(name, startDate, endDate);
 

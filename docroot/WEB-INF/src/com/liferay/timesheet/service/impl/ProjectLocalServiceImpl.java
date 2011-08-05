@@ -39,19 +39,18 @@ public class ProjectLocalServiceImpl extends ProjectLocalServiceBaseImpl {
 			int endDateMonth, int endDateDay, int endDateYear)
 		throws PortalException, SystemException {
 
-		Project project = null;
+		User user = userPersistence.findByPrimaryKey(userId);
 
 		Date startDate = PortalUtil.getDate(
-				startDateMonth, startDateDay, startDateYear);
+			startDateMonth, startDateDay, startDateYear);
 		Date endDate = PortalUtil.getDate(
-				endDateMonth, endDateDay, endDateYear);
+			endDateMonth, endDateDay, endDateYear);
 
 		validate(name, wage, description, startDate, endDate);
 
-		User user = userPersistence.findByPrimaryKey(userId);
-
 		long projectId = counterLocalService.increment();
-		project =  projectPersistence.create(projectId);
+
+		Project project = projectPersistence.create(projectId);
 
 		project.setUserId(user.getUserId());
 		project.setName(name);
@@ -72,16 +71,16 @@ public class ProjectLocalServiceImpl extends ProjectLocalServiceBaseImpl {
 			int endDateYear)
 		throws PortalException, SystemException {
 
+		User user = userPersistence.findByPrimaryKey(userId);
+		
 		Project project = projectPersistence.findByPrimaryKey(projectId);
 
 		Date startDate = PortalUtil.getDate(
-				startDateMonth, startDateDay, startDateYear);
+			startDateMonth, startDateDay, startDateYear);
 		Date endDate = PortalUtil.getDate(
-				endDateMonth, endDateDay, endDateYear);
+			endDateMonth, endDateDay, endDateYear);
 
 		validate(name, wage, description, startDate, endDate);
-
-		User user = userPersistence.findByPrimaryKey(userId);
 
 		project.setUserId(user.getUserId());
 		project.setName(name);
@@ -91,10 +90,11 @@ public class ProjectLocalServiceImpl extends ProjectLocalServiceBaseImpl {
 		project.setEndDate(endDate);
 
 		projectPersistence.update(project, false);
-
+		
 		return project;
 	}
 
+	// TODO RENOMEAR PRA NAME DESCRIPTION
 	protected void validate(
 			String projectName, double wage, String projectDescription,
 			Date startDate, Date endDate)
@@ -109,9 +109,12 @@ public class ProjectLocalServiceImpl extends ProjectLocalServiceBaseImpl {
 		}
 
 		String wageString = String.valueOf(wage);
+
+		// TODO FAZ O MESMO DO OUTRO
 		if (Validator.isNull(wage) ||
 			!Validator.isDigit(wageString.replace(".", "")) ||
 			wage == 0) {
+
 			throw new InvalidMoneyFormatException();
 		}
 

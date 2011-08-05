@@ -16,6 +16,8 @@ package com.liferay.timesheet.service.impl;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.timesheet.InvalidDescriptionException;
@@ -33,25 +35,27 @@ import java.util.List;
  */
 public class ExpenseLocalServiceImpl extends ExpenseLocalServiceBaseImpl {
 
+	// TODO CHECAR ORDEM DOS PARAMETROS, GROUPID VEM PRIMEIRO
+	// TODO mudar de billlllllllled pra algo
 	public Expense addExpense(
 			long projectId, String description, int billledDateMonth,
 			int billledDateDay, int billledDateYear, int type, double value,
 			File file, long groupId)
 		throws PortalException, SystemException {
 
-		Expense expense = null;
+		Date date = PortalUtil.getDate(
+			billledDateMonth, billledDateDay, billledDateYear);
 
 		validate(description, value);
 
-		Date date = PortalUtil.getDate(
-				billledDateMonth, billledDateDay, billledDateYear);
-
 		long expenseId = counterLocalService.increment();
 
-		expense =  expensePersistence.create(expenseId);
+		Expense expense =  expensePersistence.create(expenseId);
 
+		// RENOMEAR PRA FILENETRYID SO
 		long dlFieldEntryId = 0;
-		if ( file!= null) {
+
+		if (file != null) {
 			getDlFileId(file, groupId);
 		}
 
@@ -69,9 +73,11 @@ public class ExpenseLocalServiceImpl extends ExpenseLocalServiceBaseImpl {
 
 	public List<Expense> getExpenseByProjectId(long projectId)
 		throws SystemException {
+
 		return expensePersistence.findByProjectId(projectId);
 	}
 
+	// TODO CHECAR ORDEM DE PARAMSS
 	public Expense updateExpense(
 			long expenseId, long projectId, String description,
 			int billledDateDay, int billledDateMonth, int billledDateYear,
@@ -83,11 +89,11 @@ public class ExpenseLocalServiceImpl extends ExpenseLocalServiceBaseImpl {
 		validate(description, value);
 
 		Date date = PortalUtil.getDate(
-				billledDateMonth, billledDateDay, billledDateYear);
+			billledDateMonth, billledDateDay, billledDateYear);
 
 		long dlFieldEntryId = 0;
 
-		if ( file!= null) {
+		if (file != null) {
 			getDlFileId(file, groupId);
 		}
 
@@ -153,13 +159,14 @@ public class ExpenseLocalServiceImpl extends ExpenseLocalServiceBaseImpl {
 			throw new InvalidDescriptionException();
 		}
 
-		String valueString = String.valueOf(expenseValue);
-		
-		if (Validator.isNull(expenseValue) ||
-			!Validator.isDigit(valueString.replace(".", "")) ||
-			expenseValue == 0) {
+		String value = String.valueOf(expenseValue);
 
-			throw new InvalidMoneyFormatException("Invalid Value");
+		value = StringUtil.remove(value, StringPool.PERIOD);
+	
+		if (Validator.isNull(expenseValue) || !Validator.isDigit(value) || 
+			(expenseValue == 0)) {
+
+			throw new InvalidMoneyFormatException();
 		}
 	}
 
