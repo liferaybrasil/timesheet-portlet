@@ -14,8 +14,10 @@
  */
 --%>
 
-<%@ page import="com.liferay.portal.kernel.util.StringUtil"%>
-<%@ page import="com.liferay.portal.kernel.language.LanguageUtil"%>
+<%-- CHECAR INCLUDE --%>
+<%-- CHECAR COMO USAR O FORMATADOR DE DATAS EM JSPS --%>
+<%-- VER AS QUEBRAS NOS OUTROS JSPS --%>
+
 <%@ include file="/html/init.jsp"%>
 
 <%
@@ -33,16 +35,18 @@
 	SimpleDateFormat sdfExpenses = new SimpleDateFormat("dd-MM-yyyy");
 	SimpleDateFormat sdfTasks = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 %>
+
 <liferay-util:include page="/html/toolbar.jsp"
 	servletContext="<%= application %>" />
 
-<liferay-ui:header backURL="<%= redirect %>"
-	title='<%= project.getName() %>' />
+<liferay-ui:header backURL="<%= redirect %>" title='<%= project.getName() %>' />
 
 <liferay-ui:message key="responsible"></liferay-ui:message>
-:
-<%=PortalUtil.getUserName(project.getUserId(), "none")%>
+
+<%= StringPool.COLON + PortalUtil.getUserName(project.getUserId(), "none") %>
+
 <br />
+
 <liferay-ui:message
 	key='<%= LanguageUtil.format(pageContext, "total-tasks", String.valueOf(project.getTotalTaskCost())) %>'></liferay-ui:message>
 <br />
@@ -156,20 +160,21 @@
 </div>
 
 <aui:script>
-		function <portlet:namespace />showReport() {
-			var A = AUI();
+	function <portlet:namespace />showReport() {
+		var A = AUI();
 
-			var form = A.Node.create('<form />');
+		var form = A.Node.create('<form />');
 
-			form.setAttribute('method', 'POST');
+		form.setAttribute('method', 'POST');
 
-			var content = A.one('#<portlet:namespace />report');
+		var content = A.one('#<portlet:namespace />report');
 
-			if (content) {
-				form.append(content);
-				content.show();
-			}
+		if (content) {
+			form.append(content);
+			content.show();
+		}
 
+<<<<<<< HEAD
 			var dialog = new A.Dialog(
 				{
 					bodyContent: form,
@@ -179,29 +184,30 @@
 								
 							},
 							text: Liferay.Language.get('print')
+=======
+		var dialog = new A.Dialog(
+			{
+				bodyContent: form,
+				buttons: [
+					{
+						handler: function() {
+							<portlet:namespace />printIt('#<portlet:namespace />report').innerHTML);
+>>>>>>> formatando
 						},
-						{
-							handler: function() {
-								this.close();
-							},
-							text: Liferay.Language.get('ok')
-						}
-					],
-					centered: true,
-					modal: true,
-					title: '<liferay-ui:message key="report" />',
-					width: 800
-				}
-			).render();
-		}
-		
-		function <portlet:namespace />printIt(printThis) {
-		    win = window.open();
-		    self.focus();
-		    win.document.open();
-		    win.document.write(printThis);
-		    win.document.close();
-		    win.print();
-		    win.close();
-		  }
+						text: Liferay.Language.get('print')
+					},
+					{
+						handler: function() {
+							this.close();
+						},
+						text: Liferay.Language.get('ok')
+					}
+				],
+				centered: true,
+				modal: true,
+				title: '<liferay-ui:message key="report" />',
+				width: 800
+			}
+		).render();
+	}
 </aui:script>

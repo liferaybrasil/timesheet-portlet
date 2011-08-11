@@ -26,9 +26,18 @@ import java.util.List;
  * @author Antonio Junior
  */
 public class ProjectImpl extends ProjectBaseImpl {
-
-	public ProjectImpl() {
-
+	
+	public double getTotalExpenseCost() throws SystemException {
+		double total = 0;
+		
+		List<Expense> expenses = ExpenseLocalServiceUtil.getExpenseByProjectId(
+				getProjectId());
+		
+		for (Expense expense : expenses) {
+			total = total + expense.getValue();
+		}
+		
+		return total;
 	}
 
 	public double getTotalProjectCost() throws SystemException {
@@ -39,23 +48,11 @@ public class ProjectImpl extends ProjectBaseImpl {
 		double total = 0;
 
 		List<Task> tasks = TaskLocalServiceUtil.getTaskByProjectId(
-				getProjectId());
+			getProjectId());
 
+		// TODO: fazer um finder com SUM(tasks.hour)
 		for (Task task : tasks) {
-			total += task.getTotalHours() * this.getWage();
-		}
-
-		return total;
-	}
-
-	public double getTotalExpenseCost() throws SystemException {
-		double total = 0;
-
-		List<Expense> expenses = ExpenseLocalServiceUtil.getExpenseByProjectId(
-				getProjectId());
-
-		for (Expense expense : expenses) {
-			total += expense.getValue();
+			total = total + (task.getTotalHours() * getWage());
 		}
 
 		return total;

@@ -41,6 +41,7 @@ public class TaskLocalServiceImpl extends TaskLocalServiceBaseImpl {
 		Date startDate = PortalUtil.getDate(
 			startDateMonth, startDateDay, startDateYear, startDateHour,
 			startDateMinute, new PortalException());
+
 		Date endDate = PortalUtil.getDate(
 			endDateMonth, endDateDay, endDateYear, endDateHour, endDateMinute,
 			new PortalException());
@@ -81,6 +82,7 @@ public class TaskLocalServiceImpl extends TaskLocalServiceBaseImpl {
 		Date startDate = PortalUtil.getDate(
 			startDateMonth, startDateDay, startDateYear, startDateHour,
 			startDateMinute, new PortalException());
+
 		Date endDate = PortalUtil.getDate(
 			endDateMonth, endDateDay, endDateYear, endDateHour,
 			endDateMinute, new PortalException());

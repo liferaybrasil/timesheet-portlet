@@ -90,12 +90,12 @@ public class ProjectLocalServiceImpl extends ProjectLocalServiceBaseImpl {
 	}
 
 	public List<Project> search(
-			String keywords, int start, int end,
+			String keywords, int start, int end, 
 			OrderByComparator orderByComparator)
 		throws SystemException {
 
 		return projectFinder.findByKeywords(
-				keywords, start, end, orderByComparator);
+			keywords, start, end, orderByComparator);
 	}
 
 	public List<Project> search(
@@ -104,7 +104,7 @@ public class ProjectLocalServiceImpl extends ProjectLocalServiceBaseImpl {
 		throws SystemException {
 
 		return projectFinder.findByN_D(
-				name, description, andOperator, start, end, orderByComparator);
+			wname, description, andOperator, start, end, orderByComparator);
 	}
 
 	public int searchCount(
@@ -114,9 +114,7 @@ public class ProjectLocalServiceImpl extends ProjectLocalServiceBaseImpl {
 		return projectFinder.countByN_D(name, description, andOperator);
 	}
 
-	public int searchCount(String keywords)
-		throws SystemException {
-
+	public int searchCount(String keywords) throws SystemException {
 		return projectFinder.countByKeywords(keywords);
 	}
 
@@ -162,10 +160,7 @@ public class ProjectLocalServiceImpl extends ProjectLocalServiceBaseImpl {
 			throw new InvalidDescriptionException();
 		}
 
-		String strWage = String.valueOf(wage);
-
-		if (Validator.isNull(strWage) || (wage == 0)) {
-
+		if (Validator.isNull(String.valueOf(wage)) || (wage == 0)) {
 			throw new InvalidMoneyFormatException();
 		}
 

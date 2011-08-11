@@ -92,25 +92,25 @@ public class TimesheetPortlet extends MVCPortlet {
 			long fileEntryId = ParamUtil.getLong(uploadRequest, "fileEntryId");
 			
 			String description = ParamUtil.getString(
-					uploadRequest, "description");
+				uploadRequest, "description");
 
 			double value = ParamUtil.getDouble(uploadRequest, "value");
 
 			int purchasedDateMonth = ParamUtil.getInteger(
-					uploadRequest, "purchasedDateMonth");
+				uploadRequest, "purchasedDateMonth");
 			int purchasedDateDay = ParamUtil.getInteger(
-					uploadRequest, "purchasedDateDay");
+				uploadRequest, "purchasedDateDay");
 			int purchasedDateYear = ParamUtil.getInteger(
-					uploadRequest, "purchasedDateYear");
-			
+				uploadRequest, "purchasedDateYear");
+
 			int type = ParamUtil.getInteger(uploadRequest, "type");
-			
-			//uploaded file					
-			
+
+			// Uploaded file					
+
 			File file = uploadRequest.getFile("file");
 			String sourceFileName = uploadRequest.getFileName("file");
-			
-			if(Validator.isNotNull(file) &&
+
+			if (Validator.isNotNull(file) &&
 				Validator.isNotNull(sourceFileName)) {
 			
 				if (!file.exists()) {
@@ -123,7 +123,8 @@ public class TimesheetPortlet extends MVCPortlet {
 
 				ThemeDisplay themeDisplay = 
 					(ThemeDisplay)actionRequest.getAttribute(
-							WebKeys.THEME_DISPLAY);
+						WebKeys.THEME_DISPLAY);
+
 				long groupId = themeDisplay.getScopeGroupId();
 
 				DLFolder folder = null;
@@ -131,9 +132,11 @@ public class TimesheetPortlet extends MVCPortlet {
 				try {
 					folder = DLFolderLocalServiceUtil.getDLFolder(
 						DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					folder = DLFolderLocalServiceUtil.createDLFolder(
 						DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+
 					folder = DLFolderLocalServiceUtil.addDLFolder(folder);
 				}
 

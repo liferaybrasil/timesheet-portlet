@@ -21,13 +21,11 @@ import com.liferay.timesheet.util.PortletPropsValues;
  */
 public class TaskImpl extends TaskBaseImpl {
 
-	public TaskImpl() {
-
-	}
-
+	// TODO: ver espaçamento entre multiplicacao/divisao
 	public long getTotalHours() {
-		long diff = this.getEndDate().getTime() - this.getStartDate().getTime();
-		return diff / (1000 * 60 * 60);
+		long milliseconds = getEndDate().getTime() - getStartDate().getTime();
+
+		return milliseconds / (1000 * 60 * 60);
 	}
 
 	public String getTypeDescription() {

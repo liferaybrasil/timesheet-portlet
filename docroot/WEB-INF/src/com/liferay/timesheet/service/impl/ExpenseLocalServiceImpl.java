@@ -41,7 +41,7 @@ public class ExpenseLocalServiceImpl extends ExpenseLocalServiceBaseImpl {
 		throws PortalException, SystemException {
 
 		Date date = PortalUtil.getDate(
-				purchasedDateMonth, purchasedDateDay, purchasedDateYear);
+			purchasedDateMonth, purchasedDateDay, purchasedDateYear);
 
 		validate(description, value);
 
@@ -78,7 +78,7 @@ public class ExpenseLocalServiceImpl extends ExpenseLocalServiceBaseImpl {
 		validate(description, value);
 
 		Date date = PortalUtil.getDate(
-				purchasedDateMonth, purchasedDateDay, purchasedDateYear);
+			purchasedDateMonth, purchasedDateDay, purchasedDateYear);
 
 		expense.setProjectId(projectId);
 		expense.setDescription(description);
@@ -102,35 +102,35 @@ public class ExpenseLocalServiceImpl extends ExpenseLocalServiceBaseImpl {
 			try {
 				DLFileEntry fileEntry = 
 					DLFileEntryLocalServiceUtil.getFileEntry(
-							expense.getFileEntryId());
+						expense.getFileEntryId());
 				
 				StringBuilder sb = new StringBuilder();
+
 				sb.append("documents");
 				sb.append(StringPool.FORWARD_SLASH);
 				sb.append(fileEntry.getGroupId());
 				sb.append(StringPool.FORWARD_SLASH);
 				sb.append(fileEntry.getUuid());
-				expense.setFilePath(sb.toString());
 				
+				expense.setFilePath(sb.toString());
 				expense.setFileName(fileEntry.getTitle());				
-			} catch (Exception e) {
+			} 
+			catch (Exception e) {
 				expense.setFileEntryId(0);
 			}			
 		}
+
 		return expense;
 	}
 
-	protected void validate(
-			String description, double value)
+	protected void validate(String description, double value)
 		throws PortalException {
 
 		if (Validator.isNull(description)) {
 			throw new InvalidDescriptionException();
 		}
 
-		String strValue = String.valueOf(value);
-
-		if (Validator.isNull(strValue) || (value == 0)) {
+		if (Validator.isNull(String.valueOf(value)) || (value == 0)) {
 			throw new InvalidMoneyFormatException();
 		}
 	}
