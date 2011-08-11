@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<custom-sql>
+	<sql id="com.liferay.timesheet.service.persistence.ProjectFinder.countByN_D">
+		<![CDATA[
+			SELECT
+				COUNT(*) AS COUNT_VALUE
+			FROM
+				Timesheet_Project
+			WHERE
+				(
+					(lower(name) LIKE ? [$AND_OR_NULL_CHECK$]) [$AND_OR_CONNECTOR$]
+					(description LIKE ? [$AND_OR_NULL_CHECK$])
+				)
+		]]>
+	</sql>
+	<sql id="com.liferay.timesheet.service.persistence.ProjectFinder.findByN_D">
+		<![CDATA[
+			SELECT
+				Timesheet_Project.*
+			FROM
+				Timesheet_Project
+			WHERE
+				(
+					(lower(name) LIKE ? [$AND_OR_NULL_CHECK$]) [$AND_OR_CONNECTOR$]
+					(description LIKE ? [$AND_OR_NULL_CHECK$])
+				)
+			ORDER BY
+				Timesheet_Project.startDate DESC
+		]]>
+	</sql>
+</custom-sql>

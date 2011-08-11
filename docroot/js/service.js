@@ -1,0 +1,1 @@
+Liferay.Service.register("Liferay.Service.Timesheet", "com.liferay.timesheet.service", "timesheet-portlet");

@@ -176,7 +176,7 @@
 					buttons: [
 						{
 							handler: function() {
-								<portlet:namespace />printIt('#<portlet:namespace />report').innerHTML);
+								
 							},
 							text: Liferay.Language.get('print')
 						},
