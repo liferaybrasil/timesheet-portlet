@@ -195,6 +195,253 @@ public class ProjectUtil {
 	}
 
 	/**
+	* Returns all the projects where name = &#63;.
+	*
+	* @param name the name
+	* @return the matching projects
+	* @throws SystemException if a system exception occurred
+	*/
+	public static java.util.List<com.liferay.timesheet.model.Project> findByName(
+		java.lang.String name)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().findByName(name);
+	}
+
+	/**
+	* Returns a range of all the projects where name = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param name the name
+	* @param start the lower bound of the range of projects
+	* @param end the upper bound of the range of projects (not inclusive)
+	* @return the range of matching projects
+	* @throws SystemException if a system exception occurred
+	*/
+	public static java.util.List<com.liferay.timesheet.model.Project> findByName(
+		java.lang.String name, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().findByName(name, start, end);
+	}
+
+	/**
+	* Returns an ordered range of all the projects where name = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param name the name
+	* @param start the lower bound of the range of projects
+	* @param end the upper bound of the range of projects (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @return the ordered range of matching projects
+	* @throws SystemException if a system exception occurred
+	*/
+	public static java.util.List<com.liferay.timesheet.model.Project> findByName(
+		java.lang.String name, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().findByName(name, start, end, orderByComparator);
+	}
+
+	/**
+	* Returns the first project in the ordered set where name = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param name the name
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching project
+	* @throws com.liferay.timesheet.NoSuchProjectException if a matching project could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.timesheet.model.Project findByName_First(
+		java.lang.String name,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException,
+			com.liferay.timesheet.NoSuchProjectException {
+		return getPersistence().findByName_First(name, orderByComparator);
+	}
+
+	/**
+	* Returns the last project in the ordered set where name = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param name the name
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching project
+	* @throws com.liferay.timesheet.NoSuchProjectException if a matching project could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.timesheet.model.Project findByName_Last(
+		java.lang.String name,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException,
+			com.liferay.timesheet.NoSuchProjectException {
+		return getPersistence().findByName_Last(name, orderByComparator);
+	}
+
+	/**
+	* Returns the projects before and after the current project in the ordered set where name = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param projectId the primary key of the current project
+	* @param name the name
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the previous, current, and next project
+	* @throws com.liferay.timesheet.NoSuchProjectException if a project with the primary key could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.timesheet.model.Project[] findByName_PrevAndNext(
+		long projectId, java.lang.String name,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException,
+			com.liferay.timesheet.NoSuchProjectException {
+		return getPersistence()
+				   .findByName_PrevAndNext(projectId, name, orderByComparator);
+	}
+
+	/**
+	* Returns all the projects where name = &#63; and description = &#63;.
+	*
+	* @param name the name
+	* @param description the description
+	* @return the matching projects
+	* @throws SystemException if a system exception occurred
+	*/
+	public static java.util.List<com.liferay.timesheet.model.Project> findByN_D(
+		java.lang.String name, java.lang.String description)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().findByN_D(name, description);
+	}
+
+	/**
+	* Returns a range of all the projects where name = &#63; and description = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param name the name
+	* @param description the description
+	* @param start the lower bound of the range of projects
+	* @param end the upper bound of the range of projects (not inclusive)
+	* @return the range of matching projects
+	* @throws SystemException if a system exception occurred
+	*/
+	public static java.util.List<com.liferay.timesheet.model.Project> findByN_D(
+		java.lang.String name, java.lang.String description, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().findByN_D(name, description, start, end);
+	}
+
+	/**
+	* Returns an ordered range of all the projects where name = &#63; and description = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param name the name
+	* @param description the description
+	* @param start the lower bound of the range of projects
+	* @param end the upper bound of the range of projects (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @return the ordered range of matching projects
+	* @throws SystemException if a system exception occurred
+	*/
+	public static java.util.List<com.liferay.timesheet.model.Project> findByN_D(
+		java.lang.String name, java.lang.String description, int start,
+		int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence()
+				   .findByN_D(name, description, start, end, orderByComparator);
+	}
+
+	/**
+	* Returns the first project in the ordered set where name = &#63; and description = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param name the name
+	* @param description the description
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching project
+	* @throws com.liferay.timesheet.NoSuchProjectException if a matching project could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.timesheet.model.Project findByN_D_First(
+		java.lang.String name, java.lang.String description,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException,
+			com.liferay.timesheet.NoSuchProjectException {
+		return getPersistence()
+				   .findByN_D_First(name, description, orderByComparator);
+	}
+
+	/**
+	* Returns the last project in the ordered set where name = &#63; and description = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param name the name
+	* @param description the description
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching project
+	* @throws com.liferay.timesheet.NoSuchProjectException if a matching project could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.timesheet.model.Project findByN_D_Last(
+		java.lang.String name, java.lang.String description,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException,
+			com.liferay.timesheet.NoSuchProjectException {
+		return getPersistence()
+				   .findByN_D_Last(name, description, orderByComparator);
+	}
+
+	/**
+	* Returns the projects before and after the current project in the ordered set where name = &#63; and description = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param projectId the primary key of the current project
+	* @param name the name
+	* @param description the description
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the previous, current, and next project
+	* @throws com.liferay.timesheet.NoSuchProjectException if a project with the primary key could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.timesheet.model.Project[] findByN_D_PrevAndNext(
+		long projectId, java.lang.String name, java.lang.String description,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException,
+			com.liferay.timesheet.NoSuchProjectException {
+		return getPersistence()
+				   .findByN_D_PrevAndNext(projectId, name, description,
+			orderByComparator);
+	}
+
+	/**
 	* Returns all the projects.
 	*
 	* @return the projects
@@ -244,6 +491,30 @@ public class ProjectUtil {
 	}
 
 	/**
+	* Removes all the projects where name = &#63; from the database.
+	*
+	* @param name the name
+	* @throws SystemException if a system exception occurred
+	*/
+	public static void removeByName(java.lang.String name)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		getPersistence().removeByName(name);
+	}
+
+	/**
+	* Removes all the projects where name = &#63; and description = &#63; from the database.
+	*
+	* @param name the name
+	* @param description the description
+	* @throws SystemException if a system exception occurred
+	*/
+	public static void removeByN_D(java.lang.String name,
+		java.lang.String description)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		getPersistence().removeByN_D(name, description);
+	}
+
+	/**
 	* Removes all the projects from the database.
 	*
 	* @throws SystemException if a system exception occurred
@@ -251,6 +522,32 @@ public class ProjectUtil {
 	public static void removeAll()
 		throws com.liferay.portal.kernel.exception.SystemException {
 		getPersistence().removeAll();
+	}
+
+	/**
+	* Returns the number of projects where name = &#63;.
+	*
+	* @param name the name
+	* @return the number of matching projects
+	* @throws SystemException if a system exception occurred
+	*/
+	public static int countByName(java.lang.String name)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().countByName(name);
+	}
+
+	/**
+	* Returns the number of projects where name = &#63; and description = &#63;.
+	*
+	* @param name the name
+	* @param description the description
+	* @return the number of matching projects
+	* @throws SystemException if a system exception occurred
+	*/
+	public static int countByN_D(java.lang.String name,
+		java.lang.String description)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().countByN_D(name, description);
 	}
 
 	/**

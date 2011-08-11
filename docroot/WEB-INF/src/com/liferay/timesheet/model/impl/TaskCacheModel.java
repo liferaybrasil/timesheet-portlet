@@ -36,16 +36,16 @@ public class TaskCacheModel implements CacheModel<Task> {
 
 		sb.append("{taskId=");
 		sb.append(taskId);
-		sb.append(", endDate=");
-		sb.append(endDate);
-		sb.append(", name=");
-		sb.append(name);
 		sb.append(", projectId=");
 		sb.append(projectId);
-		sb.append(", startDate=");
-		sb.append(startDate);
+		sb.append(", name=");
+		sb.append(name);
 		sb.append(", type=");
 		sb.append(type);
+		sb.append(", startDate=");
+		sb.append(startDate);
+		sb.append(", endDate=");
+		sb.append(endDate);
 		sb.append("}");
 
 		return sb.toString();
@@ -55,13 +55,7 @@ public class TaskCacheModel implements CacheModel<Task> {
 		TaskImpl taskImpl = new TaskImpl();
 
 		taskImpl.setTaskId(taskId);
-
-		if (endDate == Long.MIN_VALUE) {
-			taskImpl.setEndDate(null);
-		}
-		else {
-			taskImpl.setEndDate(new Date(endDate));
-		}
+		taskImpl.setProjectId(projectId);
 
 		if (name == null) {
 			taskImpl.setName(StringPool.BLANK);
@@ -70,7 +64,7 @@ public class TaskCacheModel implements CacheModel<Task> {
 			taskImpl.setName(name);
 		}
 
-		taskImpl.setProjectId(projectId);
+		taskImpl.setType(type);
 
 		if (startDate == Long.MIN_VALUE) {
 			taskImpl.setStartDate(null);
@@ -79,7 +73,12 @@ public class TaskCacheModel implements CacheModel<Task> {
 			taskImpl.setStartDate(new Date(startDate));
 		}
 
-		taskImpl.setType(type);
+		if (endDate == Long.MIN_VALUE) {
+			taskImpl.setEndDate(null);
+		}
+		else {
+			taskImpl.setEndDate(new Date(endDate));
+		}
 
 		taskImpl.resetOriginalValues();
 
@@ -87,9 +86,9 @@ public class TaskCacheModel implements CacheModel<Task> {
 	}
 
 	public long taskId;
-	public long endDate;
-	public String name;
 	public long projectId;
-	public long startDate;
+	public String name;
 	public int type;
+	public long startDate;
+	public long endDate;
 }

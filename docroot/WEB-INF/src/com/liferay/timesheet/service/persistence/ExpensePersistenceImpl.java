@@ -300,12 +300,12 @@ public class ExpensePersistenceImpl extends BasePersistenceImpl<Expense>
 		expenseImpl.setPrimaryKey(expense.getPrimaryKey());
 
 		expenseImpl.setExpenseId(expense.getExpenseId());
-		expenseImpl.setBilledDate(expense.getBilledDate());
-		expenseImpl.setDescription(expense.getDescription());
 		expenseImpl.setProjectId(expense.getProjectId());
+		expenseImpl.setDescription(expense.getDescription());
+		expenseImpl.setPurchasedDate(expense.getPurchasedDate());
 		expenseImpl.setType(expense.getType());
 		expenseImpl.setValue(expense.getValue());
-		expenseImpl.setDlFieldEntryId(expense.getDlFieldEntryId());
+		expenseImpl.setFileEntryId(expense.getFileEntryId());
 
 		return expenseImpl;
 	}

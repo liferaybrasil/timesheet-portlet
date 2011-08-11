@@ -147,24 +147,6 @@ public class ProjectWrapper implements Project {
 	}
 
 	/**
-	* Returns the name of this project.
-	*
-	* @return the name of this project
-	*/
-	public java.lang.String getName() {
-		return _project.getName();
-	}
-
-	/**
-	* Sets the name of this project.
-	*
-	* @param name the name of this project
-	*/
-	public void setName(java.lang.String name) {
-		_project.setName(name);
-	}
-
-	/**
 	* Returns the start date of this project.
 	*
 	* @return the start date of this project
@@ -180,6 +162,24 @@ public class ProjectWrapper implements Project {
 	*/
 	public void setStartDate(java.util.Date startDate) {
 		_project.setStartDate(startDate);
+	}
+
+	/**
+	* Returns the name of this project.
+	*
+	* @return the name of this project
+	*/
+	public java.lang.String getName() {
+		return _project.getName();
+	}
+
+	/**
+	* Sets the name of this project.
+	*
+	* @param name the name of this project
+	*/
+	public void setName(java.lang.String name) {
+		_project.setName(name);
 	}
 
 	/**

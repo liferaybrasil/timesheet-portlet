@@ -36,18 +36,18 @@ public class ExpenseCacheModel implements CacheModel<Expense> {
 
 		sb.append("{expenseId=");
 		sb.append(expenseId);
-		sb.append(", billedDate=");
-		sb.append(billedDate);
-		sb.append(", description=");
-		sb.append(description);
 		sb.append(", projectId=");
 		sb.append(projectId);
+		sb.append(", description=");
+		sb.append(description);
+		sb.append(", purchasedDate=");
+		sb.append(purchasedDate);
 		sb.append(", type=");
 		sb.append(type);
 		sb.append(", value=");
 		sb.append(value);
-		sb.append(", dlFieldEntryId=");
-		sb.append(dlFieldEntryId);
+		sb.append(", fileEntryId=");
+		sb.append(fileEntryId);
 		sb.append("}");
 
 		return sb.toString();
@@ -57,13 +57,7 @@ public class ExpenseCacheModel implements CacheModel<Expense> {
 		ExpenseImpl expenseImpl = new ExpenseImpl();
 
 		expenseImpl.setExpenseId(expenseId);
-
-		if (billedDate == Long.MIN_VALUE) {
-			expenseImpl.setBilledDate(null);
-		}
-		else {
-			expenseImpl.setBilledDate(new Date(billedDate));
-		}
+		expenseImpl.setProjectId(projectId);
 
 		if (description == null) {
 			expenseImpl.setDescription(StringPool.BLANK);
@@ -72,10 +66,16 @@ public class ExpenseCacheModel implements CacheModel<Expense> {
 			expenseImpl.setDescription(description);
 		}
 
-		expenseImpl.setProjectId(projectId);
+		if (purchasedDate == Long.MIN_VALUE) {
+			expenseImpl.setPurchasedDate(null);
+		}
+		else {
+			expenseImpl.setPurchasedDate(new Date(purchasedDate));
+		}
+
 		expenseImpl.setType(type);
 		expenseImpl.setValue(value);
-		expenseImpl.setDlFieldEntryId(dlFieldEntryId);
+		expenseImpl.setFileEntryId(fileEntryId);
 
 		expenseImpl.resetOriginalValues();
 
@@ -83,10 +83,10 @@ public class ExpenseCacheModel implements CacheModel<Expense> {
 	}
 
 	public long expenseId;
-	public long billedDate;
-	public String description;
 	public long projectId;
+	public String description;
+	public long purchasedDate;
 	public int type;
 	public double value;
-	public long dlFieldEntryId;
+	public long fileEntryId;
 }

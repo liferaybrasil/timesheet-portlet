@@ -13,10 +13,9 @@
  * details.
  */
 --%>
-<%@ page import="com.liferay.timesheet.InvalidDescriptionException" %>
-<%@ page import="com.liferay.timesheet.InvalidMoneyFormatException" %>
-<%@ page import="com.liferay.timesheet.model.impl.ExpenseImpl" %>
-<%@ include file="/html/init.jsp" %>
+<%@ page import="com.liferay.portal.kernel.util.StringPool"%>
+<%@ page import="com.liferay.timesheet.util.PortletPropsValues"%>
+<%@ include file="/html/init.jsp"%>
 
 <%
 String redirect = ParamUtil.getString(request, "redirect");
@@ -27,32 +26,36 @@ Expense expense = null;
 Calendar date = Calendar.getInstance();
 if (expenseId > 0) {
 	expense = ExpenseLocalServiceUtil.getExpense(expenseId);
-	date = CalendarFactoryUtil.getCalendar(expense.getBilledDate()
-			.getYear() + 1900, expense.getBilledDate().getMonth(),
-			expense.getBilledDate().getDate());
+	date = CalendarFactoryUtil.getCalendar(expense.getPurchasedDate()
+			.getYear() + 1900, expense.getPurchasedDate().getMonth(),
+			expense.getPurchasedDate().getDate());
 }
+StringBuilder sb = new StringBuilder();
 %>
 
-<liferay-ui:error exception="<%= InvalidDescriptionException.class %>" message="please-enter-a-valid-description" />
-<liferay-ui:error exception="<%= InvalidMoneyFormatException.class %>" message="please-enter-a-valid-money-format" />
+<liferay-ui:error exception="<%= InvalidDescriptionException.class %>"
+	message="please-enter-a-valid-description" />
+<liferay-ui:error exception="<%= InvalidMoneyFormatException.class %>"
+	message="please-enter-a-valid-money-format" />
 
-<liferay-ui:header backURL="<%= redirect %>"
-	title='<%= "expense-for-project" + ": " + project.getName() %>' />
+<liferay-ui:header backURL="<%= redirect %>" localizeTitle="<%= expense == null %>"
+	title='<%= (expense != null) ? expense.getDescription() : "new-expense" %>' />
 
 <aui:model-context bean="<%= expense %>" model="<%= Expense.class %>" />
 
 <portlet:actionURL name="updateExpense" var="editExpenseURL" />
 
-<aui:form action="<%= editExpenseURL %>" method="POST" name="fm">
+<aui:form action="<%= editExpenseURL %>" method="POST" name="fm"
+	enctype="multipart/form-data">
 	<aui:fieldset>
-		<aui:input type="hidden" name="currentUrl" value="<%= currentUrl %>" />
-
 		<aui:input type="hidden" name="redirect" value="<%= redirect %>" />
 
 		<aui:input type="hidden" name="expenseId" value="<%= expenseId %>" />
 
-		<aui:input type="hidden" name="projectId"
-			value='<%= project.getProjectId() %>' />
+		<aui:input type="hidden" name="fileEntryId"
+			value="<%= (expense != null) ? expense.getFileEntryId() : 0  %>" />
+
+		<aui:input type="hidden" name="projectId" value='<%= projectId %>' />
 
 		<aui:input name="description" />
 
@@ -61,18 +64,17 @@ if (expenseId > 0) {
 		<label class="aui-field-label"> date </label>
 		<liferay-ui:input-date yearRangeEnd="2050" yearRangeStart="1980"
 			dayValue="<%=date.get(Calendar.DAY_OF_MONTH) %>"
-			dayParam="billedDateDay" monthParam="billedDateMonth"
+			dayParam="purchasedDateDay" monthParam="purchasedDateMonth"
 			monthValue="<%= date.get(Calendar.MONTH) %>"
-			yearParam="billedDateYear" yearValue="<%= date.get(Calendar.YEAR) %>" />
-		<br />
+			yearParam="purchasedDateYear"
+			yearValue="<%= date.get(Calendar.YEAR) %>" />
 		<br />
 
-		<aui:select label="expenseType" name="expenseType">
+		<aui:select label="type" name="type">
 			<%
-				String[] types = ExpenseImpl.getAllTypes();
-							for (int i = 0; i < types.length; i++) {
+				String[] types = PortletPropsValues.EXPENSE_TYPES;
+				for (int i = 0; i < types.length; i++) {
 			%>
-
 			<aui:option selected="<%= i==0 %>" value="<%= i %>">
 				<liferay-ui:message key="<%= types[i] %>" />
 			</aui:option>
@@ -80,9 +82,14 @@ if (expenseId > 0) {
 				}
 			%>
 		</aui:select>
-		<c:if test="<%= expense != null && expense.getDlFieldEntryId() > 0 %>">
-			<aui:a href="<%= expense.getFilePath() %>">file</aui:a>
+		<c:if test="<%= expense != null && expense.getFileEntryId() > 0 %>">
+			<aui:a
+				href="<%= 	sb.append(PortalUtil.getCDNHost())
+							.append(StringPool.FORWARD_SLASH)
+							.append(expense.getFilePath())
+							.toString()  %>"><%= expense.getFileName() %></aui:a>
 		</c:if>
+		<aui:input name="file" type="file" />
 	</aui:fieldset>
 
 	<aui:button-row>

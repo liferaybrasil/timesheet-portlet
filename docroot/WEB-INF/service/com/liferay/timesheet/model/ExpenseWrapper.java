@@ -73,21 +73,21 @@ public class ExpenseWrapper implements Expense {
 	}
 
 	/**
-	* Returns the billed date of this expense.
+	* Returns the project ID of this expense.
 	*
-	* @return the billed date of this expense
+	* @return the project ID of this expense
 	*/
-	public java.util.Date getBilledDate() {
-		return _expense.getBilledDate();
+	public long getProjectId() {
+		return _expense.getProjectId();
 	}
 
 	/**
-	* Sets the billed date of this expense.
+	* Sets the project ID of this expense.
 	*
-	* @param billedDate the billed date of this expense
+	* @param projectId the project ID of this expense
 	*/
-	public void setBilledDate(java.util.Date billedDate) {
-		_expense.setBilledDate(billedDate);
+	public void setProjectId(long projectId) {
+		_expense.setProjectId(projectId);
 	}
 
 	/**
@@ -109,21 +109,21 @@ public class ExpenseWrapper implements Expense {
 	}
 
 	/**
-	* Returns the project ID of this expense.
+	* Returns the purchased date of this expense.
 	*
-	* @return the project ID of this expense
+	* @return the purchased date of this expense
 	*/
-	public long getProjectId() {
-		return _expense.getProjectId();
+	public java.util.Date getPurchasedDate() {
+		return _expense.getPurchasedDate();
 	}
 
 	/**
-	* Sets the project ID of this expense.
+	* Sets the purchased date of this expense.
 	*
-	* @param projectId the project ID of this expense
+	* @param purchasedDate the purchased date of this expense
 	*/
-	public void setProjectId(long projectId) {
-		_expense.setProjectId(projectId);
+	public void setPurchasedDate(java.util.Date purchasedDate) {
+		_expense.setPurchasedDate(purchasedDate);
 	}
 
 	/**
@@ -163,21 +163,21 @@ public class ExpenseWrapper implements Expense {
 	}
 
 	/**
-	* Returns the dl field entry ID of this expense.
+	* Returns the file entry ID of this expense.
 	*
-	* @return the dl field entry ID of this expense
+	* @return the file entry ID of this expense
 	*/
-	public long getDlFieldEntryId() {
-		return _expense.getDlFieldEntryId();
+	public long getFileEntryId() {
+		return _expense.getFileEntryId();
 	}
 
 	/**
-	* Sets the dl field entry ID of this expense.
+	* Sets the file entry ID of this expense.
 	*
-	* @param dlFieldEntryId the dl field entry ID of this expense
+	* @param fileEntryId the file entry ID of this expense
 	*/
-	public void setDlFieldEntryId(long dlFieldEntryId) {
-		_expense.setDlFieldEntryId(dlFieldEntryId);
+	public void setFileEntryId(long fileEntryId) {
+		_expense.setFileEntryId(fileEntryId);
 	}
 
 	public boolean isNew() {
@@ -267,6 +267,14 @@ public class ExpenseWrapper implements Expense {
 
 	public void setFilePath(java.lang.String filePath) {
 		_expense.setFilePath(filePath);
+	}
+
+	public java.lang.String getFileName() {
+		return _expense.getFileName();
+	}
+
+	public void setFileName(java.lang.String fileName) {
+		_expense.setFileName(fileName);
 	}
 
 	public Expense getWrappedExpense() {

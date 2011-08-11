@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
 import com.liferay.portal.kernel.dao.orm.Query;
+import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -32,6 +33,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
@@ -73,6 +75,32 @@ public class ProjectPersistenceImpl extends BasePersistenceImpl<Project>
 	public static final String FINDER_CLASS_NAME_ENTITY = ProjectImpl.class.getName();
 	public static final String FINDER_CLASS_NAME_LIST = FINDER_CLASS_NAME_ENTITY +
 		".List";
+	public static final FinderPath FINDER_PATH_FIND_BY_NAME = new FinderPath(ProjectModelImpl.ENTITY_CACHE_ENABLED,
+			ProjectModelImpl.FINDER_CACHE_ENABLED, ProjectImpl.class,
+			FINDER_CLASS_NAME_LIST, "findByName",
+			new String[] {
+				String.class.getName(),
+				
+			"java.lang.Integer", "java.lang.Integer",
+				"com.liferay.portal.kernel.util.OrderByComparator"
+			});
+	public static final FinderPath FINDER_PATH_COUNT_BY_NAME = new FinderPath(ProjectModelImpl.ENTITY_CACHE_ENABLED,
+			ProjectModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST, "countByName",
+			new String[] { String.class.getName() });
+	public static final FinderPath FINDER_PATH_FIND_BY_N_D = new FinderPath(ProjectModelImpl.ENTITY_CACHE_ENABLED,
+			ProjectModelImpl.FINDER_CACHE_ENABLED, ProjectImpl.class,
+			FINDER_CLASS_NAME_LIST, "findByN_D",
+			new String[] {
+				String.class.getName(), String.class.getName(),
+				
+			"java.lang.Integer", "java.lang.Integer",
+				"com.liferay.portal.kernel.util.OrderByComparator"
+			});
+	public static final FinderPath FINDER_PATH_COUNT_BY_N_D = new FinderPath(ProjectModelImpl.ENTITY_CACHE_ENABLED,
+			ProjectModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST, "countByN_D",
+			new String[] { String.class.getName(), String.class.getName() });
 	public static final FinderPath FINDER_PATH_FIND_ALL = new FinderPath(ProjectModelImpl.ENTITY_CACHE_ENABLED,
 			ProjectModelImpl.FINDER_CACHE_ENABLED, ProjectImpl.class,
 			FINDER_CLASS_NAME_LIST, "findAll", new String[0]);
@@ -288,8 +316,8 @@ public class ProjectPersistenceImpl extends BasePersistenceImpl<Project>
 		projectImpl.setUserId(project.getUserId());
 		projectImpl.setDescription(project.getDescription());
 		projectImpl.setEndDate(project.getEndDate());
-		projectImpl.setName(project.getName());
 		projectImpl.setStartDate(project.getStartDate());
+		projectImpl.setName(project.getName());
 		projectImpl.setWage(project.getWage());
 
 		return projectImpl;
@@ -391,6 +419,774 @@ public class ProjectPersistenceImpl extends BasePersistenceImpl<Project>
 		}
 
 		return project;
+	}
+
+	/**
+	 * Returns all the projects where name = &#63;.
+	 *
+	 * @param name the name
+	 * @return the matching projects
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<Project> findByName(String name) throws SystemException {
+		return findByName(name, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the projects where name = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param name the name
+	 * @param start the lower bound of the range of projects
+	 * @param end the upper bound of the range of projects (not inclusive)
+	 * @return the range of matching projects
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<Project> findByName(String name, int start, int end)
+		throws SystemException {
+		return findByName(name, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the projects where name = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param name the name
+	 * @param start the lower bound of the range of projects
+	 * @param end the upper bound of the range of projects (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching projects
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<Project> findByName(String name, int start, int end,
+		OrderByComparator orderByComparator) throws SystemException {
+		Object[] finderArgs = new Object[] {
+				name,
+				
+				String.valueOf(start), String.valueOf(end),
+				String.valueOf(orderByComparator)
+			};
+
+		List<Project> list = (List<Project>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_NAME,
+				finderArgs, this);
+
+		if (list == null) {
+			StringBundler query = null;
+
+			if (orderByComparator != null) {
+				query = new StringBundler(3 +
+						(orderByComparator.getOrderByFields().length * 3));
+			}
+			else {
+				query = new StringBundler(3);
+			}
+
+			query.append(_SQL_SELECT_PROJECT_WHERE);
+
+			if (name == null) {
+				query.append(_FINDER_COLUMN_NAME_NAME_1);
+			}
+			else {
+				if (name.equals(StringPool.BLANK)) {
+					query.append(_FINDER_COLUMN_NAME_NAME_3);
+				}
+				else {
+					query.append(_FINDER_COLUMN_NAME_NAME_2);
+				}
+			}
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+
+			else {
+				query.append(ProjectModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				if (name != null) {
+					qPos.add(name);
+				}
+
+				list = (List<Project>)QueryUtil.list(q, getDialect(), start, end);
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (list == null) {
+					FinderCacheUtil.removeResult(FINDER_PATH_FIND_BY_NAME,
+						finderArgs);
+				}
+				else {
+					cacheResult(list);
+
+					FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_NAME,
+						finderArgs, list);
+				}
+
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first project in the ordered set where name = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param name the name
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching project
+	 * @throws com.liferay.timesheet.NoSuchProjectException if a matching project could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Project findByName_First(String name,
+		OrderByComparator orderByComparator)
+		throws NoSuchProjectException, SystemException {
+		List<Project> list = findByName(name, 0, 1, orderByComparator);
+
+		if (list.isEmpty()) {
+			StringBundler msg = new StringBundler(4);
+
+			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			msg.append("name=");
+			msg.append(name);
+
+			msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+			throw new NoSuchProjectException(msg.toString());
+		}
+		else {
+			return list.get(0);
+		}
+	}
+
+	/**
+	 * Returns the last project in the ordered set where name = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param name the name
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching project
+	 * @throws com.liferay.timesheet.NoSuchProjectException if a matching project could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Project findByName_Last(String name,
+		OrderByComparator orderByComparator)
+		throws NoSuchProjectException, SystemException {
+		int count = countByName(name);
+
+		List<Project> list = findByName(name, count - 1, count,
+				orderByComparator);
+
+		if (list.isEmpty()) {
+			StringBundler msg = new StringBundler(4);
+
+			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			msg.append("name=");
+			msg.append(name);
+
+			msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+			throw new NoSuchProjectException(msg.toString());
+		}
+		else {
+			return list.get(0);
+		}
+	}
+
+	/**
+	 * Returns the projects before and after the current project in the ordered set where name = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param projectId the primary key of the current project
+	 * @param name the name
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next project
+	 * @throws com.liferay.timesheet.NoSuchProjectException if a project with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Project[] findByName_PrevAndNext(long projectId, String name,
+		OrderByComparator orderByComparator)
+		throws NoSuchProjectException, SystemException {
+		Project project = findByPrimaryKey(projectId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			Project[] array = new ProjectImpl[3];
+
+			array[0] = getByName_PrevAndNext(session, project, name,
+					orderByComparator, true);
+
+			array[1] = project;
+
+			array[2] = getByName_PrevAndNext(session, project, name,
+					orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected Project getByName_PrevAndNext(Session session, Project project,
+		String name, OrderByComparator orderByComparator, boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByFields().length * 6));
+		}
+		else {
+			query = new StringBundler(3);
+		}
+
+		query.append(_SQL_SELECT_PROJECT_WHERE);
+
+		if (name == null) {
+			query.append(_FINDER_COLUMN_NAME_NAME_1);
+		}
+		else {
+			if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_NAME_NAME_3);
+			}
+			else {
+				query.append(_FINDER_COLUMN_NAME_NAME_2);
+			}
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			if (orderByFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+
+		else {
+			query.append(ProjectModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = query.toString();
+
+		Query q = session.createQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		if (name != null) {
+			qPos.add(name);
+		}
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByValues(project);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<Project> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns all the projects where name = &#63; and description = &#63;.
+	 *
+	 * @param name the name
+	 * @param description the description
+	 * @return the matching projects
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<Project> findByN_D(String name, String description)
+		throws SystemException {
+		return findByN_D(name, description, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the projects where name = &#63; and description = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param name the name
+	 * @param description the description
+	 * @param start the lower bound of the range of projects
+	 * @param end the upper bound of the range of projects (not inclusive)
+	 * @return the range of matching projects
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<Project> findByN_D(String name, String description, int start,
+		int end) throws SystemException {
+		return findByN_D(name, description, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the projects where name = &#63; and description = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param name the name
+	 * @param description the description
+	 * @param start the lower bound of the range of projects
+	 * @param end the upper bound of the range of projects (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching projects
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<Project> findByN_D(String name, String description, int start,
+		int end, OrderByComparator orderByComparator) throws SystemException {
+		Object[] finderArgs = new Object[] {
+				name, description,
+				
+				String.valueOf(start), String.valueOf(end),
+				String.valueOf(orderByComparator)
+			};
+
+		List<Project> list = (List<Project>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_N_D,
+				finderArgs, this);
+
+		if (list == null) {
+			StringBundler query = null;
+
+			if (orderByComparator != null) {
+				query = new StringBundler(4 +
+						(orderByComparator.getOrderByFields().length * 3));
+			}
+			else {
+				query = new StringBundler(4);
+			}
+
+			query.append(_SQL_SELECT_PROJECT_WHERE);
+
+			if (name == null) {
+				query.append(_FINDER_COLUMN_N_D_NAME_1);
+			}
+			else {
+				if (name.equals(StringPool.BLANK)) {
+					query.append(_FINDER_COLUMN_N_D_NAME_3);
+				}
+				else {
+					query.append(_FINDER_COLUMN_N_D_NAME_2);
+				}
+			}
+
+			if (description == null) {
+				query.append(_FINDER_COLUMN_N_D_DESCRIPTION_1);
+			}
+			else {
+				if (description.equals(StringPool.BLANK)) {
+					query.append(_FINDER_COLUMN_N_D_DESCRIPTION_3);
+				}
+				else {
+					query.append(_FINDER_COLUMN_N_D_DESCRIPTION_2);
+				}
+			}
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+
+			else {
+				query.append(ProjectModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				if (name != null) {
+					qPos.add(name);
+				}
+
+				if (description != null) {
+					qPos.add(description);
+				}
+
+				list = (List<Project>)QueryUtil.list(q, getDialect(), start, end);
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (list == null) {
+					FinderCacheUtil.removeResult(FINDER_PATH_FIND_BY_N_D,
+						finderArgs);
+				}
+				else {
+					cacheResult(list);
+
+					FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_N_D,
+						finderArgs, list);
+				}
+
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first project in the ordered set where name = &#63; and description = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param name the name
+	 * @param description the description
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching project
+	 * @throws com.liferay.timesheet.NoSuchProjectException if a matching project could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Project findByN_D_First(String name, String description,
+		OrderByComparator orderByComparator)
+		throws NoSuchProjectException, SystemException {
+		List<Project> list = findByN_D(name, description, 0, 1,
+				orderByComparator);
+
+		if (list.isEmpty()) {
+			StringBundler msg = new StringBundler(6);
+
+			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			msg.append("name=");
+			msg.append(name);
+
+			msg.append(", description=");
+			msg.append(description);
+
+			msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+			throw new NoSuchProjectException(msg.toString());
+		}
+		else {
+			return list.get(0);
+		}
+	}
+
+	/**
+	 * Returns the last project in the ordered set where name = &#63; and description = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param name the name
+	 * @param description the description
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching project
+	 * @throws com.liferay.timesheet.NoSuchProjectException if a matching project could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Project findByN_D_Last(String name, String description,
+		OrderByComparator orderByComparator)
+		throws NoSuchProjectException, SystemException {
+		int count = countByN_D(name, description);
+
+		List<Project> list = findByN_D(name, description, count - 1, count,
+				orderByComparator);
+
+		if (list.isEmpty()) {
+			StringBundler msg = new StringBundler(6);
+
+			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			msg.append("name=");
+			msg.append(name);
+
+			msg.append(", description=");
+			msg.append(description);
+
+			msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+			throw new NoSuchProjectException(msg.toString());
+		}
+		else {
+			return list.get(0);
+		}
+	}
+
+	/**
+	 * Returns the projects before and after the current project in the ordered set where name = &#63; and description = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param projectId the primary key of the current project
+	 * @param name the name
+	 * @param description the description
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next project
+	 * @throws com.liferay.timesheet.NoSuchProjectException if a project with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Project[] findByN_D_PrevAndNext(long projectId, String name,
+		String description, OrderByComparator orderByComparator)
+		throws NoSuchProjectException, SystemException {
+		Project project = findByPrimaryKey(projectId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			Project[] array = new ProjectImpl[3];
+
+			array[0] = getByN_D_PrevAndNext(session, project, name,
+					description, orderByComparator, true);
+
+			array[1] = project;
+
+			array[2] = getByN_D_PrevAndNext(session, project, name,
+					description, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected Project getByN_D_PrevAndNext(Session session, Project project,
+		String name, String description, OrderByComparator orderByComparator,
+		boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByFields().length * 6));
+		}
+		else {
+			query = new StringBundler(3);
+		}
+
+		query.append(_SQL_SELECT_PROJECT_WHERE);
+
+		if (name == null) {
+			query.append(_FINDER_COLUMN_N_D_NAME_1);
+		}
+		else {
+			if (name.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_N_D_NAME_3);
+			}
+			else {
+				query.append(_FINDER_COLUMN_N_D_NAME_2);
+			}
+		}
+
+		if (description == null) {
+			query.append(_FINDER_COLUMN_N_D_DESCRIPTION_1);
+		}
+		else {
+			if (description.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_N_D_DESCRIPTION_3);
+			}
+			else {
+				query.append(_FINDER_COLUMN_N_D_DESCRIPTION_2);
+			}
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			if (orderByFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+
+		else {
+			query.append(ProjectModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = query.toString();
+
+		Query q = session.createQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		if (name != null) {
+			qPos.add(name);
+		}
+
+		if (description != null) {
+			qPos.add(description);
+		}
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByValues(project);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<Project> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
 	}
 
 	/**
@@ -502,6 +1298,32 @@ public class ProjectPersistenceImpl extends BasePersistenceImpl<Project>
 	}
 
 	/**
+	 * Removes all the projects where name = &#63; from the database.
+	 *
+	 * @param name the name
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void removeByName(String name) throws SystemException {
+		for (Project project : findByName(name)) {
+			projectPersistence.remove(project);
+		}
+	}
+
+	/**
+	 * Removes all the projects where name = &#63; and description = &#63; from the database.
+	 *
+	 * @param name the name
+	 * @param description the description
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void removeByN_D(String name, String description)
+		throws SystemException {
+		for (Project project : findByN_D(name, description)) {
+			projectPersistence.remove(project);
+		}
+	}
+
+	/**
 	 * Removes all the projects from the database.
 	 *
 	 * @throws SystemException if a system exception occurred
@@ -510,6 +1332,154 @@ public class ProjectPersistenceImpl extends BasePersistenceImpl<Project>
 		for (Project project : findAll()) {
 			projectPersistence.remove(project);
 		}
+	}
+
+	/**
+	 * Returns the number of projects where name = &#63;.
+	 *
+	 * @param name the name
+	 * @return the number of matching projects
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int countByName(String name) throws SystemException {
+		Object[] finderArgs = new Object[] { name };
+
+		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_NAME,
+				finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(2);
+
+			query.append(_SQL_COUNT_PROJECT_WHERE);
+
+			if (name == null) {
+				query.append(_FINDER_COLUMN_NAME_NAME_1);
+			}
+			else {
+				if (name.equals(StringPool.BLANK)) {
+					query.append(_FINDER_COLUMN_NAME_NAME_3);
+				}
+				else {
+					query.append(_FINDER_COLUMN_NAME_NAME_2);
+				}
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				if (name != null) {
+					qPos.add(name);
+				}
+
+				count = (Long)q.uniqueResult();
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (count == null) {
+					count = Long.valueOf(0);
+				}
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_NAME,
+					finderArgs, count);
+
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of projects where name = &#63; and description = &#63;.
+	 *
+	 * @param name the name
+	 * @param description the description
+	 * @return the number of matching projects
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int countByN_D(String name, String description)
+		throws SystemException {
+		Object[] finderArgs = new Object[] { name, description };
+
+		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_N_D,
+				finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(3);
+
+			query.append(_SQL_COUNT_PROJECT_WHERE);
+
+			if (name == null) {
+				query.append(_FINDER_COLUMN_N_D_NAME_1);
+			}
+			else {
+				if (name.equals(StringPool.BLANK)) {
+					query.append(_FINDER_COLUMN_N_D_NAME_3);
+				}
+				else {
+					query.append(_FINDER_COLUMN_N_D_NAME_2);
+				}
+			}
+
+			if (description == null) {
+				query.append(_FINDER_COLUMN_N_D_DESCRIPTION_1);
+			}
+			else {
+				if (description.equals(StringPool.BLANK)) {
+					query.append(_FINDER_COLUMN_N_D_DESCRIPTION_3);
+				}
+				else {
+					query.append(_FINDER_COLUMN_N_D_DESCRIPTION_2);
+				}
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				if (name != null) {
+					qPos.add(name);
+				}
+
+				if (description != null) {
+					qPos.add(description);
+				}
+
+				count = (Long)q.uniqueResult();
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (count == null) {
+					count = Long.valueOf(0);
+				}
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_N_D, finderArgs,
+					count);
+
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
 	}
 
 	/**
@@ -594,9 +1564,21 @@ public class ProjectPersistenceImpl extends BasePersistenceImpl<Project>
 	@BeanReference(type = UserPersistence.class)
 	protected UserPersistence userPersistence;
 	private static final String _SQL_SELECT_PROJECT = "SELECT project FROM Project project";
+	private static final String _SQL_SELECT_PROJECT_WHERE = "SELECT project FROM Project project WHERE ";
 	private static final String _SQL_COUNT_PROJECT = "SELECT COUNT(project) FROM Project project";
+	private static final String _SQL_COUNT_PROJECT_WHERE = "SELECT COUNT(project) FROM Project project WHERE ";
+	private static final String _FINDER_COLUMN_NAME_NAME_1 = "project.name IS NULL";
+	private static final String _FINDER_COLUMN_NAME_NAME_2 = "project.name = ?";
+	private static final String _FINDER_COLUMN_NAME_NAME_3 = "(project.name IS NULL OR project.name = ?)";
+	private static final String _FINDER_COLUMN_N_D_NAME_1 = "project.name IS NULL AND ";
+	private static final String _FINDER_COLUMN_N_D_NAME_2 = "project.name = ? AND ";
+	private static final String _FINDER_COLUMN_N_D_NAME_3 = "(project.name IS NULL OR project.name = ?) AND ";
+	private static final String _FINDER_COLUMN_N_D_DESCRIPTION_1 = "project.description IS NULL";
+	private static final String _FINDER_COLUMN_N_D_DESCRIPTION_2 = "project.description = ?";
+	private static final String _FINDER_COLUMN_N_D_DESCRIPTION_3 = "(project.description IS NULL OR project.description = ?)";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "project.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No Project exists with the primary key ";
+	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No Project exists with the key {";
 	private static final boolean _HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE = GetterUtil.getBoolean(PropsUtil.get(
 				PropsKeys.HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE));
 	private static Log _log = LogFactoryUtil.getLog(ProjectPersistenceImpl.class);

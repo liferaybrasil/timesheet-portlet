@@ -255,26 +255,54 @@ public class ProjectLocalServiceUtil {
 	}
 
 	public static com.liferay.timesheet.model.Project addProject(long userId,
-		java.lang.String name, double wage, java.lang.String description,
-		int startDateMonth, int startDateDay, int startDateYear,
-		int endDateMonth, int endDateDay, int endDateYear)
+		java.lang.String description, int endDateMonth, int endDateDay,
+		int endDateYear, int startDateMonth, int startDateDay,
+		int startDateYear, java.lang.String name, double wage)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService()
-				   .addProject(userId, name, wage, description, startDateMonth,
-			startDateDay, startDateYear, endDateMonth, endDateDay, endDateYear);
+				   .addProject(userId, description, endDateMonth, endDateDay,
+			endDateYear, startDateMonth, startDateDay, startDateYear, name, wage);
+	}
+
+	public static java.util.List<com.liferay.timesheet.model.Project> search(
+		java.lang.String keywords, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().search(keywords, start, end, orderByComparator);
+	}
+
+	public static java.util.List<com.liferay.timesheet.model.Project> search(
+		java.lang.String name, java.lang.String description,
+		boolean andOperator, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .search(name, description, andOperator, start, end,
+			orderByComparator);
+	}
+
+	public static int searchCount(java.lang.String name,
+		java.lang.String description, boolean andOperator)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().searchCount(name, description, andOperator);
+	}
+
+	public static int searchCount(java.lang.String keywords)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().searchCount(keywords);
 	}
 
 	public static com.liferay.timesheet.model.Project updateProject(
-		long projectId, long userId, java.lang.String name, double wage,
-		java.lang.String description, int startDateMonth, int startDateDay,
-		int startDateYear, int endDateMonth, int endDateDay, int endDateYear)
+		long projectId, long userId, java.lang.String description,
+		int endDateMonth, int endDateDay, int endDateYear, int startDateMonth,
+		int startDateDay, int startDateYear, java.lang.String name, double wage)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService()
-				   .updateProject(projectId, userId, name, wage, description,
-			startDateMonth, startDateDay, startDateYear, endDateMonth,
-			endDateDay, endDateYear);
+				   .updateProject(projectId, userId, description, endDateMonth,
+			endDateDay, endDateYear, startDateMonth, startDateDay,
+			startDateYear, name, wage);
 	}
 
 	public static void clearService() {

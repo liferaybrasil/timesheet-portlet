@@ -15,6 +15,7 @@
 package com.liferay.timesheet.model.impl;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
+import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -28,6 +29,7 @@ import com.liferay.portlet.expando.util.ExpandoBridgeFactoryUtil;
 
 import com.liferay.timesheet.model.Expense;
 import com.liferay.timesheet.model.ExpenseModel;
+import com.liferay.timesheet.model.ExpenseSoap;
 
 import java.io.Serializable;
 
@@ -35,7 +37,9 @@ import java.lang.reflect.Proxy;
 
 import java.sql.Types;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * The base model implementation for the Expense service. Represents a row in the &quot;Timesheet_Expense&quot; database table, with each column mapped to a property of this class.
@@ -50,6 +54,7 @@ import java.util.Date;
  * @see com.liferay.timesheet.model.ExpenseModel
  * @generated
  */
+@JSON(strict = true)
 public class ExpenseModelImpl extends BaseModelImpl<Expense>
 	implements ExpenseModel {
 	/*
@@ -60,17 +65,17 @@ public class ExpenseModelImpl extends BaseModelImpl<Expense>
 	public static final String TABLE_NAME = "Timesheet_Expense";
 	public static final Object[][] TABLE_COLUMNS = {
 			{ "expenseId", Types.BIGINT },
-			{ "billedDate", Types.TIMESTAMP },
-			{ "description", Types.VARCHAR },
 			{ "projectId", Types.BIGINT },
+			{ "description", Types.VARCHAR },
+			{ "purchasedDate", Types.TIMESTAMP },
 			{ "type_", Types.INTEGER },
 			{ "value", Types.DOUBLE },
-			{ "dlFieldEntryId", Types.BIGINT }
+			{ "fileEntryId", Types.BIGINT }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Timesheet_Expense (expenseId LONG not null primary key,billedDate DATE null,description VARCHAR(75) null,projectId LONG,type_ INTEGER,value DOUBLE,dlFieldEntryId LONG)";
+	public static final String TABLE_SQL_CREATE = "create table Timesheet_Expense (expenseId LONG not null primary key,projectId LONG,description VARCHAR(75) null,purchasedDate DATE null,type_ INTEGER,value DOUBLE,fileEntryId LONG)";
 	public static final String TABLE_SQL_DROP = "drop table Timesheet_Expense";
-	public static final String ORDER_BY_JPQL = " ORDER BY expense.billedDate DESC";
-	public static final String ORDER_BY_SQL = " ORDER BY Timesheet_Expense.billedDate DESC";
+	public static final String ORDER_BY_JPQL = " ORDER BY expense.purchasedDate DESC";
+	public static final String ORDER_BY_SQL = " ORDER BY Timesheet_Expense.purchasedDate DESC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";
@@ -80,6 +85,42 @@ public class ExpenseModelImpl extends BaseModelImpl<Expense>
 	public static final boolean FINDER_CACHE_ENABLED = GetterUtil.getBoolean(com.liferay.util.service.ServiceProps.get(
 				"value.object.finder.cache.enabled.com.liferay.timesheet.model.Expense"),
 			true);
+
+	/**
+	 * Converts the soap model instance into a normal model instance.
+	 *
+	 * @param soapModel the soap model instance to convert
+	 * @return the normal model instance
+	 */
+	public static Expense toModel(ExpenseSoap soapModel) {
+		Expense model = new ExpenseImpl();
+
+		model.setExpenseId(soapModel.getExpenseId());
+		model.setProjectId(soapModel.getProjectId());
+		model.setDescription(soapModel.getDescription());
+		model.setPurchasedDate(soapModel.getPurchasedDate());
+		model.setType(soapModel.getType());
+		model.setValue(soapModel.getValue());
+		model.setFileEntryId(soapModel.getFileEntryId());
+
+		return model;
+	}
+
+	/**
+	 * Converts the soap model instances into normal model instances.
+	 *
+	 * @param soapModels the soap model instances to convert
+	 * @return the normal model instances
+	 */
+	public static List<Expense> toModels(ExpenseSoap[] soapModels) {
+		List<Expense> models = new ArrayList<Expense>(soapModels.length);
+
+		for (ExpenseSoap soapModel : soapModels) {
+			models.add(toModel(soapModel));
+		}
+
+		return models;
+	}
 
 	public Class<?> getModelClass() {
 		return Expense.class;
@@ -111,6 +152,7 @@ public class ExpenseModelImpl extends BaseModelImpl<Expense>
 		setPrimaryKey(((Long)primaryKeyObj).longValue());
 	}
 
+	@JSON
 	public long getExpenseId() {
 		return _expenseId;
 	}
@@ -119,14 +161,16 @@ public class ExpenseModelImpl extends BaseModelImpl<Expense>
 		_expenseId = expenseId;
 	}
 
-	public Date getBilledDate() {
-		return _billedDate;
+	@JSON
+	public long getProjectId() {
+		return _projectId;
 	}
 
-	public void setBilledDate(Date billedDate) {
-		_billedDate = billedDate;
+	public void setProjectId(long projectId) {
+		_projectId = projectId;
 	}
 
+	@JSON
 	public String getDescription() {
 		if (_description == null) {
 			return StringPool.BLANK;
@@ -140,14 +184,16 @@ public class ExpenseModelImpl extends BaseModelImpl<Expense>
 		_description = description;
 	}
 
-	public long getProjectId() {
-		return _projectId;
+	@JSON
+	public Date getPurchasedDate() {
+		return _purchasedDate;
 	}
 
-	public void setProjectId(long projectId) {
-		_projectId = projectId;
+	public void setPurchasedDate(Date purchasedDate) {
+		_purchasedDate = purchasedDate;
 	}
 
+	@JSON
 	public int getType() {
 		return _type;
 	}
@@ -156,6 +202,7 @@ public class ExpenseModelImpl extends BaseModelImpl<Expense>
 		_type = type;
 	}
 
+	@JSON
 	public double getValue() {
 		return _value;
 	}
@@ -164,12 +211,13 @@ public class ExpenseModelImpl extends BaseModelImpl<Expense>
 		_value = value;
 	}
 
-	public long getDlFieldEntryId() {
-		return _dlFieldEntryId;
+	@JSON
+	public long getFileEntryId() {
+		return _fileEntryId;
 	}
 
-	public void setDlFieldEntryId(long dlFieldEntryId) {
-		_dlFieldEntryId = dlFieldEntryId;
+	public void setFileEntryId(long fileEntryId) {
+		_fileEntryId = fileEntryId;
 	}
 
 	@Override
@@ -208,12 +256,12 @@ public class ExpenseModelImpl extends BaseModelImpl<Expense>
 		ExpenseImpl expenseImpl = new ExpenseImpl();
 
 		expenseImpl.setExpenseId(getExpenseId());
-		expenseImpl.setBilledDate(getBilledDate());
-		expenseImpl.setDescription(getDescription());
 		expenseImpl.setProjectId(getProjectId());
+		expenseImpl.setDescription(getDescription());
+		expenseImpl.setPurchasedDate(getPurchasedDate());
 		expenseImpl.setType(getType());
 		expenseImpl.setValue(getValue());
-		expenseImpl.setDlFieldEntryId(getDlFieldEntryId());
+		expenseImpl.setFileEntryId(getFileEntryId());
 
 		expenseImpl.resetOriginalValues();
 
@@ -223,7 +271,8 @@ public class ExpenseModelImpl extends BaseModelImpl<Expense>
 	public int compareTo(Expense expense) {
 		int value = 0;
 
-		value = DateUtil.compareTo(getBilledDate(), expense.getBilledDate());
+		value = DateUtil.compareTo(getPurchasedDate(),
+				expense.getPurchasedDate());
 
 		value = value * -1;
 
@@ -274,14 +323,7 @@ public class ExpenseModelImpl extends BaseModelImpl<Expense>
 
 		expenseCacheModel.expenseId = getExpenseId();
 
-		Date billedDate = getBilledDate();
-
-		if (billedDate != null) {
-			expenseCacheModel.billedDate = billedDate.getTime();
-		}
-		else {
-			expenseCacheModel.billedDate = Long.MIN_VALUE;
-		}
+		expenseCacheModel.projectId = getProjectId();
 
 		expenseCacheModel.description = getDescription();
 
@@ -291,13 +333,20 @@ public class ExpenseModelImpl extends BaseModelImpl<Expense>
 			expenseCacheModel.description = null;
 		}
 
-		expenseCacheModel.projectId = getProjectId();
+		Date purchasedDate = getPurchasedDate();
+
+		if (purchasedDate != null) {
+			expenseCacheModel.purchasedDate = purchasedDate.getTime();
+		}
+		else {
+			expenseCacheModel.purchasedDate = Long.MIN_VALUE;
+		}
 
 		expenseCacheModel.type = getType();
 
 		expenseCacheModel.value = getValue();
 
-		expenseCacheModel.dlFieldEntryId = getDlFieldEntryId();
+		expenseCacheModel.fileEntryId = getFileEntryId();
 
 		return expenseCacheModel;
 	}
@@ -308,18 +357,18 @@ public class ExpenseModelImpl extends BaseModelImpl<Expense>
 
 		sb.append("{expenseId=");
 		sb.append(getExpenseId());
-		sb.append(", billedDate=");
-		sb.append(getBilledDate());
-		sb.append(", description=");
-		sb.append(getDescription());
 		sb.append(", projectId=");
 		sb.append(getProjectId());
+		sb.append(", description=");
+		sb.append(getDescription());
+		sb.append(", purchasedDate=");
+		sb.append(getPurchasedDate());
 		sb.append(", type=");
 		sb.append(getType());
 		sb.append(", value=");
 		sb.append(getValue());
-		sb.append(", dlFieldEntryId=");
-		sb.append(getDlFieldEntryId());
+		sb.append(", fileEntryId=");
+		sb.append(getFileEntryId());
 		sb.append("}");
 
 		return sb.toString();
@@ -337,16 +386,16 @@ public class ExpenseModelImpl extends BaseModelImpl<Expense>
 		sb.append(getExpenseId());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>billedDate</column-name><column-value><![CDATA[");
-		sb.append(getBilledDate());
+			"<column><column-name>projectId</column-name><column-value><![CDATA[");
+		sb.append(getProjectId());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>description</column-name><column-value><![CDATA[");
 		sb.append(getDescription());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>projectId</column-name><column-value><![CDATA[");
-		sb.append(getProjectId());
+			"<column><column-name>purchasedDate</column-name><column-value><![CDATA[");
+		sb.append(getPurchasedDate());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>type</column-name><column-value><![CDATA[");
@@ -357,8 +406,8 @@ public class ExpenseModelImpl extends BaseModelImpl<Expense>
 		sb.append(getValue());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>dlFieldEntryId</column-name><column-value><![CDATA[");
-		sb.append(getDlFieldEntryId());
+			"<column><column-name>fileEntryId</column-name><column-value><![CDATA[");
+		sb.append(getFileEntryId());
 		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
@@ -371,12 +420,12 @@ public class ExpenseModelImpl extends BaseModelImpl<Expense>
 			Expense.class
 		};
 	private long _expenseId;
-	private Date _billedDate;
-	private String _description;
 	private long _projectId;
+	private String _description;
+	private Date _purchasedDate;
 	private int _type;
 	private double _value;
-	private long _dlFieldEntryId;
+	private long _fileEntryId;
 	private transient ExpandoBridge _expandoBridge;
 	private Expense _escapedModelProxy;
 }

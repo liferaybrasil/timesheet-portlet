@@ -49,7 +49,7 @@ public class ProjectImpl extends ProjectBaseImpl {
 	}
 
 	public double getTotalExpenseCost() throws SystemException {
-		long total = 0;
+		double total = 0;
 
 		List<Expense> expenses = ExpenseLocalServiceUtil.getExpenseByProjectId(
 				getProjectId());

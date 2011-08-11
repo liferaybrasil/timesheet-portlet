@@ -5,15 +5,28 @@
 	<bean id="com.liferay.timesheet.service.ExpenseLocalServiceUtil" class="com.liferay.timesheet.service.ExpenseLocalServiceUtil">
 		<property name="service" ref="com.liferay.timesheet.service.ExpenseLocalService" />
 	</bean>
+	<bean id="com.liferay.timesheet.service.ExpenseService" class="com.liferay.timesheet.service.impl.ExpenseServiceImpl" />
+	<bean id="com.liferay.timesheet.service.ExpenseServiceUtil" class="com.liferay.timesheet.service.ExpenseServiceUtil">
+		<property name="service" ref="com.liferay.timesheet.service.ExpenseService" />
+	</bean>
 	<bean id="com.liferay.timesheet.service.persistence.ExpensePersistence" class="com.liferay.timesheet.service.persistence.ExpensePersistenceImpl" parent="basePersistence" />
 	<bean id="com.liferay.timesheet.service.ProjectLocalService" class="com.liferay.timesheet.service.impl.ProjectLocalServiceImpl" />
 	<bean id="com.liferay.timesheet.service.ProjectLocalServiceUtil" class="com.liferay.timesheet.service.ProjectLocalServiceUtil">
 		<property name="service" ref="com.liferay.timesheet.service.ProjectLocalService" />
 	</bean>
+	<bean id="com.liferay.timesheet.service.ProjectService" class="com.liferay.timesheet.service.impl.ProjectServiceImpl" />
+	<bean id="com.liferay.timesheet.service.ProjectServiceUtil" class="com.liferay.timesheet.service.ProjectServiceUtil">
+		<property name="service" ref="com.liferay.timesheet.service.ProjectService" />
+	</bean>
 	<bean id="com.liferay.timesheet.service.persistence.ProjectPersistence" class="com.liferay.timesheet.service.persistence.ProjectPersistenceImpl" parent="basePersistence" />
+	<bean id="com.liferay.timesheet.service.persistence.ProjectFinder" class="com.liferay.timesheet.service.persistence.ProjectFinderImpl" parent="basePersistence" />
 	<bean id="com.liferay.timesheet.service.TaskLocalService" class="com.liferay.timesheet.service.impl.TaskLocalServiceImpl" />
 	<bean id="com.liferay.timesheet.service.TaskLocalServiceUtil" class="com.liferay.timesheet.service.TaskLocalServiceUtil">
 		<property name="service" ref="com.liferay.timesheet.service.TaskLocalService" />
+	</bean>
+	<bean id="com.liferay.timesheet.service.TaskService" class="com.liferay.timesheet.service.impl.TaskServiceImpl" />
+	<bean id="com.liferay.timesheet.service.TaskServiceUtil" class="com.liferay.timesheet.service.TaskServiceUtil">
+		<property name="service" ref="com.liferay.timesheet.service.TaskService" />
 	</bean>
 	<bean id="com.liferay.timesheet.service.persistence.TaskPersistence" class="com.liferay.timesheet.service.persistence.TaskPersistenceImpl" parent="basePersistence" />
 </beans>

@@ -10,16 +10,16 @@
 	<mapped-superclass class="com.liferay.timesheet.model.impl.ExpenseModelImpl">
 		<attributes>
 			<id name="expenseId" />
-			<basic name="billedDate">
+			<basic name="projectId" />
+			<basic name="description" />
+			<basic name="purchasedDate">
 				<temporal>TIMESTAMP</temporal>
 			</basic>
-			<basic name="description" />
-			<basic name="projectId" />
 			<basic name="type">
 				<column name="TYPE_" />
 			</basic>
 			<basic name="value" />
-			<basic name="dlFieldEntryId" />
+			<basic name="fileEntryId" />
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />
 		</attributes>
@@ -32,10 +32,10 @@
 			<basic name="endDate">
 				<temporal>TIMESTAMP</temporal>
 			</basic>
-			<basic name="name" />
 			<basic name="startDate">
 				<temporal>TIMESTAMP</temporal>
 			</basic>
+			<basic name="name" />
 			<basic name="wage" />
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />
@@ -45,16 +45,16 @@
 	<mapped-superclass class="com.liferay.timesheet.model.impl.TaskModelImpl">
 		<attributes>
 			<id name="taskId" />
-			<basic name="endDate">
-				<temporal>TIMESTAMP</temporal>
-			</basic>
-			<basic name="name" />
 			<basic name="projectId" />
+			<basic name="name" />
+			<basic name="type">
+				<column name="TYPE_" />
+			</basic>
 			<basic name="startDate">
 				<temporal>TIMESTAMP</temporal>
 			</basic>
-			<basic name="type">
-				<column name="TYPE_" />
+			<basic name="endDate">
+				<temporal>TIMESTAMP</temporal>
 			</basic>
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />
@@ -63,6 +63,7 @@
 	<entity class="com.liferay.timesheet.model.impl.ExpenseImpl" name="Expense">
 		<table name="Timesheet_Expense" />
 		<attributes>
+			<transient name="fileName" />
 			<transient name="filePath" />
 		</attributes>
 	</entity>

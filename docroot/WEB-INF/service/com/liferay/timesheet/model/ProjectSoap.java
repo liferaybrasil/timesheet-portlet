@@ -21,9 +21,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * This class is used by SOAP remote services.
+ * This class is used by SOAP remote services, specifically {@link com.liferay.timesheet.service.http.ProjectServiceSoap}.
  *
  * @author    Brian Wing Shun Chan
+ * @see       com.liferay.timesheet.service.http.ProjectServiceSoap
  * @generated
  */
 public class ProjectSoap implements Serializable {
@@ -34,8 +35,8 @@ public class ProjectSoap implements Serializable {
 		soapModel.setUserId(model.getUserId());
 		soapModel.setDescription(model.getDescription());
 		soapModel.setEndDate(model.getEndDate());
-		soapModel.setName(model.getName());
 		soapModel.setStartDate(model.getStartDate());
+		soapModel.setName(model.getName());
 		soapModel.setWage(model.getWage());
 
 		return soapModel;
@@ -121,20 +122,20 @@ public class ProjectSoap implements Serializable {
 		_endDate = endDate;
 	}
 
-	public String getName() {
-		return _name;
-	}
-
-	public void setName(String name) {
-		_name = name;
-	}
-
 	public Date getStartDate() {
 		return _startDate;
 	}
 
 	public void setStartDate(Date startDate) {
 		_startDate = startDate;
+	}
+
+	public String getName() {
+		return _name;
+	}
+
+	public void setName(String name) {
+		_name = name;
 	}
 
 	public double getWage() {
@@ -149,7 +150,7 @@ public class ProjectSoap implements Serializable {
 	private long _userId;
 	private String _description;
 	private Date _endDate;
-	private String _name;
 	private Date _startDate;
+	private String _name;
 	private double _wage;
 }

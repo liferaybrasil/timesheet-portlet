@@ -18,7 +18,7 @@
 		<supports>
 			<mime-type>text/html</mime-type>
 		</supports>
-		<resource-bundle>com.liferay.timesheet.content.Language</resource-bundle>
+		<resource-bundle>content.Language</resource-bundle>
 		<portlet-info>
 			<title>Timesheet</title>
 			<short-title>Timesheet</short-title>

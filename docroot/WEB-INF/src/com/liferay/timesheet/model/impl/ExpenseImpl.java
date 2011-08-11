@@ -14,6 +14,8 @@
 
 package com.liferay.timesheet.model.impl;
 
+import com.liferay.timesheet.util.PortletPropsValues;
+
 /**
  * @author Antonio Junior
  */
@@ -24,11 +26,7 @@ public class ExpenseImpl extends ExpenseBaseImpl {
 	}
 
 	public String getTypeDescription() {
-		return _types[this.getType()];
-	}
-
-	public static String[] getAllTypes() {
-		return _types;
+		return PortletPropsValues.EXPENSE_TYPES[getType()];
 	}
 
 	public String getFilePath() {
@@ -38,8 +36,16 @@ public class ExpenseImpl extends ExpenseBaseImpl {
 	public void setFilePath(String filePath) {
 		_filePath = filePath;
 	}
+	
+	public String getFileName() {
+		return _fileName;
+	}
 
-	private static String[] _types = {"Food", "Transport"};
+	public void setFileName(String fileName) {
+		_fileName = fileName;
+	}
+
 	private String _filePath;
+	private String _fileName;
 
 }

@@ -14,63 +14,77 @@
  */
 --%>
 
-<%@ page import="com.liferay.portal.service.UserServiceUtil" %>
-<%@ include file="/html/init.jsp" %>
+<%@ include file="/html/init.jsp"%>
 
 <%
 	String redirect = PortalUtil.getCurrentURL(renderRequest);
 	int count = ProjectLocalServiceUtil.getProjectsCount();
 	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+	PortletURL portletURL = renderResponse.createRenderURL();
 %>
 
-<aui:button-row>
-	<portlet:renderURL var="addProjectURL">
-		<portlet:param name="jspPage" value="/html/edit_project.jsp" />
-		<portlet:param name="redirect" value="<%= redirect %>" />
-	</portlet:renderURL>
+<liferay-util:include page="/html/toolbar.jsp"
+	servletContext="<%= application %>" />
 
-	<aui:button value="add-project"
-		onClick="<%= addProjectURL.toString() %>" />
-</aui:button-row>
+<aui:form action="<%= portletURL.toString() %>" method="post" name="fm">
+	<aui:input name="redirect" type="hidden"
+		value="<%= portletURL.toString() %>" />
 
-<liferay-ui:search-container
-	emptyResultsMessage="project-empty-results-message">
+	<liferay-ui:search-container
+		searchContainer="<%= new ProjectSearch(renderRequest, portletURL) %>">
 
-	<liferay-ui:search-container-results
-		results="<%= ProjectLocalServiceUtil.getProjects(searchContainer.getStart(), searchContainer.getEnd()) %>"
-		total="<%= count %>" />
+		<%
+			ProjectDisplayTerms displayTerms = (ProjectDisplayTerms) searchContainer.getDisplayTerms();
+			ProjectSearchTerms searchTerms = (ProjectSearchTerms) searchContainer.getSearchTerms();
+		%>
 
-	<liferay-ui:search-container-row
-		className="com.liferay.timesheet.model.Project"
-		keyProperty="projectId" modelVar="project">
+		<liferay-util:include page="/html/project_search.jsp"
+			servletContext="<%= application %>" />
 
-		<liferay-ui:search-container-row-parameter name="project"
-			value="<%= project %>" />
+		<liferay-ui:search-container-results>
+			<%@ include file="/html/project_search_results.jspf"%>
+		</liferay-ui:search-container-results>
 
-		<portlet:renderURL var="rowProjectDetailsURL">
-			<portlet:param name="jspPage" value="/html/project_details.jsp" />
-			<portlet:param name="redirect" value="<%= redirect %>" />
-			<portlet:param name="projectId"
-				value="<%= String.valueOf(project.getProjectId()) %>" />
-		</portlet:renderURL>
+		<liferay-ui:search-container-row
+			className="com.liferay.timesheet.model.Project"
+			keyProperty="projectId" escapedModel="<%= true %>" modelVar="project">
 
-		<liferay-ui:search-container-column-text name="name" property="name" href="<%= rowProjectDetailsURL %>" />
+			<portlet:renderURL var="rowURL">
+				<portlet:param name="jspPage" value="/html/project_details.jsp" />
+				<portlet:param name="redirect"
+					value="<%= searchContainer.getIteratorURL().toString() %>" />
+				<portlet:param name="projectId"
+					value="<%= String.valueOf(project.getProjectId()) %>" />
+			</portlet:renderURL>
 
-		<liferay-ui:search-container-column-text name="responsible" href="<%= rowProjectDetailsURL %>"
-			value='<%= PortalUtil.getUserName(project.getUserId(), "default") %>' />
+			<liferay-ui:search-container-row-parameter name="project"
+				value="<%= project %>" />
 
-		<liferay-ui:search-container-column-text name="description" href="<%= rowProjectDetailsURL %>"
-			property="description" />
+			<liferay-ui:search-container-column-text name="name" property="name"
+				href="<%= rowURL %>" />
 
-		<liferay-ui:search-container-column-text name="startDate" href="<%= rowProjectDetailsURL %>"
-			value="<%= sdf.format(project.getStartDate()) %>" />
+			<liferay-ui:search-container-column-text name="responsible"
+				href="<%= rowURL %>"
+				value='<%= PortalUtil.getUserName(project.getUserId(), "default") %>' />
 
-		<liferay-ui:search-container-column-text name="endDate" href="<%= rowProjectDetailsURL %>"
-			value="<%= sdf.format(project.getEndDate()) %>" />
+			<liferay-ui:search-container-column-text name="description"
+				href="<%= rowURL %>" property="description" />
 
-		<liferay-ui:search-container-column-jsp align="center"
-			path="/html/project_actions.jsp" />
-	</liferay-ui:search-container-row>
+			<liferay-ui:search-container-column-text name="startDate"
+				href="<%= rowURL %>"
+				value="<%= sdf.format(project.getStartDate()) %>" />
 
-	<liferay-ui:search-iterator />
-</liferay-ui:search-container>
+			<liferay-ui:search-container-column-text name="endDate"
+				href="<%= rowURL %>" value="<%= sdf.format(project.getEndDate()) %>" />
+
+			<liferay-ui:search-container-column-jsp align="center"
+				path="/html/project_actions.jsp" />
+		</liferay-ui:search-container-row>
+
+		<div class="separator">
+			<!-- -->
+		</div>
+
+		<liferay-ui:search-iterator />
+	</liferay-ui:search-container>
+</aui:form>

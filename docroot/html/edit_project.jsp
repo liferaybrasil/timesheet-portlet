@@ -15,11 +15,6 @@
 --%>
 
 <%@ page import="com.liferay.portal.kernel.language.LanguageUtil" %>
-<%@ page import="com.liferay.timesheet.InvalidNameException" %>
-<%@ page import="com.liferay.timesheet.InvalidDescriptionException" %>
-<%@ page import="com.liferay.timesheet.InvalidMoneyFormatException" %>
-<%@ page import="com.liferay.timesheet.InvalidDatesException" %>
-
 <%@ include file="/html/init.jsp" %>
 
 <%
@@ -41,6 +36,9 @@
 				project.getEndDate().getDate());
 	}
 %>
+
+<liferay-util:include page="/html/toolbar.jsp" servletContext="<%= application %>" />
+
 <liferay-ui:error exception="<%= InvalidNameException.class %>"
 	message="please-enter-a-valid-name" />
 <liferay-ui:error exception="<%= InvalidDescriptionException.class %>"
@@ -50,7 +48,11 @@
 <liferay-ui:error exception="<%= InvalidDatesException.class %>"
 	message="please-enter-a-valid-period-date" />
 
-<liferay-ui:header backURL="<%= redirect %>"
+<liferay-ui:asset-categories-error />
+
+<liferay-ui:asset-tags-error />
+
+<liferay-ui:header backURL="<%= redirect %>" localizeTitle="<%= project == null %>"
 	title='<%= (project != null) ? project.getName() : "new-project" %>' />
 
 <aui:model-context bean="<%= project %>" model="<%= Project.class %>" />
@@ -59,8 +61,6 @@
 
 <aui:form action="<%= editProjectURL %>" method="POST" name="fm">
 	<aui:fieldset>
-		<aui:input type="hidden" name="currentUrl" value="<%= currentUrl %>" />
-
 		<aui:input type="hidden" name="redirect" value="<%= redirect %>" />
 
 		<aui:input type="hidden" name="userId"

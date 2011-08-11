@@ -14,12 +14,23 @@
 
 package com.liferay.timesheet.portlet;
 
+import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.documentlibrary.model.DLFileEntry;
+import com.liferay.portlet.documentlibrary.model.DLFolder;
+import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
+import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
+import com.liferay.portlet.documentlibrary.service.DLFolderLocalServiceUtil;
+import com.liferay.portlet.imagegallery.NoSuchFolderException;
 import com.liferay.timesheet.InvalidDatesException;
 import com.liferay.timesheet.InvalidDescriptionException;
 import com.liferay.timesheet.InvalidMoneyFormatException;
@@ -71,56 +82,106 @@ public class TimesheetPortlet extends MVCPortlet {
 	public void updateExpense(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
-
-		// TODO CHECAR CURRENT URL, SE ƒ ASSIM MESMO OU DA PRA FAZER POR REDIRECT
-		String currentUrl = ParamUtil.getString(actionRequest, "currentUrl");
-
+		
+		UploadPortletRequest uploadRequest =
+			PortalUtil.getUploadPortletRequest(actionRequest);
+		
 		try {
-			long expenseId = ParamUtil.getLong(actionRequest, "expenseId");
-			long projectId = ParamUtil.getLong(actionRequest, "projectId");
-
+			long expenseId = ParamUtil.getLong(uploadRequest, "expenseId");
+			long projectId = ParamUtil.getLong(uploadRequest, "projectId");
+			long fileEntryId = ParamUtil.getLong(uploadRequest, "fileEntryId");
+			
 			String description = ParamUtil.getString(
-				actionRequest, "description");
+					uploadRequest, "description");
 
-			double value = ParamUtil.getDouble(actionRequest, "value");
+			double value = ParamUtil.getDouble(uploadRequest, "value");
 
-			int billedDateMonth = ParamUtil.getInteger(
-				actionRequest, "billedDateMonth");
-			int billedDateDay = ParamUtil.getInteger(
-				actionRequest, "billedDateDay");
-			int billedDateYear = ParamUtil.getInteger(
-				actionRequest, "billedDateYear");
+			int purchasedDateMonth = ParamUtil.getInteger(
+					uploadRequest, "purchasedDateMonth");
+			int purchasedDateDay = ParamUtil.getInteger(
+					uploadRequest, "purchasedDateDay");
+			int purchasedDateYear = ParamUtil.getInteger(
+					uploadRequest, "purchasedDateYear");
+			
+			int type = ParamUtil.getInteger(uploadRequest, "type");
+			
+			//uploaded file					
+			
+			File file = uploadRequest.getFile("file");
+			String sourceFileName = uploadRequest.getFileName("file");
+			
+			if(Validator.isNotNull(file) &&
+				Validator.isNotNull(sourceFileName)) {
+			
+				if (!file.exists()) {
+					file.createNewFile();
+				}
 
-			UploadPortletRequest uploadRequest = 
-				PortalUtil.getUploadPortletRequest(actionRequest);
+				String contentType = uploadRequest.getContentType("file");			
+				String title = sourceFileName;
+				String changeLog = StringPool.BLANK;
 
-			File file = null;
+				ThemeDisplay themeDisplay = 
+					(ThemeDisplay)actionRequest.getAttribute(
+							WebKeys.THEME_DISPLAY);
+				long groupId = themeDisplay.getScopeGroupId();
 
-			ThemeDisplay themeDisplay =
-				(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+				DLFolder folder = null;
 
-			long groupId = themeDisplay.getScopeGroupId();
+				try {
+					folder = DLFolderLocalServiceUtil.getDLFolder(
+						DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+				} catch (Exception e) {
+					folder = DLFolderLocalServiceUtil.createDLFolder(
+						DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+					folder = DLFolderLocalServiceUtil.addDLFolder(folder);
+				}
 
-			int type = ParamUtil.getInteger(actionRequest, "type");
+				long folderId = folder.getFolderId();			
 
-			if ( expenseId == 0) {
+				ServiceContext serviceContext =
+					ServiceContextFactory.getInstance(
+						DLFileEntry.class.getName(), actionRequest);
+				serviceContext.setAddGroupPermissions(true);
+				serviceContext.setAddGuestPermissions(true);						
+
+				FileEntry fileEntry = null;
+
+				if(fileEntryId > 0) {
+					fileEntry = DLAppServiceUtil.updateFileEntry(
+						fileEntryId, sourceFileName, contentType, title,
+						description, changeLog, true, file, serviceContext);
+				} 
+				else {
+					fileEntry = DLAppServiceUtil.addFileEntry(
+						groupId, folderId, sourceFileName, contentType, title,
+						title, changeLog, file, serviceContext);
+				}
+
+				fileEntryId = fileEntry.getFileEntryId();
+			}
+			
+			if ( expenseId <= 0) {
 				ExpenseLocalServiceUtil.addExpense(
-					projectId, description, billedDateMonth, billedDateDay,
-					billedDateYear, type, value, file, groupId);
+					projectId, description, purchasedDateMonth, 
+					purchasedDateDay, purchasedDateYear, type, value, 
+					fileEntryId);
 			}
 			else {
 				ExpenseLocalServiceUtil.updateExpense(
-					expenseId, projectId, description, billedDateMonth,
-					billedDateDay, billedDateYear, type, value, file, groupId);
+					expenseId, projectId, description, purchasedDateMonth, 
+					purchasedDateDay, purchasedDateYear, type, value, 
+					fileEntryId);
 			}
-		} 
+		}
 		catch (Exception e) {
 			if (e instanceof InvalidDescriptionException ||
 				e instanceof InvalidMoneyFormatException) {
 
 				SessionErrors.add(actionRequest, e.getClass().getName());
 
-				actionResponse.sendRedirect(currentUrl);
+				_renderPage(
+					actionRequest, actionResponse, "/html/edit_expense.jsp");
 			}
 			else {
 				throw e;
@@ -131,8 +192,6 @@ public class TimesheetPortlet extends MVCPortlet {
 	public void updateProject(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
-
-		String currentUrl = ParamUtil.getString(actionRequest, "currentUrl");
 
 		try {
 			long userId = ParamUtil.getLong(actionRequest, "userId");
@@ -159,15 +218,14 @@ public class TimesheetPortlet extends MVCPortlet {
 
 			if ( projectId == 0) {
 				ProjectLocalServiceUtil.addProject(
-					userId, name, wage, description, startDateMonth,
-					startDateDay, startDateYear, endDateMonth, endDateDay,
-					endDateYear);
-			} 
+					userId, description, endDateMonth, endDateDay, endDateYear,
+					startDateMonth, startDateDay, startDateYear, name, wage);
+			}
 			else {
 				ProjectLocalServiceUtil.updateProject(
-					projectId, userId, name, wage, description, startDateMonth,
-					startDateDay, startDateYear, endDateMonth, endDateDay,
-					endDateYear);
+					projectId, userId, description, endDateMonth, endDateDay,
+					endDateYear, startDateMonth, startDateDay, startDateYear,
+					name, wage);
 			}
 		} catch (Exception e) {
 			if (e instanceof InvalidNameException ||
@@ -177,7 +235,8 @@ public class TimesheetPortlet extends MVCPortlet {
 
 				SessionErrors.add(actionRequest, e.getClass().getName());
 
-				actionResponse.sendRedirect(currentUrl);
+				_renderPage(
+					actionRequest, actionResponse, "/html/edit_project.jsp");
 			}
 			else {
 				throw e;
@@ -188,8 +247,6 @@ public class TimesheetPortlet extends MVCPortlet {
 	public void updateTask(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
-
-		String currentUrl = ParamUtil.getString(actionRequest, "currentUrl");
 
 		try {
 			long projectId = ParamUtil.getLong(actionRequest, "projectId");
@@ -236,26 +293,36 @@ public class TimesheetPortlet extends MVCPortlet {
 					projectId, name, type, startDateMonth, startDateDay,
 					startDateYear, startDateHour, startDateMinute, endDateMonth,
 					endDateDay, endDateYear, endDateHour, endDateMinute);
-			} 
+			}
 			else {
 				TaskLocalServiceUtil.updateTask(
 					taskId, projectId, name, type, startDateMonth, startDateDay,
 					startDateYear, startDateHour, startDateMinute, endDateMonth,
 					endDateDay, endDateYear, endDateHour, endDateMinute);
 			}
-		} 
+		}
 		catch (Exception e) {
 			if (e instanceof InvalidNameException ||
 				e instanceof InvalidDatesException) {
 
 				SessionErrors.add(actionRequest, e.getClass().getName());
 
-				actionResponse.sendRedirect(currentUrl);
+				_renderPage(
+					actionRequest, actionResponse, "/html/edit_task.jsp");
 			}
 			else {
 				throw e;
 			}
 		}
+	}
+
+	private void _renderPage(
+			ActionRequest actionRequest, ActionResponse actionResponse,
+			String page) {
+
+		PortalUtil.copyRequestParameters(actionRequest, actionResponse);
+
+		actionResponse.setRenderParameter("jspPage", page);
 	}
 
 }

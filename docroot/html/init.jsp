@@ -52,6 +52,15 @@
 <%@ page import="com.liferay.timesheet.service.ExpenseLocalServiceUtil" %>
 <%@ page import="com.liferay.timesheet.service.ProjectLocalServiceUtil" %>
 <%@ page import="com.liferay.timesheet.service.TaskLocalServiceUtil" %>
+<%@ page import="com.liferay.timesheet.InvalidDescriptionException"%>
+<%@ page import="com.liferay.timesheet.InvalidMoneyFormatException"%>
+<%@ page import="com.liferay.timesheet.InvalidNameException" %>
+<%@ page import="com.liferay.timesheet.InvalidDatesException" %>
+
+<%@ page import="com.liferay.timesheet.search.ProjectSearch" %>
+<%@ page import="com.liferay.timesheet.search.ProjectSearchTerms" %>
+<%@ page import="com.liferay.timesheet.search.ProjectDisplayTerms" %>
+<%@ page import="com.liferay.portal.service.UserServiceUtil" %>
 
 <portlet:defineObjects/>
 <liferay-theme:defineObjects />

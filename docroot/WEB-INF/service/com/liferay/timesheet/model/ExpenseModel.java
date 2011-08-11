@@ -74,18 +74,18 @@ public interface ExpenseModel extends BaseModel<Expense> {
 	public void setExpenseId(long expenseId);
 
 	/**
-	 * Returns the billed date of this expense.
+	 * Returns the project ID of this expense.
 	 *
-	 * @return the billed date of this expense
+	 * @return the project ID of this expense
 	 */
-	public Date getBilledDate();
+	public long getProjectId();
 
 	/**
-	 * Sets the billed date of this expense.
+	 * Sets the project ID of this expense.
 	 *
-	 * @param billedDate the billed date of this expense
+	 * @param projectId the project ID of this expense
 	 */
-	public void setBilledDate(Date billedDate);
+	public void setProjectId(long projectId);
 
 	/**
 	 * Returns the description of this expense.
@@ -103,18 +103,18 @@ public interface ExpenseModel extends BaseModel<Expense> {
 	public void setDescription(String description);
 
 	/**
-	 * Returns the project ID of this expense.
+	 * Returns the purchased date of this expense.
 	 *
-	 * @return the project ID of this expense
+	 * @return the purchased date of this expense
 	 */
-	public long getProjectId();
+	public Date getPurchasedDate();
 
 	/**
-	 * Sets the project ID of this expense.
+	 * Sets the purchased date of this expense.
 	 *
-	 * @param projectId the project ID of this expense
+	 * @param purchasedDate the purchased date of this expense
 	 */
-	public void setProjectId(long projectId);
+	public void setPurchasedDate(Date purchasedDate);
 
 	/**
 	 * Returns the type of this expense.
@@ -145,18 +145,18 @@ public interface ExpenseModel extends BaseModel<Expense> {
 	public void setValue(double value);
 
 	/**
-	 * Returns the dl field entry ID of this expense.
+	 * Returns the file entry ID of this expense.
 	 *
-	 * @return the dl field entry ID of this expense
+	 * @return the file entry ID of this expense
 	 */
-	public long getDlFieldEntryId();
+	public long getFileEntryId();
 
 	/**
-	 * Sets the dl field entry ID of this expense.
+	 * Sets the file entry ID of this expense.
 	 *
-	 * @param dlFieldEntryId the dl field entry ID of this expense
+	 * @param fileEntryId the file entry ID of this expense
 	 */
-	public void setDlFieldEntryId(long dlFieldEntryId);
+	public void setFileEntryId(long fileEntryId);
 
 	public boolean isNew();
 

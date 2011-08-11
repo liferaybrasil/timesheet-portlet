@@ -133,6 +133,20 @@ public interface ProjectModel extends BaseModel<Project> {
 	public void setEndDate(Date endDate);
 
 	/**
+	 * Returns the start date of this project.
+	 *
+	 * @return the start date of this project
+	 */
+	public Date getStartDate();
+
+	/**
+	 * Sets the start date of this project.
+	 *
+	 * @param startDate the start date of this project
+	 */
+	public void setStartDate(Date startDate);
+
+	/**
 	 * Returns the name of this project.
 	 *
 	 * @return the name of this project
@@ -146,20 +160,6 @@ public interface ProjectModel extends BaseModel<Project> {
 	 * @param name the name of this project
 	 */
 	public void setName(String name);
-
-	/**
-	 * Returns the start date of this project.
-	 *
-	 * @return the start date of this project
-	 */
-	public Date getStartDate();
-
-	/**
-	 * Sets the start date of this project.
-	 *
-	 * @param startDate the start date of this project
-	 */
-	public void setStartDate(Date startDate);
 
 	/**
 	 * Returns the wage of this project.

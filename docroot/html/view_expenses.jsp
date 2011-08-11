@@ -17,9 +17,9 @@
 <%@ include file="/html/init.jsp" %>
 
 <%
-	String urlViewExpenses = PortalUtil.getCurrentURL(renderRequest);
-	long pId = ParamUtil.getLong(request, "projectId");
-	List<Expense> expenses = ExpenseLocalServiceUtil.getExpenseByProjectId(pId);
+	long projectId = ParamUtil.getLong(request, "projectId");
+	String currentUrl = PortalUtil.getCurrentURL(renderRequest);
+	List<Expense> expenses = ExpenseLocalServiceUtil.getExpenseByProjectId(projectId);
 	int count = expenses.size();
 	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 %>
@@ -27,15 +27,15 @@
 <aui:button-row>
 	<portlet:renderURL var="addExpenseURL">
 		<portlet:param name="jspPage" value="/html/edit_expense.jsp" />
-		<portlet:param name="projectId" value="<%= String.valueOf(pId) %>" />
-		<portlet:param name="redirect" value="<%= HtmlUtil.escapeHREF(urlViewExpenses) %>" />
+		<portlet:param name="projectId" value="<%= String.valueOf(projectId) %>" />
+		<portlet:param name="redirect" value="<%= HtmlUtil.escapeHREF(currentUrl) %>" />
 	</portlet:renderURL>
 
 	<aui:button value="add-expense" onClick="<%= addExpenseURL.toString() %>" />
 </aui:button-row>
 
 <liferay-ui:search-container
-	emptyResultsMessage="expense-empty-results-message">
+	emptyResultsMessage="no-entries-were-found">
 	<liferay-ui:search-container-results results="<%= expenses %>"
 		total="<%= count %>" />
 
@@ -44,12 +44,12 @@
 		keyProperty="expenseId" modelVar="expense">
 		<liferay-ui:search-container-column-text name="description" property="description" />
 
+		<liferay-ui:search-container-column-text name="purchasedDate"
+			value="<%= sdf.format(expense.getPurchasedDate()) %>" />
+
 		<liferay-ui:search-container-column-text name="value" property="value" />
 
-		<liferay-ui:search-container-column-text name="billedDate"
-			value="<%= sdf.format(expense.getBilledDate()) %>" />
-
-		<liferay-ui:search-container-column-text name="typeDescription"
+		<liferay-ui:search-container-column-text name="typeDescription" translate="<%= true %>"
 			property="typeDescription" />
 
 		<liferay-ui:search-container-column-jsp align="right"

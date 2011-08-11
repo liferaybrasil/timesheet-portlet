@@ -14,9 +14,7 @@
  */
 --%>
 
-<%@ page import="com.liferay.timesheet.InvalidNameException" %>
-<%@ page import="com.liferay.timesheet.InvalidDatesException" %>
-<%@ page import="com.liferay.timesheet.model.impl.TaskImpl" %>
+<%@ page import="com.liferay.timesheet.util.PortletPropsValues" %>
 <%@ include file="/html/init.jsp" %>
 
 <%
@@ -32,7 +30,7 @@ if (taskId > 0) {
 <liferay-ui:error exception="<%= InvalidNameException.class %>" message="please-enter-a-valid-name" />
 <liferay-ui:error exception="<%= InvalidDatesException.class %>" message="please-enter-a-valid-period-date" />
 
-<liferay-ui:header backURL="<%= redirect %>"
+<liferay-ui:header backURL="<%= redirect %>" localizeTitle="<%= task == null %>"
 	title='<%= (task != null) ? task.getName() : "new-task" %>' />
 
 <aui:model-context bean="<%= task %>" model="<%= Task.class %>" />
@@ -41,8 +39,6 @@ if (taskId > 0) {
 
 <aui:form action="<%= editTasktURL %>" method="POST" name="fm">
 	<aui:fieldset>
-		<aui:input type="hidden" name="currentUrl" value="<%= currentUrl %>" />
-
 		<aui:input type="hidden" name="redirect" value="<%= redirect %>" />
 
 		<aui:input type="hidden" name="projectId"
@@ -58,7 +54,7 @@ if (taskId > 0) {
 
 		<aui:select label="type" name="type">
 			<%
-				String[] types = TaskImpl.getAllTypes();
+				String[] types = PortletPropsValues.TASK_TYPES;
 				for (int i = 0; i < types.length; i++) {
 			%>
 

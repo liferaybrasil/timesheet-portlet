@@ -21,9 +21,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * This class is used by SOAP remote services.
+ * This class is used by SOAP remote services, specifically {@link com.liferay.timesheet.service.http.ExpenseServiceSoap}.
  *
  * @author    Brian Wing Shun Chan
+ * @see       com.liferay.timesheet.service.http.ExpenseServiceSoap
  * @generated
  */
 public class ExpenseSoap implements Serializable {
@@ -31,12 +32,12 @@ public class ExpenseSoap implements Serializable {
 		ExpenseSoap soapModel = new ExpenseSoap();
 
 		soapModel.setExpenseId(model.getExpenseId());
-		soapModel.setBilledDate(model.getBilledDate());
-		soapModel.setDescription(model.getDescription());
 		soapModel.setProjectId(model.getProjectId());
+		soapModel.setDescription(model.getDescription());
+		soapModel.setPurchasedDate(model.getPurchasedDate());
 		soapModel.setType(model.getType());
 		soapModel.setValue(model.getValue());
-		soapModel.setDlFieldEntryId(model.getDlFieldEntryId());
+		soapModel.setFileEntryId(model.getFileEntryId());
 
 		return soapModel;
 	}
@@ -97,12 +98,12 @@ public class ExpenseSoap implements Serializable {
 		_expenseId = expenseId;
 	}
 
-	public Date getBilledDate() {
-		return _billedDate;
+	public long getProjectId() {
+		return _projectId;
 	}
 
-	public void setBilledDate(Date billedDate) {
-		_billedDate = billedDate;
+	public void setProjectId(long projectId) {
+		_projectId = projectId;
 	}
 
 	public String getDescription() {
@@ -113,12 +114,12 @@ public class ExpenseSoap implements Serializable {
 		_description = description;
 	}
 
-	public long getProjectId() {
-		return _projectId;
+	public Date getPurchasedDate() {
+		return _purchasedDate;
 	}
 
-	public void setProjectId(long projectId) {
-		_projectId = projectId;
+	public void setPurchasedDate(Date purchasedDate) {
+		_purchasedDate = purchasedDate;
 	}
 
 	public int getType() {
@@ -137,19 +138,19 @@ public class ExpenseSoap implements Serializable {
 		_value = value;
 	}
 
-	public long getDlFieldEntryId() {
-		return _dlFieldEntryId;
+	public long getFileEntryId() {
+		return _fileEntryId;
 	}
 
-	public void setDlFieldEntryId(long dlFieldEntryId) {
-		_dlFieldEntryId = dlFieldEntryId;
+	public void setFileEntryId(long fileEntryId) {
+		_fileEntryId = fileEntryId;
 	}
 
 	private long _expenseId;
-	private Date _billedDate;
-	private String _description;
 	private long _projectId;
+	private String _description;
+	private Date _purchasedDate;
 	private int _type;
 	private double _value;
-	private long _dlFieldEntryId;
+	private long _fileEntryId;
 }

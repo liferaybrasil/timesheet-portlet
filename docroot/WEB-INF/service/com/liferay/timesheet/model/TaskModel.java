@@ -74,18 +74,18 @@ public interface TaskModel extends BaseModel<Task> {
 	public void setTaskId(long taskId);
 
 	/**
-	 * Returns the end date of this task.
+	 * Returns the project ID of this task.
 	 *
-	 * @return the end date of this task
+	 * @return the project ID of this task
 	 */
-	public Date getEndDate();
+	public long getProjectId();
 
 	/**
-	 * Sets the end date of this task.
+	 * Sets the project ID of this task.
 	 *
-	 * @param endDate the end date of this task
+	 * @param projectId the project ID of this task
 	 */
-	public void setEndDate(Date endDate);
+	public void setProjectId(long projectId);
 
 	/**
 	 * Returns the name of this task.
@@ -103,18 +103,18 @@ public interface TaskModel extends BaseModel<Task> {
 	public void setName(String name);
 
 	/**
-	 * Returns the project ID of this task.
+	 * Returns the type of this task.
 	 *
-	 * @return the project ID of this task
+	 * @return the type of this task
 	 */
-	public long getProjectId();
+	public int getType();
 
 	/**
-	 * Sets the project ID of this task.
+	 * Sets the type of this task.
 	 *
-	 * @param projectId the project ID of this task
+	 * @param type the type of this task
 	 */
-	public void setProjectId(long projectId);
+	public void setType(int type);
 
 	/**
 	 * Returns the start date of this task.
@@ -131,18 +131,18 @@ public interface TaskModel extends BaseModel<Task> {
 	public void setStartDate(Date startDate);
 
 	/**
-	 * Returns the type of this task.
+	 * Returns the end date of this task.
 	 *
-	 * @return the type of this task
+	 * @return the end date of this task
 	 */
-	public int getType();
+	public Date getEndDate();
 
 	/**
-	 * Sets the type of this task.
+	 * Sets the end date of this task.
 	 *
-	 * @param type the type of this task
+	 * @param endDate the end date of this task
 	 */
-	public void setType(int type);
+	public void setEndDate(Date endDate);
 
 	public boolean isNew();
 

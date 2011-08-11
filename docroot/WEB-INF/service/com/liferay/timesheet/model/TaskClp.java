@@ -67,12 +67,12 @@ public class TaskClp extends BaseModelImpl<Task> implements Task {
 		_taskId = taskId;
 	}
 
-	public Date getEndDate() {
-		return _endDate;
+	public long getProjectId() {
+		return _projectId;
 	}
 
-	public void setEndDate(Date endDate) {
-		_endDate = endDate;
+	public void setProjectId(long projectId) {
+		_projectId = projectId;
 	}
 
 	public String getName() {
@@ -83,12 +83,12 @@ public class TaskClp extends BaseModelImpl<Task> implements Task {
 		_name = name;
 	}
 
-	public long getProjectId() {
-		return _projectId;
+	public int getType() {
+		return _type;
 	}
 
-	public void setProjectId(long projectId) {
-		_projectId = projectId;
+	public void setType(int type) {
+		_type = type;
 	}
 
 	public Date getStartDate() {
@@ -99,12 +99,12 @@ public class TaskClp extends BaseModelImpl<Task> implements Task {
 		_startDate = startDate;
 	}
 
-	public int getType() {
-		return _type;
+	public Date getEndDate() {
+		return _endDate;
 	}
 
-	public void setType(int type) {
-		_type = type;
+	public void setEndDate(Date endDate) {
+		_endDate = endDate;
 	}
 
 	public long getTotalHours() {
@@ -135,11 +135,11 @@ public class TaskClp extends BaseModelImpl<Task> implements Task {
 		TaskClp clone = new TaskClp();
 
 		clone.setTaskId(getTaskId());
-		clone.setEndDate(getEndDate());
-		clone.setName(getName());
 		clone.setProjectId(getProjectId());
-		clone.setStartDate(getStartDate());
+		clone.setName(getName());
 		clone.setType(getType());
+		clone.setStartDate(getStartDate());
+		clone.setEndDate(getEndDate());
 
 		return clone;
 	}
@@ -194,16 +194,16 @@ public class TaskClp extends BaseModelImpl<Task> implements Task {
 
 		sb.append("{taskId=");
 		sb.append(getTaskId());
-		sb.append(", endDate=");
-		sb.append(getEndDate());
-		sb.append(", name=");
-		sb.append(getName());
 		sb.append(", projectId=");
 		sb.append(getProjectId());
-		sb.append(", startDate=");
-		sb.append(getStartDate());
+		sb.append(", name=");
+		sb.append(getName());
 		sb.append(", type=");
 		sb.append(getType());
+		sb.append(", startDate=");
+		sb.append(getStartDate());
+		sb.append(", endDate=");
+		sb.append(getEndDate());
 		sb.append("}");
 
 		return sb.toString();
@@ -221,24 +221,24 @@ public class TaskClp extends BaseModelImpl<Task> implements Task {
 		sb.append(getTaskId());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>endDate</column-name><column-value><![CDATA[");
-		sb.append(getEndDate());
+			"<column><column-name>projectId</column-name><column-value><![CDATA[");
+		sb.append(getProjectId());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>name</column-name><column-value><![CDATA[");
 		sb.append(getName());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>projectId</column-name><column-value><![CDATA[");
-		sb.append(getProjectId());
+			"<column><column-name>type</column-name><column-value><![CDATA[");
+		sb.append(getType());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>startDate</column-name><column-value><![CDATA[");
 		sb.append(getStartDate());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>type</column-name><column-value><![CDATA[");
-		sb.append(getType());
+			"<column><column-name>endDate</column-name><column-value><![CDATA[");
+		sb.append(getEndDate());
 		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
@@ -247,9 +247,9 @@ public class TaskClp extends BaseModelImpl<Task> implements Task {
 	}
 
 	private long _taskId;
-	private Date _endDate;
-	private String _name;
 	private long _projectId;
-	private Date _startDate;
+	private String _name;
 	private int _type;
+	private Date _startDate;
+	private Date _endDate;
 }

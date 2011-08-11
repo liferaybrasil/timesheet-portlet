@@ -297,11 +297,11 @@ public class TaskPersistenceImpl extends BasePersistenceImpl<Task>
 		taskImpl.setPrimaryKey(task.getPrimaryKey());
 
 		taskImpl.setTaskId(task.getTaskId());
-		taskImpl.setEndDate(task.getEndDate());
-		taskImpl.setName(task.getName());
 		taskImpl.setProjectId(task.getProjectId());
-		taskImpl.setStartDate(task.getStartDate());
+		taskImpl.setName(task.getName());
 		taskImpl.setType(task.getType());
+		taskImpl.setStartDate(task.getStartDate());
+		taskImpl.setEndDate(task.getEndDate());
 
 		return taskImpl;
 	}

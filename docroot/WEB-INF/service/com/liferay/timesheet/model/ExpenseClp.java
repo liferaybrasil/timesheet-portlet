@@ -67,12 +67,12 @@ public class ExpenseClp extends BaseModelImpl<Expense> implements Expense {
 		_expenseId = expenseId;
 	}
 
-	public Date getBilledDate() {
-		return _billedDate;
+	public long getProjectId() {
+		return _projectId;
 	}
 
-	public void setBilledDate(Date billedDate) {
-		_billedDate = billedDate;
+	public void setProjectId(long projectId) {
+		_projectId = projectId;
 	}
 
 	public String getDescription() {
@@ -83,12 +83,12 @@ public class ExpenseClp extends BaseModelImpl<Expense> implements Expense {
 		_description = description;
 	}
 
-	public long getProjectId() {
-		return _projectId;
+	public Date getPurchasedDate() {
+		return _purchasedDate;
 	}
 
-	public void setProjectId(long projectId) {
-		_projectId = projectId;
+	public void setPurchasedDate(Date purchasedDate) {
+		_purchasedDate = purchasedDate;
 	}
 
 	public int getType() {
@@ -107,12 +107,12 @@ public class ExpenseClp extends BaseModelImpl<Expense> implements Expense {
 		_value = value;
 	}
 
-	public long getDlFieldEntryId() {
-		return _dlFieldEntryId;
+	public long getFileEntryId() {
+		return _fileEntryId;
 	}
 
-	public void setDlFieldEntryId(long dlFieldEntryId) {
-		_dlFieldEntryId = dlFieldEntryId;
+	public void setFileEntryId(long fileEntryId) {
+		_fileEntryId = fileEntryId;
 	}
 
 	public java.lang.String getTypeDescription() {
@@ -124,6 +124,14 @@ public class ExpenseClp extends BaseModelImpl<Expense> implements Expense {
 	}
 
 	public void setFilePath(java.lang.String filePath) {
+		throw new UnsupportedOperationException();
+	}
+
+	public java.lang.String getFileName() {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setFileName(java.lang.String fileName) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -147,12 +155,12 @@ public class ExpenseClp extends BaseModelImpl<Expense> implements Expense {
 		ExpenseClp clone = new ExpenseClp();
 
 		clone.setExpenseId(getExpenseId());
-		clone.setBilledDate(getBilledDate());
-		clone.setDescription(getDescription());
 		clone.setProjectId(getProjectId());
+		clone.setDescription(getDescription());
+		clone.setPurchasedDate(getPurchasedDate());
 		clone.setType(getType());
 		clone.setValue(getValue());
-		clone.setDlFieldEntryId(getDlFieldEntryId());
+		clone.setFileEntryId(getFileEntryId());
 
 		return clone;
 	}
@@ -160,7 +168,8 @@ public class ExpenseClp extends BaseModelImpl<Expense> implements Expense {
 	public int compareTo(Expense expense) {
 		int value = 0;
 
-		value = DateUtil.compareTo(getBilledDate(), expense.getBilledDate());
+		value = DateUtil.compareTo(getPurchasedDate(),
+				expense.getPurchasedDate());
 
 		value = value * -1;
 
@@ -207,18 +216,18 @@ public class ExpenseClp extends BaseModelImpl<Expense> implements Expense {
 
 		sb.append("{expenseId=");
 		sb.append(getExpenseId());
-		sb.append(", billedDate=");
-		sb.append(getBilledDate());
-		sb.append(", description=");
-		sb.append(getDescription());
 		sb.append(", projectId=");
 		sb.append(getProjectId());
+		sb.append(", description=");
+		sb.append(getDescription());
+		sb.append(", purchasedDate=");
+		sb.append(getPurchasedDate());
 		sb.append(", type=");
 		sb.append(getType());
 		sb.append(", value=");
 		sb.append(getValue());
-		sb.append(", dlFieldEntryId=");
-		sb.append(getDlFieldEntryId());
+		sb.append(", fileEntryId=");
+		sb.append(getFileEntryId());
 		sb.append("}");
 
 		return sb.toString();
@@ -236,16 +245,16 @@ public class ExpenseClp extends BaseModelImpl<Expense> implements Expense {
 		sb.append(getExpenseId());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>billedDate</column-name><column-value><![CDATA[");
-		sb.append(getBilledDate());
+			"<column><column-name>projectId</column-name><column-value><![CDATA[");
+		sb.append(getProjectId());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>description</column-name><column-value><![CDATA[");
 		sb.append(getDescription());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>projectId</column-name><column-value><![CDATA[");
-		sb.append(getProjectId());
+			"<column><column-name>purchasedDate</column-name><column-value><![CDATA[");
+		sb.append(getPurchasedDate());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>type</column-name><column-value><![CDATA[");
@@ -256,8 +265,8 @@ public class ExpenseClp extends BaseModelImpl<Expense> implements Expense {
 		sb.append(getValue());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>dlFieldEntryId</column-name><column-value><![CDATA[");
-		sb.append(getDlFieldEntryId());
+			"<column><column-name>fileEntryId</column-name><column-value><![CDATA[");
+		sb.append(getFileEntryId());
 		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
@@ -266,10 +275,10 @@ public class ExpenseClp extends BaseModelImpl<Expense> implements Expense {
 	}
 
 	private long _expenseId;
-	private Date _billedDate;
-	private String _description;
 	private long _projectId;
+	private String _description;
+	private Date _purchasedDate;
 	private int _type;
 	private double _value;
-	private long _dlFieldEntryId;
+	private long _fileEntryId;
 }

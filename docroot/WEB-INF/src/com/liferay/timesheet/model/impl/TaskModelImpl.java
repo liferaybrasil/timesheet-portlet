@@ -15,6 +15,7 @@
 package com.liferay.timesheet.model.impl;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
+import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -28,6 +29,7 @@ import com.liferay.portlet.expando.util.ExpandoBridgeFactoryUtil;
 
 import com.liferay.timesheet.model.Task;
 import com.liferay.timesheet.model.TaskModel;
+import com.liferay.timesheet.model.TaskSoap;
 
 import java.io.Serializable;
 
@@ -35,7 +37,9 @@ import java.lang.reflect.Proxy;
 
 import java.sql.Types;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * The base model implementation for the Task service. Represents a row in the &quot;Timesheet_Task&quot; database table, with each column mapped to a property of this class.
@@ -50,6 +54,7 @@ import java.util.Date;
  * @see com.liferay.timesheet.model.TaskModel
  * @generated
  */
+@JSON(strict = true)
 public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
@@ -59,13 +64,13 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 	public static final String TABLE_NAME = "Timesheet_Task";
 	public static final Object[][] TABLE_COLUMNS = {
 			{ "taskId", Types.BIGINT },
-			{ "endDate", Types.TIMESTAMP },
-			{ "name", Types.VARCHAR },
 			{ "projectId", Types.BIGINT },
+			{ "name", Types.VARCHAR },
+			{ "type_", Types.INTEGER },
 			{ "startDate", Types.TIMESTAMP },
-			{ "type_", Types.INTEGER }
+			{ "endDate", Types.TIMESTAMP }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Timesheet_Task (taskId LONG not null primary key,endDate DATE null,name VARCHAR(75) null,projectId LONG,startDate DATE null,type_ INTEGER)";
+	public static final String TABLE_SQL_CREATE = "create table Timesheet_Task (taskId LONG not null primary key,projectId LONG,name VARCHAR(75) null,type_ INTEGER,startDate DATE null,endDate DATE null)";
 	public static final String TABLE_SQL_DROP = "drop table Timesheet_Task";
 	public static final String ORDER_BY_JPQL = " ORDER BY task.startDate DESC";
 	public static final String ORDER_BY_SQL = " ORDER BY Timesheet_Task.startDate DESC";
@@ -78,6 +83,41 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 	public static final boolean FINDER_CACHE_ENABLED = GetterUtil.getBoolean(com.liferay.util.service.ServiceProps.get(
 				"value.object.finder.cache.enabled.com.liferay.timesheet.model.Task"),
 			true);
+
+	/**
+	 * Converts the soap model instance into a normal model instance.
+	 *
+	 * @param soapModel the soap model instance to convert
+	 * @return the normal model instance
+	 */
+	public static Task toModel(TaskSoap soapModel) {
+		Task model = new TaskImpl();
+
+		model.setTaskId(soapModel.getTaskId());
+		model.setProjectId(soapModel.getProjectId());
+		model.setName(soapModel.getName());
+		model.setType(soapModel.getType());
+		model.setStartDate(soapModel.getStartDate());
+		model.setEndDate(soapModel.getEndDate());
+
+		return model;
+	}
+
+	/**
+	 * Converts the soap model instances into normal model instances.
+	 *
+	 * @param soapModels the soap model instances to convert
+	 * @return the normal model instances
+	 */
+	public static List<Task> toModels(TaskSoap[] soapModels) {
+		List<Task> models = new ArrayList<Task>(soapModels.length);
+
+		for (TaskSoap soapModel : soapModels) {
+			models.add(toModel(soapModel));
+		}
+
+		return models;
+	}
 
 	public Class<?> getModelClass() {
 		return Task.class;
@@ -109,6 +149,7 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 		setPrimaryKey(((Long)primaryKeyObj).longValue());
 	}
 
+	@JSON
 	public long getTaskId() {
 		return _taskId;
 	}
@@ -117,14 +158,16 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 		_taskId = taskId;
 	}
 
-	public Date getEndDate() {
-		return _endDate;
+	@JSON
+	public long getProjectId() {
+		return _projectId;
 	}
 
-	public void setEndDate(Date endDate) {
-		_endDate = endDate;
+	public void setProjectId(long projectId) {
+		_projectId = projectId;
 	}
 
+	@JSON
 	public String getName() {
 		if (_name == null) {
 			return StringPool.BLANK;
@@ -138,14 +181,16 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 		_name = name;
 	}
 
-	public long getProjectId() {
-		return _projectId;
+	@JSON
+	public int getType() {
+		return _type;
 	}
 
-	public void setProjectId(long projectId) {
-		_projectId = projectId;
+	public void setType(int type) {
+		_type = type;
 	}
 
+	@JSON
 	public Date getStartDate() {
 		return _startDate;
 	}
@@ -154,12 +199,13 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 		_startDate = startDate;
 	}
 
-	public int getType() {
-		return _type;
+	@JSON
+	public Date getEndDate() {
+		return _endDate;
 	}
 
-	public void setType(int type) {
-		_type = type;
+	public void setEndDate(Date endDate) {
+		_endDate = endDate;
 	}
 
 	@Override
@@ -198,11 +244,11 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 		TaskImpl taskImpl = new TaskImpl();
 
 		taskImpl.setTaskId(getTaskId());
-		taskImpl.setEndDate(getEndDate());
-		taskImpl.setName(getName());
 		taskImpl.setProjectId(getProjectId());
-		taskImpl.setStartDate(getStartDate());
+		taskImpl.setName(getName());
 		taskImpl.setType(getType());
+		taskImpl.setStartDate(getStartDate());
+		taskImpl.setEndDate(getEndDate());
 
 		taskImpl.resetOriginalValues();
 
@@ -263,14 +309,7 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 
 		taskCacheModel.taskId = getTaskId();
 
-		Date endDate = getEndDate();
-
-		if (endDate != null) {
-			taskCacheModel.endDate = endDate.getTime();
-		}
-		else {
-			taskCacheModel.endDate = Long.MIN_VALUE;
-		}
+		taskCacheModel.projectId = getProjectId();
 
 		taskCacheModel.name = getName();
 
@@ -280,7 +319,7 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 			taskCacheModel.name = null;
 		}
 
-		taskCacheModel.projectId = getProjectId();
+		taskCacheModel.type = getType();
 
 		Date startDate = getStartDate();
 
@@ -291,7 +330,14 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 			taskCacheModel.startDate = Long.MIN_VALUE;
 		}
 
-		taskCacheModel.type = getType();
+		Date endDate = getEndDate();
+
+		if (endDate != null) {
+			taskCacheModel.endDate = endDate.getTime();
+		}
+		else {
+			taskCacheModel.endDate = Long.MIN_VALUE;
+		}
 
 		return taskCacheModel;
 	}
@@ -302,16 +348,16 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 
 		sb.append("{taskId=");
 		sb.append(getTaskId());
-		sb.append(", endDate=");
-		sb.append(getEndDate());
-		sb.append(", name=");
-		sb.append(getName());
 		sb.append(", projectId=");
 		sb.append(getProjectId());
-		sb.append(", startDate=");
-		sb.append(getStartDate());
+		sb.append(", name=");
+		sb.append(getName());
 		sb.append(", type=");
 		sb.append(getType());
+		sb.append(", startDate=");
+		sb.append(getStartDate());
+		sb.append(", endDate=");
+		sb.append(getEndDate());
 		sb.append("}");
 
 		return sb.toString();
@@ -329,24 +375,24 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 		sb.append(getTaskId());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>endDate</column-name><column-value><![CDATA[");
-		sb.append(getEndDate());
+			"<column><column-name>projectId</column-name><column-value><![CDATA[");
+		sb.append(getProjectId());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>name</column-name><column-value><![CDATA[");
 		sb.append(getName());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>projectId</column-name><column-value><![CDATA[");
-		sb.append(getProjectId());
+			"<column><column-name>type</column-name><column-value><![CDATA[");
+		sb.append(getType());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>startDate</column-name><column-value><![CDATA[");
 		sb.append(getStartDate());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>type</column-name><column-value><![CDATA[");
-		sb.append(getType());
+			"<column><column-name>endDate</column-name><column-value><![CDATA[");
+		sb.append(getEndDate());
 		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
@@ -359,11 +405,11 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 			Task.class
 		};
 	private long _taskId;
-	private Date _endDate;
-	private String _name;
 	private long _projectId;
-	private Date _startDate;
+	private String _name;
 	private int _type;
+	private Date _startDate;
+	private Date _endDate;
 	private transient ExpandoBridge _expandoBridge;
 	private Task _escapedModelProxy;
 }

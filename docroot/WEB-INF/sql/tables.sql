@@ -1,11 +1,11 @@
 create table Timesheet_Expense (
 	expenseId LONG not null primary key,
-	billedDate DATE null,
-	description VARCHAR(75) null,
 	projectId LONG,
+	description VARCHAR(75) null,
+	purchasedDate DATE null,
 	type_ INTEGER,
 	value DOUBLE,
-	dlFieldEntryId LONG
+	fileEntryId LONG
 );
 
 create table Timesheet_Project (
@@ -13,16 +13,16 @@ create table Timesheet_Project (
 	userId LONG,
 	description VARCHAR(75) null,
 	endDate DATE null,
-	name VARCHAR(75) null,
 	startDate DATE null,
+	name VARCHAR(75) null,
 	wage DOUBLE
 );
 
 create table Timesheet_Task (
 	taskId LONG not null primary key,
-	endDate DATE null,
-	name VARCHAR(75) null,
 	projectId LONG,
+	name VARCHAR(75) null,
+	type_ INTEGER,
 	startDate DATE null,
-	type_ INTEGER
+	endDate DATE null
 );

@@ -3,7 +3,7 @@
 
 <service-builder package-path="com.liferay.timesheet">
 	<namespace>Timesheet</namespace>
-	<entity name="Project" local-service="true" remote-service="false">
+	<entity name="Project" local-service="true" remote-service="true">
 
 		<!-- PK fields -->
 
@@ -17,8 +17,8 @@
 
 		<column name="description" type="String" />
 		<column name="endDate" type="Date" />
-		<column name="name" type="String" />
 		<column name="startDate" type="Date" />
+		<column name="name" type="String" />
 		<column name="wage" type="double" />		
 
 		<!-- Order -->
@@ -26,8 +26,18 @@
 		<order by="desc">
 			<order-column name="startDate" />
 		</order>
+		
+		<!-- Finder methods -->
+		
+		<finder name="Name" return-type="Collection">
+			<finder-column name="name" />
+		</finder>
+		<finder name="N_D" return-type="Collection">
+			<finder-column name="name" />
+			<finder-column name="description" />
+		</finder>
 	</entity>
-	<entity name="Task" local-service="true" remote-service="false">
+	<entity name="Task" local-service="true" remote-service="true">
 	
 		<!-- PK fields -->
 	
@@ -35,11 +45,11 @@
 		
 		<!-- Other fields -->
 		
-		<column name="endDate" type="Date" />
-		<column name="name" type="String" />
 		<column name="projectId" type="long" />
-		<column name="startDate" type="Date" />
+		<column name="name" type="String" />
 		<column name="type" type="int" />
+		<column name="startDate" type="Date" />
+		<column name="endDate" type="Date" />		
 		
 		<!-- Order -->
 		
@@ -53,7 +63,7 @@
 			<finder-column name="projectId" />
 		</finder>
 	</entity>
-	<entity name="Expense" local-service="true" remote-service="false">
+	<entity name="Expense" local-service="true" remote-service="true">
 	
 		<!-- PK fields -->
 	
@@ -61,17 +71,17 @@
 		
 		<!-- Other fields -->
 		
-		<column name="billedDate" type="Date" />
-		<column name="description" type="String" />
 		<column name="projectId" type="long" />
+		<column name="description" type="String" />
+		<column name="purchasedDate" type="Date" />		
 		<column name="type" type="int" />
 		<column name="value" type="double" />
-		<column name="dlFieldEntryId" type="long" />
+		<column name="fileEntryId" type="long" />
 		
 		<!-- Order -->
 		
 		<order by="desc">
-			<order-column name="billedDate" />
+			<order-column name="purchasedDate" />
 		</order>
 		
 		<!-- Finder methods -->

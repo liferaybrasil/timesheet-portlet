@@ -21,9 +21,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * This class is used by SOAP remote services.
+ * This class is used by SOAP remote services, specifically {@link com.liferay.timesheet.service.http.TaskServiceSoap}.
  *
  * @author    Brian Wing Shun Chan
+ * @see       com.liferay.timesheet.service.http.TaskServiceSoap
  * @generated
  */
 public class TaskSoap implements Serializable {
@@ -31,11 +32,11 @@ public class TaskSoap implements Serializable {
 		TaskSoap soapModel = new TaskSoap();
 
 		soapModel.setTaskId(model.getTaskId());
-		soapModel.setEndDate(model.getEndDate());
-		soapModel.setName(model.getName());
 		soapModel.setProjectId(model.getProjectId());
-		soapModel.setStartDate(model.getStartDate());
+		soapModel.setName(model.getName());
 		soapModel.setType(model.getType());
+		soapModel.setStartDate(model.getStartDate());
+		soapModel.setEndDate(model.getEndDate());
 
 		return soapModel;
 	}
@@ -96,12 +97,12 @@ public class TaskSoap implements Serializable {
 		_taskId = taskId;
 	}
 
-	public Date getEndDate() {
-		return _endDate;
+	public long getProjectId() {
+		return _projectId;
 	}
 
-	public void setEndDate(Date endDate) {
-		_endDate = endDate;
+	public void setProjectId(long projectId) {
+		_projectId = projectId;
 	}
 
 	public String getName() {
@@ -112,12 +113,12 @@ public class TaskSoap implements Serializable {
 		_name = name;
 	}
 
-	public long getProjectId() {
-		return _projectId;
+	public int getType() {
+		return _type;
 	}
 
-	public void setProjectId(long projectId) {
-		_projectId = projectId;
+	public void setType(int type) {
+		_type = type;
 	}
 
 	public Date getStartDate() {
@@ -128,18 +129,18 @@ public class TaskSoap implements Serializable {
 		_startDate = startDate;
 	}
 
-	public int getType() {
-		return _type;
+	public Date getEndDate() {
+		return _endDate;
 	}
 
-	public void setType(int type) {
-		_type = type;
+	public void setEndDate(Date endDate) {
+		_endDate = endDate;
 	}
 
 	private long _taskId;
-	private Date _endDate;
-	private String _name;
 	private long _projectId;
-	private Date _startDate;
+	private String _name;
 	private int _type;
+	private Date _startDate;
+	private Date _endDate;
 }

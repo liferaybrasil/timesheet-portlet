@@ -36,4 +36,8 @@ public interface Expense extends ExpenseModel, PersistedModel {
 	public java.lang.String getFilePath();
 
 	public void setFilePath(java.lang.String filePath);
+
+	public java.lang.String getFileName();
+
+	public void setFileName(java.lang.String fileName);
 }

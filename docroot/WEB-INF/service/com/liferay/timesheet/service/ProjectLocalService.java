@@ -228,16 +228,38 @@ public interface ProjectLocalService extends PersistedModelLocalService {
 	public void setBeanIdentifier(java.lang.String beanIdentifier);
 
 	public com.liferay.timesheet.model.Project addProject(long userId,
-		java.lang.String name, double wage, java.lang.String description,
-		int startDateMonth, int startDateDay, int startDateYear,
-		int endDateMonth, int endDateDay, int endDateYear)
+		java.lang.String description, int endDateMonth, int endDateDay,
+		int endDateYear, int startDateMonth, int startDateDay,
+		int startDateYear, java.lang.String name, double wage)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.List<com.liferay.timesheet.model.Project> search(
+		java.lang.String keywords, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.List<com.liferay.timesheet.model.Project> search(
+		java.lang.String name, java.lang.String description,
+		boolean andOperator, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int searchCount(java.lang.String name, java.lang.String description,
+		boolean andOperator)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int searchCount(java.lang.String keywords)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
 	public com.liferay.timesheet.model.Project updateProject(long projectId,
-		long userId, java.lang.String name, double wage,
-		java.lang.String description, int startDateMonth, int startDateDay,
-		int startDateYear, int endDateMonth, int endDateDay, int endDateYear)
+		long userId, java.lang.String description, int endDateMonth,
+		int endDateDay, int endDateYear, int startDateMonth, int startDateDay,
+		int startDateYear, java.lang.String name, double wage)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 }

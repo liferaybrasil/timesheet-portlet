@@ -100,20 +100,20 @@ public class ProjectClp extends BaseModelImpl<Project> implements Project {
 		_endDate = endDate;
 	}
 
-	public String getName() {
-		return _name;
-	}
-
-	public void setName(String name) {
-		_name = name;
-	}
-
 	public Date getStartDate() {
 		return _startDate;
 	}
 
 	public void setStartDate(Date startDate) {
 		_startDate = startDate;
+	}
+
+	public String getName() {
+		return _name;
+	}
+
+	public void setName(String name) {
+		_name = name;
 	}
 
 	public double getWage() {
@@ -159,8 +159,8 @@ public class ProjectClp extends BaseModelImpl<Project> implements Project {
 		clone.setUserId(getUserId());
 		clone.setDescription(getDescription());
 		clone.setEndDate(getEndDate());
-		clone.setName(getName());
 		clone.setStartDate(getStartDate());
+		clone.setName(getName());
 		clone.setWage(getWage());
 
 		return clone;
@@ -222,10 +222,10 @@ public class ProjectClp extends BaseModelImpl<Project> implements Project {
 		sb.append(getDescription());
 		sb.append(", endDate=");
 		sb.append(getEndDate());
-		sb.append(", name=");
-		sb.append(getName());
 		sb.append(", startDate=");
 		sb.append(getStartDate());
+		sb.append(", name=");
+		sb.append(getName());
 		sb.append(", wage=");
 		sb.append(getWage());
 		sb.append("}");
@@ -257,12 +257,12 @@ public class ProjectClp extends BaseModelImpl<Project> implements Project {
 		sb.append(getEndDate());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>name</column-name><column-value><![CDATA[");
-		sb.append(getName());
-		sb.append("]]></column-value></column>");
-		sb.append(
 			"<column><column-name>startDate</column-name><column-value><![CDATA[");
 		sb.append(getStartDate());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>name</column-name><column-value><![CDATA[");
+		sb.append(getName());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>wage</column-name><column-value><![CDATA[");
@@ -279,7 +279,7 @@ public class ProjectClp extends BaseModelImpl<Project> implements Project {
 	private String _userUuid;
 	private String _description;
 	private Date _endDate;
-	private String _name;
 	private Date _startDate;
+	private String _name;
 	private double _wage;
 }

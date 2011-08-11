@@ -42,10 +42,10 @@ public class ProjectCacheModel implements CacheModel<Project> {
 		sb.append(description);
 		sb.append(", endDate=");
 		sb.append(endDate);
-		sb.append(", name=");
-		sb.append(name);
 		sb.append(", startDate=");
 		sb.append(startDate);
+		sb.append(", name=");
+		sb.append(name);
 		sb.append(", wage=");
 		sb.append(wage);
 		sb.append("}");
@@ -73,18 +73,18 @@ public class ProjectCacheModel implements CacheModel<Project> {
 			projectImpl.setEndDate(new Date(endDate));
 		}
 
-		if (name == null) {
-			projectImpl.setName(StringPool.BLANK);
-		}
-		else {
-			projectImpl.setName(name);
-		}
-
 		if (startDate == Long.MIN_VALUE) {
 			projectImpl.setStartDate(null);
 		}
 		else {
 			projectImpl.setStartDate(new Date(startDate));
+		}
+
+		if (name == null) {
+			projectImpl.setName(StringPool.BLANK);
+		}
+		else {
+			projectImpl.setName(name);
 		}
 
 		projectImpl.setWage(wage);
@@ -98,7 +98,7 @@ public class ProjectCacheModel implements CacheModel<Project> {
 	public long userId;
 	public String description;
 	public long endDate;
-	public String name;
 	public long startDate;
+	public String name;
 	public double wage;
 }

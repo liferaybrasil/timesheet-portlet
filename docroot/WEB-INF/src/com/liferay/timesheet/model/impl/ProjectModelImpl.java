@@ -16,6 +16,7 @@ package com.liferay.timesheet.model.impl;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -30,6 +31,7 @@ import com.liferay.portlet.expando.util.ExpandoBridgeFactoryUtil;
 
 import com.liferay.timesheet.model.Project;
 import com.liferay.timesheet.model.ProjectModel;
+import com.liferay.timesheet.model.ProjectSoap;
 
 import java.io.Serializable;
 
@@ -37,7 +39,9 @@ import java.lang.reflect.Proxy;
 
 import java.sql.Types;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * The base model implementation for the Project service. Represents a row in the &quot;Timesheet_Project&quot; database table, with each column mapped to a property of this class.
@@ -52,6 +56,7 @@ import java.util.Date;
  * @see com.liferay.timesheet.model.ProjectModel
  * @generated
  */
+@JSON(strict = true)
 public class ProjectModelImpl extends BaseModelImpl<Project>
 	implements ProjectModel {
 	/*
@@ -65,11 +70,11 @@ public class ProjectModelImpl extends BaseModelImpl<Project>
 			{ "userId", Types.BIGINT },
 			{ "description", Types.VARCHAR },
 			{ "endDate", Types.TIMESTAMP },
-			{ "name", Types.VARCHAR },
 			{ "startDate", Types.TIMESTAMP },
+			{ "name", Types.VARCHAR },
 			{ "wage", Types.DOUBLE }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Timesheet_Project (projectId LONG not null primary key,userId LONG,description VARCHAR(75) null,endDate DATE null,name VARCHAR(75) null,startDate DATE null,wage DOUBLE)";
+	public static final String TABLE_SQL_CREATE = "create table Timesheet_Project (projectId LONG not null primary key,userId LONG,description VARCHAR(75) null,endDate DATE null,startDate DATE null,name VARCHAR(75) null,wage DOUBLE)";
 	public static final String TABLE_SQL_DROP = "drop table Timesheet_Project";
 	public static final String ORDER_BY_JPQL = " ORDER BY project.startDate DESC";
 	public static final String ORDER_BY_SQL = " ORDER BY Timesheet_Project.startDate DESC";
@@ -82,6 +87,42 @@ public class ProjectModelImpl extends BaseModelImpl<Project>
 	public static final boolean FINDER_CACHE_ENABLED = GetterUtil.getBoolean(com.liferay.util.service.ServiceProps.get(
 				"value.object.finder.cache.enabled.com.liferay.timesheet.model.Project"),
 			true);
+
+	/**
+	 * Converts the soap model instance into a normal model instance.
+	 *
+	 * @param soapModel the soap model instance to convert
+	 * @return the normal model instance
+	 */
+	public static Project toModel(ProjectSoap soapModel) {
+		Project model = new ProjectImpl();
+
+		model.setProjectId(soapModel.getProjectId());
+		model.setUserId(soapModel.getUserId());
+		model.setDescription(soapModel.getDescription());
+		model.setEndDate(soapModel.getEndDate());
+		model.setStartDate(soapModel.getStartDate());
+		model.setName(soapModel.getName());
+		model.setWage(soapModel.getWage());
+
+		return model;
+	}
+
+	/**
+	 * Converts the soap model instances into normal model instances.
+	 *
+	 * @param soapModels the soap model instances to convert
+	 * @return the normal model instances
+	 */
+	public static List<Project> toModels(ProjectSoap[] soapModels) {
+		List<Project> models = new ArrayList<Project>(soapModels.length);
+
+		for (ProjectSoap soapModel : soapModels) {
+			models.add(toModel(soapModel));
+		}
+
+		return models;
+	}
 
 	public Class<?> getModelClass() {
 		return Project.class;
@@ -113,6 +154,7 @@ public class ProjectModelImpl extends BaseModelImpl<Project>
 		setPrimaryKey(((Long)primaryKeyObj).longValue());
 	}
 
+	@JSON
 	public long getProjectId() {
 		return _projectId;
 	}
@@ -121,6 +163,7 @@ public class ProjectModelImpl extends BaseModelImpl<Project>
 		_projectId = projectId;
 	}
 
+	@JSON
 	public long getUserId() {
 		return _userId;
 	}
@@ -137,6 +180,7 @@ public class ProjectModelImpl extends BaseModelImpl<Project>
 		_userUuid = userUuid;
 	}
 
+	@JSON
 	public String getDescription() {
 		if (_description == null) {
 			return StringPool.BLANK;
@@ -150,6 +194,7 @@ public class ProjectModelImpl extends BaseModelImpl<Project>
 		_description = description;
 	}
 
+	@JSON
 	public Date getEndDate() {
 		return _endDate;
 	}
@@ -158,6 +203,16 @@ public class ProjectModelImpl extends BaseModelImpl<Project>
 		_endDate = endDate;
 	}
 
+	@JSON
+	public Date getStartDate() {
+		return _startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		_startDate = startDate;
+	}
+
+	@JSON
 	public String getName() {
 		if (_name == null) {
 			return StringPool.BLANK;
@@ -171,14 +226,7 @@ public class ProjectModelImpl extends BaseModelImpl<Project>
 		_name = name;
 	}
 
-	public Date getStartDate() {
-		return _startDate;
-	}
-
-	public void setStartDate(Date startDate) {
-		_startDate = startDate;
-	}
-
+	@JSON
 	public double getWage() {
 		return _wage;
 	}
@@ -226,8 +274,8 @@ public class ProjectModelImpl extends BaseModelImpl<Project>
 		projectImpl.setUserId(getUserId());
 		projectImpl.setDescription(getDescription());
 		projectImpl.setEndDate(getEndDate());
-		projectImpl.setName(getName());
 		projectImpl.setStartDate(getStartDate());
+		projectImpl.setName(getName());
 		projectImpl.setWage(getWage());
 
 		projectImpl.resetOriginalValues();
@@ -308,14 +356,6 @@ public class ProjectModelImpl extends BaseModelImpl<Project>
 			projectCacheModel.endDate = Long.MIN_VALUE;
 		}
 
-		projectCacheModel.name = getName();
-
-		String name = projectCacheModel.name;
-
-		if ((name != null) && (name.length() == 0)) {
-			projectCacheModel.name = null;
-		}
-
 		Date startDate = getStartDate();
 
 		if (startDate != null) {
@@ -323,6 +363,14 @@ public class ProjectModelImpl extends BaseModelImpl<Project>
 		}
 		else {
 			projectCacheModel.startDate = Long.MIN_VALUE;
+		}
+
+		projectCacheModel.name = getName();
+
+		String name = projectCacheModel.name;
+
+		if ((name != null) && (name.length() == 0)) {
+			projectCacheModel.name = null;
 		}
 
 		projectCacheModel.wage = getWage();
@@ -342,10 +390,10 @@ public class ProjectModelImpl extends BaseModelImpl<Project>
 		sb.append(getDescription());
 		sb.append(", endDate=");
 		sb.append(getEndDate());
-		sb.append(", name=");
-		sb.append(getName());
 		sb.append(", startDate=");
 		sb.append(getStartDate());
+		sb.append(", name=");
+		sb.append(getName());
 		sb.append(", wage=");
 		sb.append(getWage());
 		sb.append("}");
@@ -377,12 +425,12 @@ public class ProjectModelImpl extends BaseModelImpl<Project>
 		sb.append(getEndDate());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>name</column-name><column-value><![CDATA[");
-		sb.append(getName());
-		sb.append("]]></column-value></column>");
-		sb.append(
 			"<column><column-name>startDate</column-name><column-value><![CDATA[");
 		sb.append(getStartDate());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>name</column-name><column-value><![CDATA[");
+		sb.append(getName());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>wage</column-name><column-value><![CDATA[");
@@ -403,8 +451,8 @@ public class ProjectModelImpl extends BaseModelImpl<Project>
 	private String _userUuid;
 	private String _description;
 	private Date _endDate;
-	private String _name;
 	private Date _startDate;
+	private String _name;
 	private double _wage;
 	private transient ExpandoBridge _expandoBridge;
 	private Project _escapedModelProxy;

@@ -3,28 +3,28 @@
 <model-hints>
 	<model name="com.liferay.timesheet.model.Expense">
 		<field name="expenseId" type="long" />
-		<field name="billedDate" type="Date" />
-		<field name="description" type="String" />
 		<field name="projectId" type="long" />
+		<field name="description" type="String" />
+		<field name="purchasedDate" type="Date" />
 		<field name="type" type="int" />
 		<field name="value" type="double" />
-		<field name="dlFieldEntryId" type="long" />
+		<field name="fileEntryId" type="long" />
 	</model>
 	<model name="com.liferay.timesheet.model.Project">
 		<field name="projectId" type="long" />
 		<field name="userId" type="long" />
 		<field name="description" type="String" />
 		<field name="endDate" type="Date" />
-		<field name="name" type="String" />
 		<field name="startDate" type="Date" />
+		<field name="name" type="String" />
 		<field name="wage" type="double" />
 	</model>
 	<model name="com.liferay.timesheet.model.Task">
 		<field name="taskId" type="long" />
-		<field name="endDate" type="Date" />
-		<field name="name" type="String" />
 		<field name="projectId" type="long" />
-		<field name="startDate" type="Date" />
+		<field name="name" type="String" />
 		<field name="type" type="int" />
+		<field name="startDate" type="Date" />
+		<field name="endDate" type="Date" />
 	</model>
 </model-hints>

@@ -228,9 +228,9 @@ public interface ExpenseLocalService extends PersistedModelLocalService {
 	public void setBeanIdentifier(java.lang.String beanIdentifier);
 
 	public com.liferay.timesheet.model.Expense addExpense(long projectId,
-		java.lang.String description, int billledDateMonth, int billledDateDay,
-		int billledDateYear, int type, double value, java.io.File file,
-		long groupId)
+		java.lang.String description, int purchasedDateMonth,
+		int purchasedDateDay, int purchasedDateYear, int type, double value,
+		long fileEntryId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
@@ -240,9 +240,9 @@ public interface ExpenseLocalService extends PersistedModelLocalService {
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	public com.liferay.timesheet.model.Expense updateExpense(long expenseId,
-		long projectId, java.lang.String description, int billledDateDay,
-		int billledDateMonth, int billledDateYear, int type, double value,
-		java.io.File file, long groupId)
+		long projectId, java.lang.String description, int purchasedDateMonth,
+		int purchasedDateDay, int purchasedDateYear, int type, double value,
+		long fileEntryId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 }

@@ -19,8 +19,11 @@ import com.liferay.portal.kernel.messaging.Message;
 
 import com.liferay.timesheet.service.ClpSerializer;
 import com.liferay.timesheet.service.ExpenseLocalServiceUtil;
+import com.liferay.timesheet.service.ExpenseServiceUtil;
 import com.liferay.timesheet.service.ProjectLocalServiceUtil;
+import com.liferay.timesheet.service.ProjectServiceUtil;
 import com.liferay.timesheet.service.TaskLocalServiceUtil;
+import com.liferay.timesheet.service.TaskServiceUtil;
 
 /**
  * @author Brian Wing Shun Chan
@@ -38,9 +41,13 @@ public class ClpMessageListener extends BaseMessageListener {
 				servletContextName.equals(getServletContextName())) {
 			ExpenseLocalServiceUtil.clearService();
 
+			ExpenseServiceUtil.clearService();
 			ProjectLocalServiceUtil.clearService();
 
+			ProjectServiceUtil.clearService();
 			TaskLocalServiceUtil.clearService();
+
+			TaskServiceUtil.clearService();
 		}
 	}
 }

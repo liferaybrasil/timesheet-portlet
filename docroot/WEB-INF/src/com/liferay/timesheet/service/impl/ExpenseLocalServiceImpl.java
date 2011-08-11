@@ -17,15 +17,14 @@ package com.liferay.timesheet.service.impl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.documentlibrary.model.DLFileEntry;
+import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
 import com.liferay.timesheet.InvalidDescriptionException;
 import com.liferay.timesheet.InvalidMoneyFormatException;
 import com.liferay.timesheet.model.Expense;
 import com.liferay.timesheet.service.base.ExpenseLocalServiceBaseImpl;
-
-import java.io.File;
 
 import java.util.Date;
 import java.util.List;
@@ -35,16 +34,14 @@ import java.util.List;
  */
 public class ExpenseLocalServiceImpl extends ExpenseLocalServiceBaseImpl {
 
-	// TODO CHECAR ORDEM DOS PARAMETROS, GROUPID VEM PRIMEIRO
-	// TODO mudar de billlllllllled pra algo
 	public Expense addExpense(
-			long projectId, String description, int billledDateMonth,
-			int billledDateDay, int billledDateYear, int type, double value,
-			File file, long groupId)
+			long projectId, String description, int purchasedDateMonth,
+			int purchasedDateDay, int purchasedDateYear, int type, double value,
+			long fileEntryId)
 		throws PortalException, SystemException {
 
 		Date date = PortalUtil.getDate(
-			billledDateMonth, billledDateDay, billledDateYear);
+				purchasedDateMonth, purchasedDateDay, purchasedDateYear);
 
 		validate(description, value);
 
@@ -52,19 +49,12 @@ public class ExpenseLocalServiceImpl extends ExpenseLocalServiceBaseImpl {
 
 		Expense expense =  expensePersistence.create(expenseId);
 
-		// RENOMEAR PRA FILENETRYID SO
-		long dlFieldEntryId = 0;
-
-		if (file != null) {
-			getDlFileId(file, groupId);
-		}
-
 		expense.setProjectId(projectId);
 		expense.setDescription(description);
-		expense.setBilledDate(date);
+		expense.setPurchasedDate(date);
 		expense.setType(type);
 		expense.setValue(value);
-		expense.setDlFieldEntryId(dlFieldEntryId);
+		expense.setFileEntryId(fileEntryId);
 
 		expensePersistence.update(expense, false);
 
@@ -77,11 +67,10 @@ public class ExpenseLocalServiceImpl extends ExpenseLocalServiceBaseImpl {
 		return expensePersistence.findByProjectId(projectId);
 	}
 
-	// TODO CHECAR ORDEM DE PARAMSS
 	public Expense updateExpense(
-			long expenseId, long projectId, String description,
-			int billledDateDay, int billledDateMonth, int billledDateYear,
-			int type, double value, File file, long groupId)
+			long expenseId, long projectId, String description, 
+			int purchasedDateMonth, int purchasedDateDay, int purchasedDateYear,
+			int type, double value, long fileEntryId)
 		throws PortalException, SystemException {
 
 		Expense expense = expensePersistence.findByPrimaryKey(expenseId);
@@ -89,51 +78,18 @@ public class ExpenseLocalServiceImpl extends ExpenseLocalServiceBaseImpl {
 		validate(description, value);
 
 		Date date = PortalUtil.getDate(
-			billledDateMonth, billledDateDay, billledDateYear);
-
-		long dlFieldEntryId = 0;
-
-		if (file != null) {
-			getDlFileId(file, groupId);
-		}
+				purchasedDateMonth, purchasedDateDay, purchasedDateYear);
 
 		expense.setProjectId(projectId);
 		expense.setDescription(description);
-		expense.setBilledDate(date);
+		expense.setPurchasedDate(date);
 		expense.setType(type);
 		expense.setValue(value);
-		expense.setDlFieldEntryId(dlFieldEntryId);
+		expense.setFileEntryId(fileEntryId);
 
 		expensePersistence.update(expense, false);
 
 		return expense;
-	}
-
-	private long getDlFileId(File file, long groupId) {
-		long dlFielId = 0;
-
-		/*		try {
-
-			DLFolder folder = DLFolderLocalServiceUtil.getFolder(
-					DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
-
-			String fileName = file.getName();
-
-			if (Validator.isNotNull(fileName) && !file.exists()) {
-				file.createNewFile();
-				DLFileEntry fileEntry = null;
-				//DLFileEntry fileEntry = DLFileEntryServiceUtil. .addFileEntry(
-					//	groupId, 0, folder.getFolderId(), fileName, "mimeType",
-					//	"title", "description", null, file,
-					//	serviceContext);
-
-				dlFielId = fileEntry.getPrimaryKey();
-			}
-		} catch(Exception ex) {
-			System.out.println(ex.getMessage());
-		}
-		 */
-		return dlFielId;
 	}
 
 	@Override
@@ -141,31 +97,40 @@ public class ExpenseLocalServiceImpl extends ExpenseLocalServiceBaseImpl {
 		throws PortalException, SystemException {
 
 		Expense expense = super.getExpense(expenseId);
-		//if ( expense.getDlFieldId() > 0) {
-		//DLFileEntry fileEntry = DLFileEntryLocalServiceUtil.getFileEntry(
-		//expense.getDlFieldId());
-		//	String filePath = "http://localhost:8080/documents/" + 
-		//fileEntry.getGroupId() + "/" + fileEntry.getUuid();
-		//expense.setFilePath(filePath);
-		//}
+		if ( expense.getFileEntryId() > 0) {
+			
+			try {
+				DLFileEntry fileEntry = 
+					DLFileEntryLocalServiceUtil.getFileEntry(
+							expense.getFileEntryId());
+				
+				StringBuilder sb = new StringBuilder();
+				sb.append("documents");
+				sb.append(StringPool.FORWARD_SLASH);
+				sb.append(fileEntry.getGroupId());
+				sb.append(StringPool.FORWARD_SLASH);
+				sb.append(fileEntry.getUuid());
+				expense.setFilePath(sb.toString());
+				
+				expense.setFileName(fileEntry.getTitle());				
+			} catch (Exception e) {
+				expense.setFileEntryId(0);
+			}			
+		}
 		return expense;
 	}
 
 	protected void validate(
-			String expenseDescription, double expenseValue)
+			String description, double value)
 		throws PortalException {
 
-		if (Validator.isNull(expenseDescription)) {
+		if (Validator.isNull(description)) {
 			throw new InvalidDescriptionException();
 		}
 
-		String value = String.valueOf(expenseValue);
+		String strValue = String.valueOf(value);
 
-		value = StringUtil.remove(value, StringPool.PERIOD);
-	
-		if (Validator.isNull(expenseValue) || !Validator.isDigit(value) || 
-			(expenseValue == 0)) {
-
+		if (Validator.isNull(strValue) || (value == 0)) {
 			throw new InvalidMoneyFormatException();
 		}
 	}

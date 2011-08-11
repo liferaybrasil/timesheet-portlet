@@ -1,5 +1,19 @@
-.aui-fieldset-content .lfr-portlet-timesheet-project-cost
+.portlet-body .lfr-portlet-timesheet-report-icon
 {
+	float: right;
+}
+
+.aui-dialog-content .lfr-portlet-timesheet-total-label 
+{
+	width: 200px;
+	float: right;
 	text-align: right;
-    width: 32%;
+	padding-right: 50px;
+	font-weight: bold;
+}
+
+.aui-dialog-content .lfr-portlet-timesheet-total-label-right
+{
+	float: none;
+	text-align: left;
 }

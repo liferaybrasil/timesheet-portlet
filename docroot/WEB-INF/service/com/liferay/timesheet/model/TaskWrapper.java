@@ -73,21 +73,21 @@ public class TaskWrapper implements Task {
 	}
 
 	/**
-	* Returns the end date of this task.
+	* Returns the project ID of this task.
 	*
-	* @return the end date of this task
+	* @return the project ID of this task
 	*/
-	public java.util.Date getEndDate() {
-		return _task.getEndDate();
+	public long getProjectId() {
+		return _task.getProjectId();
 	}
 
 	/**
-	* Sets the end date of this task.
+	* Sets the project ID of this task.
 	*
-	* @param endDate the end date of this task
+	* @param projectId the project ID of this task
 	*/
-	public void setEndDate(java.util.Date endDate) {
-		_task.setEndDate(endDate);
+	public void setProjectId(long projectId) {
+		_task.setProjectId(projectId);
 	}
 
 	/**
@@ -109,21 +109,21 @@ public class TaskWrapper implements Task {
 	}
 
 	/**
-	* Returns the project ID of this task.
+	* Returns the type of this task.
 	*
-	* @return the project ID of this task
+	* @return the type of this task
 	*/
-	public long getProjectId() {
-		return _task.getProjectId();
+	public int getType() {
+		return _task.getType();
 	}
 
 	/**
-	* Sets the project ID of this task.
+	* Sets the type of this task.
 	*
-	* @param projectId the project ID of this task
+	* @param type the type of this task
 	*/
-	public void setProjectId(long projectId) {
-		_task.setProjectId(projectId);
+	public void setType(int type) {
+		_task.setType(type);
 	}
 
 	/**
@@ -145,21 +145,21 @@ public class TaskWrapper implements Task {
 	}
 
 	/**
-	* Returns the type of this task.
+	* Returns the end date of this task.
 	*
-	* @return the type of this task
+	* @return the end date of this task
 	*/
-	public int getType() {
-		return _task.getType();
+	public java.util.Date getEndDate() {
+		return _task.getEndDate();
 	}
 
 	/**
-	* Sets the type of this task.
+	* Sets the end date of this task.
 	*
-	* @param type the type of this task
+	* @param endDate the end date of this task
 	*/
-	public void setType(int type) {
-		_task.setType(type);
+	public void setEndDate(java.util.Date endDate) {
+		_task.setEndDate(endDate);
 	}
 
 	public boolean isNew() {

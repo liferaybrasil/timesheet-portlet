@@ -17,9 +17,9 @@
 <%@ include file="/html/init.jsp" %>
 
 <%
-	long pId = ParamUtil.getLong(request, "projectId");
-	String urlViewTasks = PortalUtil.getCurrentURL(renderRequest);
-	List<Task> tasks = TaskLocalServiceUtil.getTaskByProjectId(pId);
+	long projectId = ParamUtil.getLong(request, "projectId");
+	String currentUrl = PortalUtil.getCurrentURL(renderRequest);
+	List<Task> tasks = TaskLocalServiceUtil.getTaskByProjectId(projectId);
 	int count = tasks.size();
 	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 %>
@@ -27,15 +27,15 @@
 <aui:button-row>
 	<portlet:renderURL var="addTaskURL">
 		<portlet:param name="jspPage" value="/html/edit_task.jsp" />
-		<portlet:param name="projectId" value="<%= String.valueOf(pId) %>" />
-		<portlet:param name="redirect" value="<%= HtmlUtil.escapeHREF(urlViewTasks) %>" />
+		<portlet:param name="projectId" value="<%= String.valueOf(projectId) %>" />
+		<portlet:param name="redirect" value="<%= HtmlUtil.escapeHREF(currentUrl) %>" />
 	</portlet:renderURL>
 
 	<aui:button value="add-task" onClick="<%= addTaskURL.toString() %>" />
 </aui:button-row>
 
 <liferay-ui:search-container
-	emptyResultsMessage="task-empty-results-message">
+	emptyResultsMessage="no-entries-were-found">
 	<liferay-ui:search-container-results results="<%= tasks %>"
 		total="<%= count %>" />
 
@@ -51,7 +51,7 @@
 			value="<%= sdf.format(task.getEndDate()) %>" />
 
 		<liferay-ui:search-container-column-text name="typeDescription"
-			property="typeDescription" />
+			property="typeDescription" translate="<%= true %>" />
 
 		<liferay-ui:search-container-column-jsp align="right"
 			path="/html/task_actions.jsp" />

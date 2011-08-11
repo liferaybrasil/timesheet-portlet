@@ -16,6 +16,7 @@ package com.liferay.timesheet.service.impl;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.User;
 import com.liferay.portal.util.PortalUtil;
@@ -23,10 +24,15 @@ import com.liferay.timesheet.InvalidDatesException;
 import com.liferay.timesheet.InvalidDescriptionException;
 import com.liferay.timesheet.InvalidMoneyFormatException;
 import com.liferay.timesheet.InvalidNameException;
+import com.liferay.timesheet.model.Expense;
 import com.liferay.timesheet.model.Project;
+import com.liferay.timesheet.model.Task;
+import com.liferay.timesheet.service.ExpenseLocalServiceUtil;
+import com.liferay.timesheet.service.TaskLocalServiceUtil;
 import com.liferay.timesheet.service.base.ProjectLocalServiceBaseImpl;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Antonio Junior
@@ -34,9 +40,9 @@ import java.util.Date;
 public class ProjectLocalServiceImpl extends ProjectLocalServiceBaseImpl {
 
 	public Project addProject(
-			long userId, String name, double wage, String description,
-			int startDateMonth, int startDateDay, int startDateYear,
-			int endDateMonth, int endDateDay, int endDateYear)
+			long userId, String description, int endDateMonth, int endDateDay,
+			int endDateYear, int startDateMonth, int startDateDay,
+			int startDateYear, String name, double wage)
 		throws PortalException, SystemException {
 
 		User user = userPersistence.findByPrimaryKey(userId);
@@ -64,15 +70,64 @@ public class ProjectLocalServiceImpl extends ProjectLocalServiceBaseImpl {
 		return project;
 	}
 
+	@Override
+	public void deleteProject(long projectId)
+		throws PortalException, SystemException {
+
+		List<Task> tasks = TaskLocalServiceUtil.getTaskByProjectId(projectId);
+		List<Expense> expenses =
+			ExpenseLocalServiceUtil.getExpenseByProjectId(projectId);
+
+		for (Task task : tasks) {
+			TaskLocalServiceUtil.deleteTask(task.getTaskId());
+		}
+
+		for (Expense expense : expenses) {
+			ExpenseLocalServiceUtil.deleteExpense(expense.getExpenseId());
+		}
+
+		super.deleteProject(projectId);
+	}
+
+	public List<Project> search(
+			String keywords, int start, int end,
+			OrderByComparator orderByComparator)
+		throws SystemException {
+
+		return projectFinder.findByKeywords(
+				keywords, start, end, orderByComparator);
+	}
+
+	public List<Project> search(
+			String name, String description, boolean andOperator, int start,
+			int end, OrderByComparator orderByComparator)
+		throws SystemException {
+
+		return projectFinder.findByN_D(
+				name, description, andOperator, start, end, orderByComparator);
+	}
+
+	public int searchCount(
+			String name, String description, boolean andOperator)
+		throws SystemException {
+
+		return projectFinder.countByN_D(name, description, andOperator);
+	}
+
+	public int searchCount(String keywords)
+		throws SystemException {
+
+		return projectFinder.countByKeywords(keywords);
+	}
+
 	public Project updateProject(
-			long projectId, long userId, String name, double wage,
-			String description, int startDateMonth, int startDateDay,
-			int startDateYear, int endDateMonth, int endDateDay,
-			int endDateYear)
+			long projectId, long userId, String description, int endDateMonth,
+			int endDateDay, int endDateYear, int startDateMonth,
+			int startDateDay, int startDateYear, String name, double wage)
 		throws PortalException, SystemException {
 
 		User user = userPersistence.findByPrimaryKey(userId);
-		
+
 		Project project = projectPersistence.findByPrimaryKey(projectId);
 
 		Date startDate = PortalUtil.getDate(
@@ -90,30 +145,26 @@ public class ProjectLocalServiceImpl extends ProjectLocalServiceBaseImpl {
 		project.setEndDate(endDate);
 
 		projectPersistence.update(project, false);
-		
+
 		return project;
 	}
 
-	// TODO RENOMEAR PRA NAME DESCRIPTION
 	protected void validate(
-			String projectName, double wage, String projectDescription,
-			Date startDate, Date endDate)
+			String name, double wage, String description, Date startDate,
+			Date endDate)
 		throws PortalException {
 
-		if (Validator.isNull(projectName)) {
+		if (Validator.isNull(name)) {
 			throw new InvalidNameException();
 		}
 
-		if (Validator.isNull(projectDescription)) {
+		if (Validator.isNull(description)) {
 			throw new InvalidDescriptionException();
 		}
 
-		String wageString = String.valueOf(wage);
+		String strWage = String.valueOf(wage);
 
-		// TODO FAZ O MESMO DO OUTRO
-		if (Validator.isNull(wage) ||
-			!Validator.isDigit(wageString.replace(".", "")) ||
-			wage == 0) {
+		if (Validator.isNull(strWage) || (wage == 0)) {
 
 			throw new InvalidMoneyFormatException();
 		}

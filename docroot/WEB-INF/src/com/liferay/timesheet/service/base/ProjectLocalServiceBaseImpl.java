@@ -40,9 +40,13 @@ import com.liferay.portal.service.persistence.UserPersistence;
 
 import com.liferay.timesheet.model.Project;
 import com.liferay.timesheet.service.ExpenseLocalService;
+import com.liferay.timesheet.service.ExpenseService;
 import com.liferay.timesheet.service.ProjectLocalService;
+import com.liferay.timesheet.service.ProjectService;
 import com.liferay.timesheet.service.TaskLocalService;
+import com.liferay.timesheet.service.TaskService;
 import com.liferay.timesheet.service.persistence.ExpensePersistence;
+import com.liferay.timesheet.service.persistence.ProjectFinder;
 import com.liferay.timesheet.service.persistence.ProjectPersistence;
 import com.liferay.timesheet.service.persistence.TaskPersistence;
 
@@ -328,6 +332,24 @@ public abstract class ProjectLocalServiceBaseImpl implements ProjectLocalService
 	}
 
 	/**
+	 * Returns the expense remote service.
+	 *
+	 * @return the expense remote service
+	 */
+	public ExpenseService getExpenseService() {
+		return expenseService;
+	}
+
+	/**
+	 * Sets the expense remote service.
+	 *
+	 * @param expenseService the expense remote service
+	 */
+	public void setExpenseService(ExpenseService expenseService) {
+		this.expenseService = expenseService;
+	}
+
+	/**
 	 * Returns the expense persistence.
 	 *
 	 * @return the expense persistence
@@ -364,6 +386,24 @@ public abstract class ProjectLocalServiceBaseImpl implements ProjectLocalService
 	}
 
 	/**
+	 * Returns the project remote service.
+	 *
+	 * @return the project remote service
+	 */
+	public ProjectService getProjectService() {
+		return projectService;
+	}
+
+	/**
+	 * Sets the project remote service.
+	 *
+	 * @param projectService the project remote service
+	 */
+	public void setProjectService(ProjectService projectService) {
+		this.projectService = projectService;
+	}
+
+	/**
 	 * Returns the project persistence.
 	 *
 	 * @return the project persistence
@@ -382,6 +422,24 @@ public abstract class ProjectLocalServiceBaseImpl implements ProjectLocalService
 	}
 
 	/**
+	 * Returns the project finder.
+	 *
+	 * @return the project finder
+	 */
+	public ProjectFinder getProjectFinder() {
+		return projectFinder;
+	}
+
+	/**
+	 * Sets the project finder.
+	 *
+	 * @param projectFinder the project finder
+	 */
+	public void setProjectFinder(ProjectFinder projectFinder) {
+		this.projectFinder = projectFinder;
+	}
+
+	/**
 	 * Returns the task local service.
 	 *
 	 * @return the task local service
@@ -397,6 +455,24 @@ public abstract class ProjectLocalServiceBaseImpl implements ProjectLocalService
 	 */
 	public void setTaskLocalService(TaskLocalService taskLocalService) {
 		this.taskLocalService = taskLocalService;
+	}
+
+	/**
+	 * Returns the task remote service.
+	 *
+	 * @return the task remote service
+	 */
+	public TaskService getTaskService() {
+		return taskService;
+	}
+
+	/**
+	 * Sets the task remote service.
+	 *
+	 * @param taskService the task remote service
+	 */
+	public void setTaskService(TaskService taskService) {
+		this.taskService = taskService;
 	}
 
 	/**
@@ -601,14 +677,22 @@ public abstract class ProjectLocalServiceBaseImpl implements ProjectLocalService
 
 	@BeanReference(type = ExpenseLocalService.class)
 	protected ExpenseLocalService expenseLocalService;
+	@BeanReference(type = ExpenseService.class)
+	protected ExpenseService expenseService;
 	@BeanReference(type = ExpensePersistence.class)
 	protected ExpensePersistence expensePersistence;
 	@BeanReference(type = ProjectLocalService.class)
 	protected ProjectLocalService projectLocalService;
+	@BeanReference(type = ProjectService.class)
+	protected ProjectService projectService;
 	@BeanReference(type = ProjectPersistence.class)
 	protected ProjectPersistence projectPersistence;
+	@BeanReference(type = ProjectFinder.class)
+	protected ProjectFinder projectFinder;
 	@BeanReference(type = TaskLocalService.class)
 	protected TaskLocalService taskLocalService;
+	@BeanReference(type = TaskService.class)
+	protected TaskService taskService;
 	@BeanReference(type = TaskPersistence.class)
 	protected TaskPersistence taskPersistence;
 	@BeanReference(type = CounterLocalService.class)

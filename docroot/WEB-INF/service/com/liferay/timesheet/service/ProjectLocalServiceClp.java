@@ -82,14 +82,31 @@ public class ProjectLocalServiceClp implements ProjectLocalService {
 				"setBeanIdentifier", java.lang.String.class);
 
 		_addProjectMethodKey16 = new MethodKey(_classLoaderProxy.getClassName(),
-				"addProject", long.class, java.lang.String.class, double.class,
-				java.lang.String.class, int.class, int.class, int.class,
-				int.class, int.class, int.class);
+				"addProject", long.class, java.lang.String.class, int.class,
+				int.class, int.class, int.class, int.class, int.class,
+				java.lang.String.class, double.class);
 
-		_updateProjectMethodKey17 = new MethodKey(_classLoaderProxy.getClassName(),
+		_searchMethodKey17 = new MethodKey(_classLoaderProxy.getClassName(),
+				"search", java.lang.String.class, int.class, int.class,
+				com.liferay.portal.kernel.util.OrderByComparator.class);
+
+		_searchMethodKey18 = new MethodKey(_classLoaderProxy.getClassName(),
+				"search", java.lang.String.class, java.lang.String.class,
+				boolean.class, int.class, int.class,
+				com.liferay.portal.kernel.util.OrderByComparator.class);
+
+		_searchCountMethodKey19 = new MethodKey(_classLoaderProxy.getClassName(),
+				"searchCount", java.lang.String.class, java.lang.String.class,
+				boolean.class);
+
+		_searchCountMethodKey20 = new MethodKey(_classLoaderProxy.getClassName(),
+				"searchCount", java.lang.String.class);
+
+		_updateProjectMethodKey21 = new MethodKey(_classLoaderProxy.getClassName(),
 				"updateProject", long.class, long.class,
-				java.lang.String.class, double.class, java.lang.String.class,
-				int.class, int.class, int.class, int.class, int.class, int.class);
+				java.lang.String.class, int.class, int.class, int.class,
+				int.class, int.class, int.class, java.lang.String.class,
+				double.class);
 	}
 
 	public com.liferay.timesheet.model.Project addProject(
@@ -526,18 +543,18 @@ public class ProjectLocalServiceClp implements ProjectLocalService {
 	}
 
 	public com.liferay.timesheet.model.Project addProject(long userId,
-		java.lang.String name, double wage, java.lang.String description,
-		int startDateMonth, int startDateDay, int startDateYear,
-		int endDateMonth, int endDateDay, int endDateYear)
+		java.lang.String description, int endDateMonth, int endDateDay,
+		int endDateYear, int startDateMonth, int startDateDay,
+		int startDateYear, java.lang.String name, double wage)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
 		MethodHandler methodHandler = new MethodHandler(_addProjectMethodKey16,
-				userId, ClpSerializer.translateInput(name), wage,
-				ClpSerializer.translateInput(description), startDateMonth,
-				startDateDay, startDateYear, endDateMonth, endDateDay,
-				endDateYear);
+				userId, ClpSerializer.translateInput(description),
+				endDateMonth, endDateDay, endDateYear, startDateMonth,
+				startDateDay, startDateYear,
+				ClpSerializer.translateInput(name), wage);
 
 		try {
 			returnObj = _classLoaderProxy.invoke(methodHandler);
@@ -563,19 +580,137 @@ public class ProjectLocalServiceClp implements ProjectLocalService {
 		return (com.liferay.timesheet.model.Project)ClpSerializer.translateOutput(returnObj);
 	}
 
+	public java.util.List<com.liferay.timesheet.model.Project> search(
+		java.lang.String keywords, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		Object returnObj = null;
+
+		MethodHandler methodHandler = new MethodHandler(_searchMethodKey17,
+				ClpSerializer.translateInput(keywords), start, end,
+				ClpSerializer.translateInput(orderByComparator));
+
+		try {
+			returnObj = _classLoaderProxy.invoke(methodHandler);
+		}
+		catch (Throwable t) {
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.util.List<com.liferay.timesheet.model.Project>)ClpSerializer.translateOutput(returnObj);
+	}
+
+	public java.util.List<com.liferay.timesheet.model.Project> search(
+		java.lang.String name, java.lang.String description,
+		boolean andOperator, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		Object returnObj = null;
+
+		MethodHandler methodHandler = new MethodHandler(_searchMethodKey18,
+				ClpSerializer.translateInput(name),
+				ClpSerializer.translateInput(description), andOperator, start,
+				end, ClpSerializer.translateInput(orderByComparator));
+
+		try {
+			returnObj = _classLoaderProxy.invoke(methodHandler);
+		}
+		catch (Throwable t) {
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.util.List<com.liferay.timesheet.model.Project>)ClpSerializer.translateOutput(returnObj);
+	}
+
+	public int searchCount(java.lang.String name, java.lang.String description,
+		boolean andOperator)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		Object returnObj = null;
+
+		MethodHandler methodHandler = new MethodHandler(_searchCountMethodKey19,
+				ClpSerializer.translateInput(name),
+				ClpSerializer.translateInput(description), andOperator);
+
+		try {
+			returnObj = _classLoaderProxy.invoke(methodHandler);
+		}
+		catch (Throwable t) {
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return ((Integer)returnObj).intValue();
+	}
+
+	public int searchCount(java.lang.String keywords)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		Object returnObj = null;
+
+		MethodHandler methodHandler = new MethodHandler(_searchCountMethodKey20,
+				ClpSerializer.translateInput(keywords));
+
+		try {
+			returnObj = _classLoaderProxy.invoke(methodHandler);
+		}
+		catch (Throwable t) {
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return ((Integer)returnObj).intValue();
+	}
+
 	public com.liferay.timesheet.model.Project updateProject(long projectId,
-		long userId, java.lang.String name, double wage,
-		java.lang.String description, int startDateMonth, int startDateDay,
-		int startDateYear, int endDateMonth, int endDateDay, int endDateYear)
+		long userId, java.lang.String description, int endDateMonth,
+		int endDateDay, int endDateYear, int startDateMonth, int startDateDay,
+		int startDateYear, java.lang.String name, double wage)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_updateProjectMethodKey17,
-				projectId, userId, ClpSerializer.translateInput(name), wage,
-				ClpSerializer.translateInput(description), startDateMonth,
-				startDateDay, startDateYear, endDateMonth, endDateDay,
-				endDateYear);
+		MethodHandler methodHandler = new MethodHandler(_updateProjectMethodKey21,
+				projectId, userId, ClpSerializer.translateInput(description),
+				endDateMonth, endDateDay, endDateYear, startDateMonth,
+				startDateDay, startDateYear,
+				ClpSerializer.translateInput(name), wage);
 
 		try {
 			returnObj = _classLoaderProxy.invoke(methodHandler);
@@ -623,5 +758,9 @@ public class ProjectLocalServiceClp implements ProjectLocalService {
 	private MethodKey _getBeanIdentifierMethodKey14;
 	private MethodKey _setBeanIdentifierMethodKey15;
 	private MethodKey _addProjectMethodKey16;
-	private MethodKey _updateProjectMethodKey17;
+	private MethodKey _searchMethodKey17;
+	private MethodKey _searchMethodKey18;
+	private MethodKey _searchCountMethodKey19;
+	private MethodKey _searchCountMethodKey20;
+	private MethodKey _updateProjectMethodKey21;
 }

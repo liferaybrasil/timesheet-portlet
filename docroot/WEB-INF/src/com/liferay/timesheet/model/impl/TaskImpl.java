@@ -14,6 +14,8 @@
 
 package com.liferay.timesheet.model.impl;
 
+import com.liferay.timesheet.util.PortletPropsValues;
+
 /**
  * @author Antonio Junior
  */
@@ -29,13 +31,7 @@ public class TaskImpl extends TaskBaseImpl {
 	}
 
 	public String getTypeDescription() {
-		return _types[this.getType()];
+		return PortletPropsValues.TASK_TYPES[getType()];
 	}
-
-	public static String[] getAllTypes() {
-		return _types;
-	}
-
-	private static String[] _types = {"Training", "Meeting"};
 
 }

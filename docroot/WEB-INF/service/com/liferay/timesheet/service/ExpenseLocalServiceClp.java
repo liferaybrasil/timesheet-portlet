@@ -83,8 +83,7 @@ public class ExpenseLocalServiceClp implements ExpenseLocalService {
 
 		_addExpenseMethodKey16 = new MethodKey(_classLoaderProxy.getClassName(),
 				"addExpense", long.class, java.lang.String.class, int.class,
-				int.class, int.class, int.class, double.class,
-				java.io.File.class, long.class);
+				int.class, int.class, int.class, double.class, long.class);
 
 		_getExpenseByProjectIdMethodKey17 = new MethodKey(_classLoaderProxy.getClassName(),
 				"getExpenseByProjectId", long.class);
@@ -92,7 +91,7 @@ public class ExpenseLocalServiceClp implements ExpenseLocalService {
 		_updateExpenseMethodKey18 = new MethodKey(_classLoaderProxy.getClassName(),
 				"updateExpense", long.class, long.class,
 				java.lang.String.class, int.class, int.class, int.class,
-				int.class, double.class, java.io.File.class, long.class);
+				int.class, double.class, long.class);
 	}
 
 	public com.liferay.timesheet.model.Expense addExpense(
@@ -529,17 +528,17 @@ public class ExpenseLocalServiceClp implements ExpenseLocalService {
 	}
 
 	public com.liferay.timesheet.model.Expense addExpense(long projectId,
-		java.lang.String description, int billledDateMonth, int billledDateDay,
-		int billledDateYear, int type, double value, java.io.File file,
-		long groupId)
+		java.lang.String description, int purchasedDateMonth,
+		int purchasedDateDay, int purchasedDateYear, int type, double value,
+		long fileEntryId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
 		MethodHandler methodHandler = new MethodHandler(_addExpenseMethodKey16,
 				projectId, ClpSerializer.translateInput(description),
-				billledDateMonth, billledDateDay, billledDateYear, type, value,
-				ClpSerializer.translateInput(file), groupId);
+				purchasedDateMonth, purchasedDateDay, purchasedDateYear, type,
+				value, fileEntryId);
 
 		try {
 			returnObj = _classLoaderProxy.invoke(methodHandler);
@@ -594,18 +593,17 @@ public class ExpenseLocalServiceClp implements ExpenseLocalService {
 	}
 
 	public com.liferay.timesheet.model.Expense updateExpense(long expenseId,
-		long projectId, java.lang.String description, int billledDateDay,
-		int billledDateMonth, int billledDateYear, int type, double value,
-		java.io.File file, long groupId)
+		long projectId, java.lang.String description, int purchasedDateMonth,
+		int purchasedDateDay, int purchasedDateYear, int type, double value,
+		long fileEntryId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
 		MethodHandler methodHandler = new MethodHandler(_updateExpenseMethodKey18,
 				expenseId, projectId,
-				ClpSerializer.translateInput(description), billledDateDay,
-				billledDateMonth, billledDateYear, type, value,
-				ClpSerializer.translateInput(file), groupId);
+				ClpSerializer.translateInput(description), purchasedDateMonth,
+				purchasedDateDay, purchasedDateYear, type, value, fileEntryId);
 
 		try {
 			returnObj = _classLoaderProxy.invoke(methodHandler);
