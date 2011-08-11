@@ -35,7 +35,7 @@ import java.util.List;
  * @author Antonio Junior
  */
 public class ProjectFinderImpl extends BasePersistenceImpl<Project>
-implements ProjectFinder {
+	implements ProjectFinder {
 
 	public static String COUNT_BY_N_D =
 		ProjectFinder.class.getName() + ".countByN_D";
@@ -43,9 +43,7 @@ implements ProjectFinder {
 	public static String FIND_BY_N_D =
 		ProjectFinder.class.getName() + ".findByN_D";
 
-	public int countByKeywords(String keywords)
-	throws SystemException{
-
+	public int countByKeywords(String keywords) throws SystemException{
 		String[] names = null;
 		String[] descriptions = null;
 		boolean andOperator = false;
@@ -127,9 +125,9 @@ implements ProjectFinder {
 			String sql = CustomSQLUtil.get(COUNT_BY_N_D);
 
 			sql = CustomSQLUtil.replaceKeywords(
-					sql, "lower(name)", StringPool.LIKE, false, names);
+				sql, "lower(name)", StringPool.LIKE, false, names);
 			sql = CustomSQLUtil.replaceKeywords(
-					sql, "description", StringPool.LIKE, true, descriptions);
+				sql, "description", StringPool.LIKE, true, descriptions);
 			sql = CustomSQLUtil.replaceAndOperator(sql, andOperator);
 
 			SQLQuery q = session.createSQLQuery(sql);
@@ -178,9 +176,9 @@ implements ProjectFinder {
 			String sql = CustomSQLUtil.get(FIND_BY_N_D);
 
 			sql = CustomSQLUtil.replaceKeywords(
-					sql, "lower(name)", StringPool.LIKE, false, names);
+				sql, "lower(name)", StringPool.LIKE, false, names);
 			sql = CustomSQLUtil.replaceKeywords(
-					sql, "description", StringPool.LIKE, true, descriptions);
+				sql, "description", StringPool.LIKE, true, descriptions);
 			sql = CustomSQLUtil.replaceAndOperator(sql, andOperator);
 			sql = CustomSQLUtil.replaceOrderBy(sql, orderByComparator);
 
@@ -194,7 +192,7 @@ implements ProjectFinder {
 			qPos.add(descriptions, 2);
 
 			return (List<Project>)QueryUtil.list(
-					q, getDialect(), start, end);
+				q, getDialect(), start, end);
 		}
 		catch (Exception e) {
 			throw new SystemException(e);
