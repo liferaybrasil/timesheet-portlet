@@ -14,27 +14,68 @@
 
 package com.liferay.timesheet.service.impl;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.security.auth.PrincipalException;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.timesheet.model.Expense;
 import com.liferay.timesheet.service.base.ExpenseServiceBaseImpl;
+import com.liferay.timesheet.service.permission.TimesheetExpensePermission;
+import com.liferay.timesheet.service.permission.TimesheetPermission;
+import com.liferay.timesheet.util.ActionKeys;
 
 /**
- * The implementation of the expense remote service.
- *
- * <p>
- * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link com.liferay.timesheet.service.ExpenseService} interface.
- *
- * <p>
- * This is a remote service. Methods of this service are expected to have security checks based on the propagated JAAS credentials because this service can be accessed remotely.
- * </p>
- *
- * @author Brian Wing Shun Chan
- * @see com.liferay.timesheet.service.base.ExpenseServiceBaseImpl
- * @see com.liferay.timesheet.service.ExpenseServiceUtil
+ * @author Antonio Junior
  */
 public class ExpenseServiceImpl extends ExpenseServiceBaseImpl {
-	/**
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this interface directly. Always use {@link com.liferay.timesheet.service.ExpenseServiceUtil} to access the expense remote service.
-	 */
-	
+
+	public Expense addExpense(
+			long projectId, String description, int purchasedDateMonth,
+			int purchasedDateDay, int purchasedDateYear, int type, double value,
+			long fileEntryId, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		TimesheetPermission.check(
+			getPermissionChecker(), serviceContext.getScopeGroupId(),
+			ActionKeys.ADD_EXPENSE);
+
+		return expenseLocalService.addExpense(
+			projectId, description, purchasedDateMonth, purchasedDateDay,
+			purchasedDateYear, type, value, fileEntryId, serviceContext);
+	}
+
+	public void deleteExpense(long companyId, long expenseId)
+		throws SystemException, PortalException {
+
+		TimesheetExpensePermission.check(
+			getPermissionChecker(), expenseId, ActionKeys.DELETE);
+
+		expenseLocalService.deleteExpense(expenseId);
+	}
+
+	public Expense getExpense(long expenseId)
+		throws PortalException, PrincipalException, SystemException {
+
+		TimesheetExpensePermission.check(
+			getPermissionChecker(), expenseId, ActionKeys.VIEW);
+
+		return expenseLocalService.getExpense(expenseId);
+	}
+
+	public Expense updateExpense(
+			long expenseId, long projectId, String description,
+			int purchasedDateMonth, int purchasedDateDay,
+			int purchasedDateYear, 	int type, double value, long fileEntryId,
+			ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		TimesheetExpensePermission.check(
+			getPermissionChecker(), expenseId, ActionKeys.UPDATE);
+
+		return expenseLocalService.updateExpense(
+			expenseId, projectId, description, purchasedDateMonth,
+			purchasedDateDay, purchasedDateYear, type,
+			value, fileEntryId, serviceContext);
+	}
+
 }

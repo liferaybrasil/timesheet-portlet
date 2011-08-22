@@ -14,27 +14,73 @@
 
 package com.liferay.timesheet.service.impl;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.security.auth.PrincipalException;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.timesheet.model.Task;
 import com.liferay.timesheet.service.base.TaskServiceBaseImpl;
+import com.liferay.timesheet.service.permission.TimesheetPermission;
+import com.liferay.timesheet.service.permission.TimesheetTaskPermission;
+import com.liferay.timesheet.util.ActionKeys;
 
 /**
- * The implementation of the task remote service.
- *
- * <p>
- * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link com.liferay.timesheet.service.TaskService} interface.
- *
- * <p>
- * This is a remote service. Methods of this service are expected to have security checks based on the propagated JAAS credentials because this service can be accessed remotely.
- * </p>
- *
- * @author Brian Wing Shun Chan
- * @see com.liferay.timesheet.service.base.TaskServiceBaseImpl
- * @see com.liferay.timesheet.service.TaskServiceUtil
+ * @author Antonio Junior
  */
 public class TaskServiceImpl extends TaskServiceBaseImpl {
-	/**
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this interface directly. Always use {@link com.liferay.timesheet.service.TaskServiceUtil} to access the task remote service.
-	 */
-	
+
+	public Task addTask(
+			long projectId, String name, int type, int startDateMonth,
+			int startDateDay, int startDateYear, int startDateHour,
+			int startDateMinute, int endDateMonth, int endDateDay,
+			int endDateYear, int endDateHour, int endDateMinute,
+			ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		TimesheetPermission.check(
+			getPermissionChecker(), serviceContext.getScopeGroupId(),
+			ActionKeys.ADD_TASK);
+
+		return taskLocalService.addTask(
+			projectId, name, type, startDateMonth, startDateDay, startDateYear,
+			startDateHour, startDateMinute, endDateMonth, endDateDay,
+			endDateYear, endDateHour, endDateMinute, serviceContext);
+	}
+
+	public void deleteTask(long companyId, long taskId)
+		throws PortalException, SystemException {
+
+		TimesheetTaskPermission.check(
+			getPermissionChecker(), taskId, ActionKeys.DELETE);
+
+		taskLocalService.deleteTask(companyId, taskId);
+	}
+
+	public Task getTask(long taskId)
+		throws PortalException, PrincipalException, SystemException {
+
+		TimesheetTaskPermission.check(
+			getPermissionChecker(), taskId, ActionKeys.VIEW);
+
+		return taskLocalService.getTask(taskId);
+	}
+
+	public Task updateTask(
+			long taskId, long projectId, String name, int type,
+			int startDateMonth, int startDateDay, int startDateYear,
+			int startDateHour, int startDateMinute, int endDateMonth,
+			int endDateDay, int endDateYear, int endDateHour, int endDateMinute,
+			ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		TimesheetTaskPermission.check(
+			getPermissionChecker(), taskId, ActionKeys.UPDATE);
+
+		return taskLocalService.updateTask(
+			taskId, projectId, name, type, startDateMonth, startDateDay,
+			startDateYear, startDateHour, startDateMinute, endDateMonth,
+			endDateDay, endDateYear, endDateHour, endDateMinute,
+			serviceContext);
+	}
+
 }

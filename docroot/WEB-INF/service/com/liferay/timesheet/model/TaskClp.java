@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.model.impl.BaseModelImpl;
+import com.liferay.portal.util.PortalUtil;
 
 import com.liferay.timesheet.service.TaskLocalServiceUtil;
 
@@ -67,6 +68,22 @@ public class TaskClp extends BaseModelImpl<Task> implements Task {
 		_taskId = taskId;
 	}
 
+	public long getUserId() {
+		return _userId;
+	}
+
+	public void setUserId(long userId) {
+		_userId = userId;
+	}
+
+	public String getUserUuid() throws SystemException {
+		return PortalUtil.getUserValue(getUserId(), "uuid", _userUuid);
+	}
+
+	public void setUserUuid(String userUuid) {
+		_userUuid = userUuid;
+	}
+
 	public long getProjectId() {
 		return _projectId;
 	}
@@ -107,10 +124,6 @@ public class TaskClp extends BaseModelImpl<Task> implements Task {
 		_endDate = endDate;
 	}
 
-	public long getTotalHours() {
-		throw new UnsupportedOperationException();
-	}
-
 	public java.lang.String getTypeDescription() {
 		throw new UnsupportedOperationException();
 	}
@@ -135,6 +148,7 @@ public class TaskClp extends BaseModelImpl<Task> implements Task {
 		TaskClp clone = new TaskClp();
 
 		clone.setTaskId(getTaskId());
+		clone.setUserId(getUserId());
 		clone.setProjectId(getProjectId());
 		clone.setName(getName());
 		clone.setType(getType());
@@ -190,10 +204,12 @@ public class TaskClp extends BaseModelImpl<Task> implements Task {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(13);
+		StringBundler sb = new StringBundler(15);
 
 		sb.append("{taskId=");
 		sb.append(getTaskId());
+		sb.append(", userId=");
+		sb.append(getUserId());
 		sb.append(", projectId=");
 		sb.append(getProjectId());
 		sb.append(", name=");
@@ -210,7 +226,7 @@ public class TaskClp extends BaseModelImpl<Task> implements Task {
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(22);
+		StringBundler sb = new StringBundler(25);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.timesheet.model.Task");
@@ -219,6 +235,10 @@ public class TaskClp extends BaseModelImpl<Task> implements Task {
 		sb.append(
 			"<column><column-name>taskId</column-name><column-value><![CDATA[");
 		sb.append(getTaskId());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>userId</column-name><column-value><![CDATA[");
+		sb.append(getUserId());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>projectId</column-name><column-value><![CDATA[");
@@ -247,6 +267,8 @@ public class TaskClp extends BaseModelImpl<Task> implements Task {
 	}
 
 	private long _taskId;
+	private long _userId;
+	private String _userUuid;
 	private long _projectId;
 	private String _name;
 	private int _type;

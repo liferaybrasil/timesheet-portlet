@@ -75,6 +75,34 @@ public interface ProjectModel extends BaseModel<Project> {
 	public void setProjectId(long projectId);
 
 	/**
+	 * Returns the group ID of this project.
+	 *
+	 * @return the group ID of this project
+	 */
+	public long getGroupId();
+
+	/**
+	 * Sets the group ID of this project.
+	 *
+	 * @param groupId the group ID of this project
+	 */
+	public void setGroupId(long groupId);
+
+	/**
+	 * Returns the company ID of this project.
+	 *
+	 * @return the company ID of this project
+	 */
+	public long getCompanyId();
+
+	/**
+	 * Sets the company ID of this project.
+	 *
+	 * @param companyId the company ID of this project
+	 */
+	public void setCompanyId(long companyId);
+
+	/**
 	 * Returns the user ID of this project.
 	 *
 	 * @return the user ID of this project

@@ -9,8 +9,13 @@
 
 		<column name="projectId" type="long" primary="true" />
 
+		<!-- Group instance -->
+
+		<column name="groupId" type="long" />
+		
 		<!-- Audit fields -->
 
+		<column name="companyId" type="long" />
 		<column name="userId" type="long" />
 
 		<!-- Other fields -->
@@ -19,7 +24,7 @@
 		<column name="endDate" type="Date" />
 		<column name="startDate" type="Date" />
 		<column name="name" type="String" />
-		<column name="wage" type="double" />		
+		<column name="wage" type="double" />
 
 		<!-- Order -->
 
@@ -42,6 +47,10 @@
 		<!-- PK fields -->
 	
 		<column name="taskId" type="long" primary="true" />
+		
+		<!-- Audit fields -->
+
+		<column name="userId" type="long" />
 		
 		<!-- Other fields -->
 		
@@ -69,6 +78,10 @@
 	
 		<column name="expenseId" type="long" primary="true" />
 		
+		<!-- Audit fields -->
+
+		<column name="userId" type="long" />
+		
 		<!-- Other fields -->
 		
 		<column name="projectId" type="long" />
@@ -94,6 +107,6 @@
 		<exception>InvalidDates</exception>
 		<exception>InvalidDescription</exception>
 		<exception>InvalidName</exception>
-		<exception>InvalidMoneyFormat</exception>
+		<exception>InvalidCurrencyFormat</exception>
 	</exceptions>
 </service-builder>

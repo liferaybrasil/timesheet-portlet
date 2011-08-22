@@ -14,38 +14,43 @@
  */
 --%>
 
-<%@ page import="com.liferay.timesheet.util.PortletPropsValues" %>
 <%@ include file="/html/init.jsp" %>
 
 <%
 String redirect = ParamUtil.getString(request, "redirect");
+
 long projectId = ParamUtil.getLong(request, "projectId");
+
 long taskId = ParamUtil.getLong(request, "taskId");
+
 Project project = ProjectLocalServiceUtil.getProject(projectId);
+
 Task task = null;
 if (taskId > 0) {
 	task = TaskLocalServiceUtil.getTask(taskId);
 }
 %>
 <liferay-ui:error exception="<%= InvalidNameException.class %>" message="please-enter-a-valid-name" />
+
 <liferay-ui:error exception="<%= InvalidDatesException.class %>" message="please-enter-a-valid-period-date" />
 
 <liferay-ui:header backURL="<%= redirect %>" localizeTitle="<%= task == null %>"
 	title='<%= (task != null) ? task.getName() : "new-task" %>' />
+
+<c:if test="<%= task != null %>">
+	<liferay-ui:message key='<%= LanguageUtil.format(pageContext, "responsible-x", PortalUtil.getUserName(task.getUserId(), "none")) %>' />
+</c:if>
 
 <aui:model-context bean="<%= task %>" model="<%= Task.class %>" />
 
 <portlet:actionURL name="updateTask" var="editTasktURL" />
 
 <aui:form action="<%= editTasktURL %>" method="POST" name="fm">
-	<aui:fieldset>
 		<aui:input type="hidden" name="redirect" value="<%= redirect %>" />
-
-		<aui:input type="hidden" name="projectId"
-			value='<%= project.getProjectId() %>' />
-
+		<aui:input type="hidden" name="projectId" value='<%= project.getProjectId() %>' />
 		<aui:input type="hidden" name="taskId" value="<%= taskId %>" />
 
+	<aui:fieldset>
 		<aui:input name="name" />
 
 		<aui:input name="startDate" />
@@ -53,14 +58,18 @@ if (taskId > 0) {
 		<aui:input name="endDate" />
 
 		<aui:select label="type" name="type">
+
 			<%
 				String[] types = PortletPropsValues.TASK_TYPES;
 				for (int i = 0; i < types.length; i++) {
 			%>
 
 			<aui:option selected="<%= i==0 %>" value="<%= i %>">
+
 				<liferay-ui:message key="<%= types[i] %>" />
+
 			</aui:option>
+
 			<%
 				}
 			%>

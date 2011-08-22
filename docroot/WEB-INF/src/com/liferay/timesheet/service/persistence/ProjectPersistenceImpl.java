@@ -313,6 +313,8 @@ public class ProjectPersistenceImpl extends BasePersistenceImpl<Project>
 		projectImpl.setPrimaryKey(project.getPrimaryKey());
 
 		projectImpl.setProjectId(project.getProjectId());
+		projectImpl.setGroupId(project.getGroupId());
+		projectImpl.setCompanyId(project.getCompanyId());
 		projectImpl.setUserId(project.getUserId());
 		projectImpl.setDescription(project.getDescription());
 		projectImpl.setEndDate(project.getEndDate());

@@ -18,12 +18,17 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.model.ResourceConstants;
+import com.liferay.portal.model.User;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
+import com.liferay.timesheet.InvalidCurrencyFormatException;
 import com.liferay.timesheet.InvalidDescriptionException;
-import com.liferay.timesheet.InvalidMoneyFormatException;
 import com.liferay.timesheet.model.Expense;
+import com.liferay.timesheet.model.Project;
+import com.liferay.timesheet.service.ProjectLocalServiceUtil;
 import com.liferay.timesheet.service.base.ExpenseLocalServiceBaseImpl;
 
 import java.util.Date;
@@ -37,8 +42,11 @@ public class ExpenseLocalServiceImpl extends ExpenseLocalServiceBaseImpl {
 	public Expense addExpense(
 			long projectId, String description, int purchasedDateMonth,
 			int purchasedDateDay, int purchasedDateYear, int type, double value,
-			long fileEntryId)
+			long fileEntryId, ServiceContext serviceContext)
 		throws PortalException, SystemException {
+
+		User user = userPersistence.findByPrimaryKey(
+			serviceContext.getUserId());
 
 		Date date = PortalUtil.getDate(
 			purchasedDateMonth, purchasedDateDay, purchasedDateYear);
@@ -49,6 +57,9 @@ public class ExpenseLocalServiceImpl extends ExpenseLocalServiceBaseImpl {
 
 		Expense expense =  expensePersistence.create(expenseId);
 
+		Project project = ProjectLocalServiceUtil.getProject(projectId);
+
+		expense.setUserId(user.getUserId());
 		expense.setProjectId(projectId);
 		expense.setDescription(description);
 		expense.setPurchasedDate(date);
@@ -57,6 +68,87 @@ public class ExpenseLocalServiceImpl extends ExpenseLocalServiceBaseImpl {
 		expense.setFileEntryId(fileEntryId);
 
 		expensePersistence.update(expense, false);
+
+		// Resources
+
+		if (serviceContext.getAddGroupPermissions() ||
+			serviceContext.getAddGuestPermissions()) {
+
+			addExpenseResources(
+				expense, serviceContext.getCompanyId(),
+				serviceContext.getScopeGroupId(), project.getUserId(),
+				serviceContext.getAddGroupPermissions(),
+				serviceContext.getAddGuestPermissions());
+		}
+		else {
+			addExpenseResources(
+				expense, serviceContext.getCompanyId(),
+				serviceContext.getScopeGroupId(), project.getUserId(),
+				serviceContext.getGroupPermissions(),
+				serviceContext.getGuestPermissions());
+		}
+
+		return expense;
+	}
+
+	public void addExpenseResources(
+			Expense expense, long companyId, long groupId, long userId,
+			boolean addGroupPermissions, boolean addGuestPermissions)
+		throws PortalException, SystemException {
+
+		resourceLocalService.addResources(
+			companyId, groupId, userId, Expense.class.getName(),
+			expense.getExpenseId(), false, addGroupPermissions,
+			addGuestPermissions);
+	}
+
+	public void addExpenseResources(
+			Expense expense, long companyId, long groupId, long userId,
+			String[] groupPermissions, String[] guestPermissions)
+		throws PortalException, SystemException {
+
+		resourceLocalService.addModelResources(
+			companyId, groupId, userId, Expense.class.getName(),
+			expense.getExpenseId(), groupPermissions, guestPermissions);
+	}
+
+	public void deleteExpense(long companyId, long expenseId)
+		throws SystemException, PortalException {
+
+		resourceLocalService.deleteResource(
+			companyId, Expense.class.getName(),
+			ResourceConstants.SCOPE_INDIVIDUAL, expenseId);
+
+		super.deleteExpense(expenseId);
+	}
+
+	@Override
+	public Expense getExpense(long expenseId)
+		throws PortalException, SystemException {
+
+		Expense expense = super.getExpense(expenseId);
+		if ( expense.getFileEntryId() > 0) {
+
+			try {
+				DLFileEntry fileEntry =
+					DLFileEntryLocalServiceUtil.getFileEntry(
+						expense.getFileEntryId());
+
+				StringBuilder sb = new StringBuilder();
+
+				sb.append("documents");
+				sb.append(StringPool.FORWARD_SLASH);
+				sb.append(fileEntry.getGroupId());
+				sb.append(StringPool.FORWARD_SLASH);
+				sb.append(fileEntry.getUuid());
+
+				expense.setFilePath(sb.toString());
+				expense.setFileName(fileEntry.getTitle());
+			}
+			catch (Exception e) {
+				expense.setFileEntryId(0);
+			}
+		}
 
 		return expense;
 	}
@@ -67,10 +159,16 @@ public class ExpenseLocalServiceImpl extends ExpenseLocalServiceBaseImpl {
 		return expensePersistence.findByProjectId(projectId);
 	}
 
+	public double getTotal(long projectId) throws SystemException {
+
+		return expenseFinder.sumByProject(projectId);
+	}
+
 	public Expense updateExpense(
-			long expenseId, long projectId, String description, 
+			long expenseId, long projectId, String description,
 			int purchasedDateMonth, int purchasedDateDay, int purchasedDateYear,
-			int type, double value, long fileEntryId)
+			int type, double value, long fileEntryId,
+			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
 		Expense expense = expensePersistence.findByPrimaryKey(expenseId);
@@ -79,6 +177,8 @@ public class ExpenseLocalServiceImpl extends ExpenseLocalServiceBaseImpl {
 
 		Date date = PortalUtil.getDate(
 			purchasedDateMonth, purchasedDateDay, purchasedDateYear);
+
+		Project project = ProjectLocalServiceUtil.getProject(projectId);
 
 		expense.setProjectId(projectId);
 		expense.setDescription(description);
@@ -89,35 +189,23 @@ public class ExpenseLocalServiceImpl extends ExpenseLocalServiceBaseImpl {
 
 		expensePersistence.update(expense, false);
 
-		return expense;
-	}
+		// Resources
 
-	@Override
-	public Expense getExpense(long expenseId)
-		throws PortalException, SystemException {
+		if (serviceContext.getAddGroupPermissions() ||
+			serviceContext.getAddGuestPermissions()) {
 
-		Expense expense = super.getExpense(expenseId);
-		if ( expense.getFileEntryId() > 0) {
-			
-			try {
-				DLFileEntry fileEntry = 
-					DLFileEntryLocalServiceUtil.getFileEntry(
-						expense.getFileEntryId());
-				
-				StringBuilder sb = new StringBuilder();
-
-				sb.append("documents");
-				sb.append(StringPool.FORWARD_SLASH);
-				sb.append(fileEntry.getGroupId());
-				sb.append(StringPool.FORWARD_SLASH);
-				sb.append(fileEntry.getUuid());
-				
-				expense.setFilePath(sb.toString());
-				expense.setFileName(fileEntry.getTitle());				
-			} 
-			catch (Exception e) {
-				expense.setFileEntryId(0);
-			}			
+			addExpenseResources(
+				expense, serviceContext.getCompanyId(),
+				serviceContext.getScopeGroupId(), project.getUserId(),
+				serviceContext.getAddGroupPermissions(),
+				serviceContext.getAddGuestPermissions());
+		}
+		else {
+			addExpenseResources(
+				expense, serviceContext.getCompanyId(),
+				serviceContext.getScopeGroupId(), project.getUserId(),
+				serviceContext.getGroupPermissions(),
+				serviceContext.getGuestPermissions());
 		}
 
 		return expense;
@@ -131,7 +219,7 @@ public class ExpenseLocalServiceImpl extends ExpenseLocalServiceBaseImpl {
 		}
 
 		if (Validator.isNull(String.valueOf(value)) || (value == 0)) {
-			throw new InvalidMoneyFormatException();
+			throw new InvalidCurrencyFormatException();
 		}
 	}
 

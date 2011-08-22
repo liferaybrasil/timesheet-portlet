@@ -31,13 +31,13 @@ public interface Expense extends ExpenseModel, PersistedModel {
 	 *
 	 * Never modify this interface directly. Add methods to {@link com.liferay.timesheet.model.impl.ExpenseImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
-	public java.lang.String getTypeDescription();
+	public java.lang.String getFileName();
 
 	public java.lang.String getFilePath();
 
-	public void setFilePath(java.lang.String filePath);
-
-	public java.lang.String getFileName();
+	public java.lang.String getTypeDescription();
 
 	public void setFileName(java.lang.String fileName);
+
+	public void setFilePath(java.lang.String filePath);
 }

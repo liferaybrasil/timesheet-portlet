@@ -26,8 +26,8 @@ ProjectDisplayTerms displayTerms = new ProjectDisplayTerms(renderRequest);
 	buttonLabel="search"
 >
 	<aui:fieldset>
-		<aui:input name="<%= ProjectDisplayTerms.NAME %>" size="20" type="text" value="<%= displayTerms.getName() %>" />
+		<aui:input name="<%= displayTerms.NAME %>" size="20" type="text" value="<%= displayTerms.getName() %>" />
 
-		<aui:input name="<%= ProjectDisplayTerms.DESCRIPTION %>" size="20" type="text" value="<%= displayTerms.getDescription() %>" />
+		<aui:input name="<%= displayTerms.DESCRIPTION %>" size="20" type="text" value="<%= displayTerms.getDescription() %>" />
 	</aui:fieldset>
 </liferay-ui:search-toggle>

@@ -10,6 +10,7 @@
 		<property name="service" ref="com.liferay.timesheet.service.ExpenseService" />
 	</bean>
 	<bean id="com.liferay.timesheet.service.persistence.ExpensePersistence" class="com.liferay.timesheet.service.persistence.ExpensePersistenceImpl" parent="basePersistence" />
+	<bean id="com.liferay.timesheet.service.persistence.ExpenseFinder" class="com.liferay.timesheet.service.persistence.ExpenseFinderImpl" parent="basePersistence" />
 	<bean id="com.liferay.timesheet.service.ProjectLocalService" class="com.liferay.timesheet.service.impl.ProjectLocalServiceImpl" />
 	<bean id="com.liferay.timesheet.service.ProjectLocalServiceUtil" class="com.liferay.timesheet.service.ProjectLocalServiceUtil">
 		<property name="service" ref="com.liferay.timesheet.service.ProjectLocalService" />
@@ -29,4 +30,5 @@
 		<property name="service" ref="com.liferay.timesheet.service.TaskService" />
 	</bean>
 	<bean id="com.liferay.timesheet.service.persistence.TaskPersistence" class="com.liferay.timesheet.service.persistence.TaskPersistenceImpl" parent="basePersistence" />
+	<bean id="com.liferay.timesheet.service.persistence.TaskFinder" class="com.liferay.timesheet.service.persistence.TaskFinderImpl" parent="basePersistence" />
 </beans>

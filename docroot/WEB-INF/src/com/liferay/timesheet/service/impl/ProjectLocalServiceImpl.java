@@ -18,11 +18,13 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.timesheet.InvalidCurrencyFormatException;
 import com.liferay.timesheet.InvalidDatesException;
 import com.liferay.timesheet.InvalidDescriptionException;
-import com.liferay.timesheet.InvalidMoneyFormatException;
 import com.liferay.timesheet.InvalidNameException;
 import com.liferay.timesheet.model.Expense;
 import com.liferay.timesheet.model.Project;
@@ -42,7 +44,8 @@ public class ProjectLocalServiceImpl extends ProjectLocalServiceBaseImpl {
 	public Project addProject(
 			long userId, String description, int endDateMonth, int endDateDay,
 			int endDateYear, int startDateMonth, int startDateDay,
-			int startDateYear, String name, double wage)
+			int startDateYear, String name, double wage,
+			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
 		User user = userPersistence.findByPrimaryKey(userId);
@@ -58,6 +61,8 @@ public class ProjectLocalServiceImpl extends ProjectLocalServiceBaseImpl {
 
 		Project project = projectPersistence.create(projectId);
 
+		project.setCompanyId(serviceContext.getCompanyId());
+		project.setGroupId(serviceContext.getScopeGroupId());
 		project.setUserId(user.getUserId());
 		project.setName(name);
 		project.setWage(wage);
@@ -67,11 +72,50 @@ public class ProjectLocalServiceImpl extends ProjectLocalServiceBaseImpl {
 
 		projectPersistence.update(project, false);
 
+		// Resources
+
+		if (serviceContext.getAddGroupPermissions() ||
+			serviceContext.getAddGuestPermissions()) {
+
+			addProjectResources(
+				project, serviceContext.getCompanyId(),
+				serviceContext.getScopeGroupId(), project.getUserId(),
+				serviceContext.getAddGroupPermissions(),
+				serviceContext.getAddGuestPermissions());
+		}
+		else {
+			addProjectResources(
+				project, serviceContext.getCompanyId(),
+				serviceContext.getScopeGroupId(), project.getUserId(),
+				serviceContext.getGroupPermissions(),
+				serviceContext.getGuestPermissions());
+		}
+
 		return project;
 	}
 
-	@Override
-	public void deleteProject(long projectId)
+	public void addProjectResources(
+			Project project, long companyId, long groupId, long userId,
+			boolean addGroupPermissions, boolean addGuestPermissions)
+		throws PortalException, SystemException {
+
+		resourceLocalService.addResources(
+			companyId, groupId, userId, Project.class.getName(),
+			project.getProjectId(), false, addGroupPermissions,
+			addGuestPermissions);
+	}
+
+	public void addProjectResources(
+			Project project, long companyId, long groupId, long userId,
+			String[] groupPermissions, String[] guestPermissions)
+		throws PortalException, SystemException {
+
+		resourceLocalService.addModelResources(
+			companyId, groupId, userId, Project.class.getName(),
+			project.getProjectId(), groupPermissions, guestPermissions);
+	}
+
+	public void deleteProject(long companyId, long projectId)
 		throws PortalException, SystemException {
 
 		List<Task> tasks = TaskLocalServiceUtil.getTaskByProjectId(projectId);
@@ -86,45 +130,54 @@ public class ProjectLocalServiceImpl extends ProjectLocalServiceBaseImpl {
 			ExpenseLocalServiceUtil.deleteExpense(expense.getExpenseId());
 		}
 
+		resourceLocalService.deleteResource(
+			companyId, Project.class.getName(),
+			ResourceConstants.SCOPE_INDIVIDUAL, projectId);
+
 		super.deleteProject(projectId);
 	}
 
 	public List<Project> search(
-			String keywords, int start, int end, 
+			long companyId, long groupId, String keywords, int start, int end,
 			OrderByComparator orderByComparator)
 		throws SystemException {
 
 		return projectFinder.findByKeywords(
-			keywords, start, end, orderByComparator);
+			companyId, groupId, keywords, start, end, orderByComparator);
 	}
 
 	public List<Project> search(
-			String name, String description, boolean andOperator, int start,
-			int end, OrderByComparator orderByComparator)
+			long companyId, long groupId, String name, String description,
+			boolean andOperator, int start, int end,
+			OrderByComparator orderByComparator)
 		throws SystemException {
 
 		return projectFinder.findByN_D(
-			wname, description, andOperator, start, end, orderByComparator);
+			companyId, groupId, name, description, andOperator, start, end,
+			orderByComparator);
 	}
 
 	public int searchCount(
-			String name, String description, boolean andOperator)
+			long companyId, long groupId, String name, String description,
+			boolean andOperator)
 		throws SystemException {
 
-		return projectFinder.countByN_D(name, description, andOperator);
+		return projectFinder.countByN_D(
+			companyId, groupId, name, description, andOperator);
 	}
 
-	public int searchCount(String keywords) throws SystemException {
-		return projectFinder.countByKeywords(keywords);
+	public int searchCount(long companyId, long groupId, String keywords)
+		throws SystemException {
+
+		return projectFinder.countByKeywords(companyId, groupId, keywords);
 	}
 
 	public Project updateProject(
 			long projectId, long userId, String description, int endDateMonth,
 			int endDateDay, int endDateYear, int startDateMonth,
-			int startDateDay, int startDateYear, String name, double wage)
+			int startDateDay, int startDateYear, String name, double wage,
+			ServiceContext serviceContext)
 		throws PortalException, SystemException {
-
-		User user = userPersistence.findByPrimaryKey(userId);
 
 		Project project = projectPersistence.findByPrimaryKey(projectId);
 
@@ -135,7 +188,8 @@ public class ProjectLocalServiceImpl extends ProjectLocalServiceBaseImpl {
 
 		validate(name, wage, description, startDate, endDate);
 
-		project.setUserId(user.getUserId());
+		project.setCompanyId(serviceContext.getCompanyId());
+		project.setGroupId(serviceContext.getScopeGroupId());
 		project.setName(name);
 		project.setWage(wage);
 		project.setDescription(description);
@@ -143,6 +197,25 @@ public class ProjectLocalServiceImpl extends ProjectLocalServiceBaseImpl {
 		project.setEndDate(endDate);
 
 		projectPersistence.update(project, false);
+
+		// Resources
+
+		if (serviceContext.getAddGroupPermissions() ||
+			serviceContext.getAddGuestPermissions()) {
+
+			addProjectResources(
+				project, serviceContext.getCompanyId(),
+				serviceContext.getScopeGroupId(), project.getUserId(),
+				serviceContext.getAddGroupPermissions(),
+				serviceContext.getAddGuestPermissions());
+		}
+		else {
+			addProjectResources(
+				project,  serviceContext.getCompanyId(),
+				serviceContext.getScopeGroupId(), project.getUserId(),
+				serviceContext.getGroupPermissions(),
+				serviceContext.getGuestPermissions());
+		}
 
 		return project;
 	}
@@ -161,7 +234,7 @@ public class ProjectLocalServiceImpl extends ProjectLocalServiceBaseImpl {
 		}
 
 		if (Validator.isNull(String.valueOf(wage)) || (wage == 0)) {
-			throw new InvalidMoneyFormatException();
+			throw new InvalidCurrencyFormatException();
 		}
 
 		if (startDate.after(endDate)) {

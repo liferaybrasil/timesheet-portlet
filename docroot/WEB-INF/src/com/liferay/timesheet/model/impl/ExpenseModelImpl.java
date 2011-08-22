@@ -15,6 +15,7 @@
 package com.liferay.timesheet.model.impl;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -23,6 +24,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.impl.BaseModelImpl;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.util.PortalUtil;
 
 import com.liferay.portlet.expando.model.ExpandoBridge;
 import com.liferay.portlet.expando.util.ExpandoBridgeFactoryUtil;
@@ -65,6 +67,7 @@ public class ExpenseModelImpl extends BaseModelImpl<Expense>
 	public static final String TABLE_NAME = "Timesheet_Expense";
 	public static final Object[][] TABLE_COLUMNS = {
 			{ "expenseId", Types.BIGINT },
+			{ "userId", Types.BIGINT },
 			{ "projectId", Types.BIGINT },
 			{ "description", Types.VARCHAR },
 			{ "purchasedDate", Types.TIMESTAMP },
@@ -72,7 +75,7 @@ public class ExpenseModelImpl extends BaseModelImpl<Expense>
 			{ "value", Types.DOUBLE },
 			{ "fileEntryId", Types.BIGINT }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Timesheet_Expense (expenseId LONG not null primary key,projectId LONG,description VARCHAR(75) null,purchasedDate DATE null,type_ INTEGER,value DOUBLE,fileEntryId LONG)";
+	public static final String TABLE_SQL_CREATE = "create table Timesheet_Expense (expenseId LONG not null primary key,userId LONG,projectId LONG,description VARCHAR(75) null,purchasedDate DATE null,type_ INTEGER,value DOUBLE,fileEntryId LONG)";
 	public static final String TABLE_SQL_DROP = "drop table Timesheet_Expense";
 	public static final String ORDER_BY_JPQL = " ORDER BY expense.purchasedDate DESC";
 	public static final String ORDER_BY_SQL = " ORDER BY Timesheet_Expense.purchasedDate DESC";
@@ -96,6 +99,7 @@ public class ExpenseModelImpl extends BaseModelImpl<Expense>
 		Expense model = new ExpenseImpl();
 
 		model.setExpenseId(soapModel.getExpenseId());
+		model.setUserId(soapModel.getUserId());
 		model.setProjectId(soapModel.getProjectId());
 		model.setDescription(soapModel.getDescription());
 		model.setPurchasedDate(soapModel.getPurchasedDate());
@@ -159,6 +163,23 @@ public class ExpenseModelImpl extends BaseModelImpl<Expense>
 
 	public void setExpenseId(long expenseId) {
 		_expenseId = expenseId;
+	}
+
+	@JSON
+	public long getUserId() {
+		return _userId;
+	}
+
+	public void setUserId(long userId) {
+		_userId = userId;
+	}
+
+	public String getUserUuid() throws SystemException {
+		return PortalUtil.getUserValue(getUserId(), "uuid", _userUuid);
+	}
+
+	public void setUserUuid(String userUuid) {
+		_userUuid = userUuid;
 	}
 
 	@JSON
@@ -256,6 +277,7 @@ public class ExpenseModelImpl extends BaseModelImpl<Expense>
 		ExpenseImpl expenseImpl = new ExpenseImpl();
 
 		expenseImpl.setExpenseId(getExpenseId());
+		expenseImpl.setUserId(getUserId());
 		expenseImpl.setProjectId(getProjectId());
 		expenseImpl.setDescription(getDescription());
 		expenseImpl.setPurchasedDate(getPurchasedDate());
@@ -323,6 +345,8 @@ public class ExpenseModelImpl extends BaseModelImpl<Expense>
 
 		expenseCacheModel.expenseId = getExpenseId();
 
+		expenseCacheModel.userId = getUserId();
+
 		expenseCacheModel.projectId = getProjectId();
 
 		expenseCacheModel.description = getDescription();
@@ -353,10 +377,12 @@ public class ExpenseModelImpl extends BaseModelImpl<Expense>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(15);
+		StringBundler sb = new StringBundler(17);
 
 		sb.append("{expenseId=");
 		sb.append(getExpenseId());
+		sb.append(", userId=");
+		sb.append(getUserId());
 		sb.append(", projectId=");
 		sb.append(getProjectId());
 		sb.append(", description=");
@@ -375,7 +401,7 @@ public class ExpenseModelImpl extends BaseModelImpl<Expense>
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(28);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.timesheet.model.Expense");
@@ -384,6 +410,10 @@ public class ExpenseModelImpl extends BaseModelImpl<Expense>
 		sb.append(
 			"<column><column-name>expenseId</column-name><column-value><![CDATA[");
 		sb.append(getExpenseId());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>userId</column-name><column-value><![CDATA[");
+		sb.append(getUserId());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>projectId</column-name><column-value><![CDATA[");
@@ -420,6 +450,8 @@ public class ExpenseModelImpl extends BaseModelImpl<Expense>
 			Expense.class
 		};
 	private long _expenseId;
+	private long _userId;
+	private String _userUuid;
 	private long _projectId;
 	private String _description;
 	private Date _purchasedDate;

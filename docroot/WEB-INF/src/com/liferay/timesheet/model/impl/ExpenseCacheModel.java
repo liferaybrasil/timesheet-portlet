@@ -32,10 +32,12 @@ import java.util.Date;
 public class ExpenseCacheModel implements CacheModel<Expense> {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(15);
+		StringBundler sb = new StringBundler(17);
 
 		sb.append("{expenseId=");
 		sb.append(expenseId);
+		sb.append(", userId=");
+		sb.append(userId);
 		sb.append(", projectId=");
 		sb.append(projectId);
 		sb.append(", description=");
@@ -57,6 +59,7 @@ public class ExpenseCacheModel implements CacheModel<Expense> {
 		ExpenseImpl expenseImpl = new ExpenseImpl();
 
 		expenseImpl.setExpenseId(expenseId);
+		expenseImpl.setUserId(userId);
 		expenseImpl.setProjectId(projectId);
 
 		if (description == null) {
@@ -83,6 +86,7 @@ public class ExpenseCacheModel implements CacheModel<Expense> {
 	}
 
 	public long expenseId;
+	public long userId;
 	public long projectId;
 	public String description;
 	public long purchasedDate;

@@ -1,5 +1,6 @@
 create table Timesheet_Expense (
 	expenseId LONG not null primary key,
+	userId LONG,
 	projectId LONG,
 	description VARCHAR(75) null,
 	purchasedDate DATE null,
@@ -10,6 +11,8 @@ create table Timesheet_Expense (
 
 create table Timesheet_Project (
 	projectId LONG not null primary key,
+	groupId LONG,
+	companyId LONG,
 	userId LONG,
 	description VARCHAR(75) null,
 	endDate DATE null,
@@ -20,6 +23,7 @@ create table Timesheet_Project (
 
 create table Timesheet_Task (
 	taskId LONG not null primary key,
+	userId LONG,
 	projectId LONG,
 	name VARCHAR(75) null,
 	type_ INTEGER,

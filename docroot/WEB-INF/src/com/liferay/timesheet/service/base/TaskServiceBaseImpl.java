@@ -36,9 +36,11 @@ import com.liferay.timesheet.service.ProjectLocalService;
 import com.liferay.timesheet.service.ProjectService;
 import com.liferay.timesheet.service.TaskLocalService;
 import com.liferay.timesheet.service.TaskService;
+import com.liferay.timesheet.service.persistence.ExpenseFinder;
 import com.liferay.timesheet.service.persistence.ExpensePersistence;
 import com.liferay.timesheet.service.persistence.ProjectFinder;
 import com.liferay.timesheet.service.persistence.ProjectPersistence;
+import com.liferay.timesheet.service.persistence.TaskFinder;
 import com.liferay.timesheet.service.persistence.TaskPersistence;
 
 import javax.sql.DataSource;
@@ -115,6 +117,24 @@ public abstract class TaskServiceBaseImpl extends PrincipalBean
 	 */
 	public void setExpensePersistence(ExpensePersistence expensePersistence) {
 		this.expensePersistence = expensePersistence;
+	}
+
+	/**
+	 * Returns the expense finder.
+	 *
+	 * @return the expense finder
+	 */
+	public ExpenseFinder getExpenseFinder() {
+		return expenseFinder;
+	}
+
+	/**
+	 * Sets the expense finder.
+	 *
+	 * @param expenseFinder the expense finder
+	 */
+	public void setExpenseFinder(ExpenseFinder expenseFinder) {
+		this.expenseFinder = expenseFinder;
 	}
 
 	/**
@@ -241,6 +261,24 @@ public abstract class TaskServiceBaseImpl extends PrincipalBean
 	 */
 	public void setTaskPersistence(TaskPersistence taskPersistence) {
 		this.taskPersistence = taskPersistence;
+	}
+
+	/**
+	 * Returns the task finder.
+	 *
+	 * @return the task finder
+	 */
+	public TaskFinder getTaskFinder() {
+		return taskFinder;
+	}
+
+	/**
+	 * Sets the task finder.
+	 *
+	 * @param taskFinder the task finder
+	 */
+	public void setTaskFinder(TaskFinder taskFinder) {
+		this.taskFinder = taskFinder;
 	}
 
 	/**
@@ -427,6 +465,8 @@ public abstract class TaskServiceBaseImpl extends PrincipalBean
 	protected ExpenseService expenseService;
 	@BeanReference(type = ExpensePersistence.class)
 	protected ExpensePersistence expensePersistence;
+	@BeanReference(type = ExpenseFinder.class)
+	protected ExpenseFinder expenseFinder;
 	@BeanReference(type = ProjectLocalService.class)
 	protected ProjectLocalService projectLocalService;
 	@BeanReference(type = ProjectService.class)
@@ -441,6 +481,8 @@ public abstract class TaskServiceBaseImpl extends PrincipalBean
 	protected TaskService taskService;
 	@BeanReference(type = TaskPersistence.class)
 	protected TaskPersistence taskPersistence;
+	@BeanReference(type = TaskFinder.class)
+	protected TaskFinder taskFinder;
 	@BeanReference(type = CounterLocalService.class)
 	protected CounterLocalService counterLocalService;
 	@BeanReference(type = ResourceLocalService.class)

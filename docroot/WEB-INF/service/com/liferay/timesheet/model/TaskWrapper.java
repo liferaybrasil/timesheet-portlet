@@ -73,6 +73,44 @@ public class TaskWrapper implements Task {
 	}
 
 	/**
+	* Returns the user ID of this task.
+	*
+	* @return the user ID of this task
+	*/
+	public long getUserId() {
+		return _task.getUserId();
+	}
+
+	/**
+	* Sets the user ID of this task.
+	*
+	* @param userId the user ID of this task
+	*/
+	public void setUserId(long userId) {
+		_task.setUserId(userId);
+	}
+
+	/**
+	* Returns the user uuid of this task.
+	*
+	* @return the user uuid of this task
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.lang.String getUserUuid()
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _task.getUserUuid();
+	}
+
+	/**
+	* Sets the user uuid of this task.
+	*
+	* @param userUuid the user uuid of this task
+	*/
+	public void setUserUuid(java.lang.String userUuid) {
+		_task.setUserUuid(userUuid);
+	}
+
+	/**
 	* Returns the project ID of this task.
 	*
 	* @return the project ID of this task
@@ -237,10 +275,6 @@ public class TaskWrapper implements Task {
 	public void persist()
 		throws com.liferay.portal.kernel.exception.SystemException {
 		_task.persist();
-	}
-
-	public long getTotalHours() {
-		return _task.getTotalHours();
 	}
 
 	public java.lang.String getTypeDescription() {

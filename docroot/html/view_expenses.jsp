@@ -17,22 +17,26 @@
 <%@ include file="/html/init.jsp" %>
 
 <%
-	long projectId = ParamUtil.getLong(request, "projectId");
-	String currentUrl = PortalUtil.getCurrentURL(renderRequest);
-	List<Expense> expenses = ExpenseLocalServiceUtil.getExpenseByProjectId(projectId);
-	int count = expenses.size();
-	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+long projectId = ParamUtil.getLong(request, "projectId");
+
+String currentUrl = PortalUtil.getCurrentURL(renderRequest);
+
+List<Expense> expenses = ExpenseLocalServiceUtil.getExpenseByProjectId(projectId);
+
+int count = expenses.size();
 %>
 
-<aui:button-row>
-	<portlet:renderURL var="addExpenseURL">
-		<portlet:param name="jspPage" value="/html/edit_expense.jsp" />
-		<portlet:param name="projectId" value="<%= String.valueOf(projectId) %>" />
-		<portlet:param name="redirect" value="<%= HtmlUtil.escapeHREF(currentUrl) %>" />
-	</portlet:renderURL>
+<c:if test="<%= TimesheetPermission.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_EXPENSE) %>">
+	<aui:button-row>
+		<portlet:renderURL var="addExpenseURL">
+			<portlet:param name="jspPage" value="/html/edit_expense.jsp" />
+			<portlet:param name="projectId" value="<%= String.valueOf(projectId) %>" />
+			<portlet:param name="redirect" value="<%= HtmlUtil.escapeHREF(currentUrl) %>" />
+		</portlet:renderURL>
 
-	<aui:button value="add-expense" onClick="<%= addExpenseURL.toString() %>" />
-</aui:button-row>
+		<aui:button value="add-expense" onClick="<%= addExpenseURL.toString() %>" />
+	</aui:button-row>
+</c:if>
 
 <liferay-ui:search-container
 	emptyResultsMessage="no-entries-were-found">
@@ -44,10 +48,14 @@
 		keyProperty="expenseId" modelVar="expense">
 		<liferay-ui:search-container-column-text name="description" property="description" />
 
-		<liferay-ui:search-container-column-text name="purchasedDate"
-			value="<%= sdf.format(expense.getPurchasedDate()) %>" />
+		<liferay-ui:search-container-column-text name="responsible"
+			value='<%= PortalUtil.getUserName(expense.getUserId(), "none") %>' />
 
-		<liferay-ui:search-container-column-text name="value" property="value" />
+		<liferay-ui:search-container-column-text name="purchasedDate"
+			value="<%= format.format(expense.getPurchasedDate()) %>" />
+
+		<liferay-ui:search-container-column-text name="value"
+			value="<%= currencyFormat.format(expense.getValue()) %>" />
 
 		<liferay-ui:search-container-column-text name="typeDescription" translate="<%= true %>"
 			property="typeDescription" />

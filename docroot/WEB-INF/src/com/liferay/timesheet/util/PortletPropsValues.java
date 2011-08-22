@@ -21,10 +21,10 @@ import com.liferay.util.portlet.PortletProps;
  */
 public class PortletPropsValues {
 
-	public static final String[] TASK_TYPES = PortletProps.getArray(
-			PortletPropsKeys.TASK_TYPES);
-
 	public static final String[] EXPENSE_TYPES = PortletProps.getArray(
-			PortletPropsKeys.EXPENSE_TYPES);
+		PortletPropsKeys.EXPENSE_TYPES);
+
+	public static final String[] TASK_TYPES = PortletProps.getArray(
+		PortletPropsKeys.TASK_TYPES);
 
 }

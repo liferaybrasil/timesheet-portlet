@@ -230,7 +230,26 @@ public interface ExpenseLocalService extends PersistedModelLocalService {
 	public com.liferay.timesheet.model.Expense addExpense(long projectId,
 		java.lang.String description, int purchasedDateMonth,
 		int purchasedDateDay, int purchasedDateYear, int type, double value,
-		long fileEntryId)
+		long fileEntryId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	public void addExpenseResources(
+		com.liferay.timesheet.model.Expense expense, long companyId,
+		long groupId, long userId, boolean addGroupPermissions,
+		boolean addGuestPermissions)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	public void addExpenseResources(
+		com.liferay.timesheet.model.Expense expense, long companyId,
+		long groupId, long userId, java.lang.String[] groupPermissions,
+		java.lang.String[] guestPermissions)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	public void deleteExpense(long companyId, long expenseId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
@@ -239,10 +258,15 @@ public interface ExpenseLocalService extends PersistedModelLocalService {
 		long projectId)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public double getTotal(long projectId)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
 	public com.liferay.timesheet.model.Expense updateExpense(long expenseId,
 		long projectId, java.lang.String description, int purchasedDateMonth,
 		int purchasedDateDay, int purchasedDateYear, int type, double value,
-		long fileEntryId)
+		long fileEntryId,
+		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 }

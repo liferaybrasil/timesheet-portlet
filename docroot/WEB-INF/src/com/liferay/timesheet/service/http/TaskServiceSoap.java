@@ -14,6 +14,13 @@
 
 package com.liferay.timesheet.service.http;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+
+import com.liferay.timesheet.service.TaskServiceUtil;
+
+import java.rmi.RemoteException;
+
 /**
  * <p>
  * This class provides a SOAP utility for the
@@ -58,4 +65,76 @@ package com.liferay.timesheet.service.http;
  * @generated
  */
 public class TaskServiceSoap {
+	public static com.liferay.timesheet.model.TaskSoap addTask(long projectId,
+		java.lang.String name, int type, int startDateMonth, int startDateDay,
+		int startDateYear, int startDateHour, int startDateMinute,
+		int endDateMonth, int endDateDay, int endDateYear, int endDateHour,
+		int endDateMinute,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			com.liferay.timesheet.model.Task returnValue = TaskServiceUtil.addTask(projectId,
+					name, type, startDateMonth, startDateDay, startDateYear,
+					startDateHour, startDateMinute, endDateMonth, endDateDay,
+					endDateYear, endDateHour, endDateMinute, serviceContext);
+
+			return com.liferay.timesheet.model.TaskSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void deleteTask(long companyId, long taskId)
+		throws RemoteException {
+		try {
+			TaskServiceUtil.deleteTask(companyId, taskId);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.timesheet.model.TaskSoap getTask(long taskId)
+		throws RemoteException {
+		try {
+			com.liferay.timesheet.model.Task returnValue = TaskServiceUtil.getTask(taskId);
+
+			return com.liferay.timesheet.model.TaskSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.timesheet.model.TaskSoap updateTask(long taskId,
+		long projectId, java.lang.String name, int type, int startDateMonth,
+		int startDateDay, int startDateYear, int startDateHour,
+		int startDateMinute, int endDateMonth, int endDateDay, int endDateYear,
+		int endDateHour, int endDateMinute,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			com.liferay.timesheet.model.Task returnValue = TaskServiceUtil.updateTask(taskId,
+					projectId, name, type, startDateMonth, startDateDay,
+					startDateYear, startDateHour, startDateMinute,
+					endDateMonth, endDateDay, endDateYear, endDateHour,
+					endDateMinute, serviceContext);
+
+			return com.liferay.timesheet.model.TaskSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	private static Log _log = LogFactoryUtil.getLog(TaskServiceSoap.class);
 }

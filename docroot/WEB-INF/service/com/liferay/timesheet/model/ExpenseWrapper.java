@@ -73,6 +73,44 @@ public class ExpenseWrapper implements Expense {
 	}
 
 	/**
+	* Returns the user ID of this expense.
+	*
+	* @return the user ID of this expense
+	*/
+	public long getUserId() {
+		return _expense.getUserId();
+	}
+
+	/**
+	* Sets the user ID of this expense.
+	*
+	* @param userId the user ID of this expense
+	*/
+	public void setUserId(long userId) {
+		_expense.setUserId(userId);
+	}
+
+	/**
+	* Returns the user uuid of this expense.
+	*
+	* @return the user uuid of this expense
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.lang.String getUserUuid()
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _expense.getUserUuid();
+	}
+
+	/**
+	* Sets the user uuid of this expense.
+	*
+	* @param userUuid the user uuid of this expense
+	*/
+	public void setUserUuid(java.lang.String userUuid) {
+		_expense.setUserUuid(userUuid);
+	}
+
+	/**
 	* Returns the project ID of this expense.
 	*
 	* @return the project ID of this expense
@@ -257,24 +295,24 @@ public class ExpenseWrapper implements Expense {
 		_expense.persist();
 	}
 
-	public java.lang.String getTypeDescription() {
-		return _expense.getTypeDescription();
+	public java.lang.String getFileName() {
+		return _expense.getFileName();
 	}
 
 	public java.lang.String getFilePath() {
 		return _expense.getFilePath();
 	}
 
-	public void setFilePath(java.lang.String filePath) {
-		_expense.setFilePath(filePath);
-	}
-
-	public java.lang.String getFileName() {
-		return _expense.getFileName();
+	public java.lang.String getTypeDescription() {
+		return _expense.getTypeDescription();
 	}
 
 	public void setFileName(java.lang.String fileName) {
 		_expense.setFileName(fileName);
+	}
+
+	public void setFilePath(java.lang.String filePath) {
+		_expense.setFilePath(filePath);
 	}
 
 	public Expense getWrappedExpense() {

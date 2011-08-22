@@ -231,7 +231,24 @@ public interface TaskLocalService extends PersistedModelLocalService {
 		java.lang.String name, int type, int startDateMonth, int startDateDay,
 		int startDateYear, int startDateHour, int startDateMinute,
 		int endDateMonth, int endDateDay, int endDateYear, int endDateHour,
-		int endDateMinute)
+		int endDateMinute,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	public void addTaskResources(com.liferay.timesheet.model.Task task,
+		long companyId, long groupId, long userId, boolean addGroupPermissions,
+		boolean addGuestPermissions)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	public void addTaskResources(com.liferay.timesheet.model.Task task,
+		long companyId, long groupId, long userId,
+		java.lang.String[] groupPermissions, java.lang.String[] guestPermissions)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	public void deleteTask(long companyId, long taskId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
@@ -240,11 +257,16 @@ public interface TaskLocalService extends PersistedModelLocalService {
 		long projectId)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public double getSumHoursByProject(long projectId)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
 	public com.liferay.timesheet.model.Task updateTask(long taskId,
 		long projectId, java.lang.String name, int type, int startDateMonth,
 		int startDateDay, int startDateYear, int startDateHour,
 		int startDateMinute, int endDateMonth, int endDateDay, int endDateYear,
-		int endDateHour, int endDateMinute)
+		int endDateHour, int endDateMinute,
+		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 }

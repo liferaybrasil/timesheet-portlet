@@ -31,7 +31,5 @@ public interface Task extends TaskModel, PersistedModel {
 	 *
 	 * Never modify this interface directly. Add methods to {@link com.liferay.timesheet.model.impl.TaskImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
-	public long getTotalHours();
-
 	public java.lang.String getTypeDescription();
 }

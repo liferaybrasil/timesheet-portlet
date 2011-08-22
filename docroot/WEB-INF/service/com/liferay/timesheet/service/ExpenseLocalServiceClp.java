@@ -83,15 +83,34 @@ public class ExpenseLocalServiceClp implements ExpenseLocalService {
 
 		_addExpenseMethodKey16 = new MethodKey(_classLoaderProxy.getClassName(),
 				"addExpense", long.class, java.lang.String.class, int.class,
-				int.class, int.class, int.class, double.class, long.class);
+				int.class, int.class, int.class, double.class, long.class,
+				com.liferay.portal.service.ServiceContext.class);
 
-		_getExpenseByProjectIdMethodKey17 = new MethodKey(_classLoaderProxy.getClassName(),
+		_addExpenseResourcesMethodKey17 = new MethodKey(_classLoaderProxy.getClassName(),
+				"addExpenseResources",
+				com.liferay.timesheet.model.Expense.class, long.class,
+				long.class, long.class, boolean.class, boolean.class);
+
+		_addExpenseResourcesMethodKey18 = new MethodKey(_classLoaderProxy.getClassName(),
+				"addExpenseResources",
+				com.liferay.timesheet.model.Expense.class, long.class,
+				long.class, long.class, java.lang.String[].class,
+				java.lang.String[].class);
+
+		_deleteExpenseMethodKey19 = new MethodKey(_classLoaderProxy.getClassName(),
+				"deleteExpense", long.class, long.class);
+
+		_getExpenseByProjectIdMethodKey20 = new MethodKey(_classLoaderProxy.getClassName(),
 				"getExpenseByProjectId", long.class);
 
-		_updateExpenseMethodKey18 = new MethodKey(_classLoaderProxy.getClassName(),
+		_getTotalMethodKey21 = new MethodKey(_classLoaderProxy.getClassName(),
+				"getTotal", long.class);
+
+		_updateExpenseMethodKey22 = new MethodKey(_classLoaderProxy.getClassName(),
 				"updateExpense", long.class, long.class,
 				java.lang.String.class, int.class, int.class, int.class,
-				int.class, double.class, long.class);
+				int.class, double.class, long.class,
+				com.liferay.portal.service.ServiceContext.class);
 	}
 
 	public com.liferay.timesheet.model.Expense addExpense(
@@ -530,7 +549,8 @@ public class ExpenseLocalServiceClp implements ExpenseLocalService {
 	public com.liferay.timesheet.model.Expense addExpense(long projectId,
 		java.lang.String description, int purchasedDateMonth,
 		int purchasedDateDay, int purchasedDateYear, int type, double value,
-		long fileEntryId)
+		long fileEntryId,
+		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
@@ -538,7 +558,7 @@ public class ExpenseLocalServiceClp implements ExpenseLocalService {
 		MethodHandler methodHandler = new MethodHandler(_addExpenseMethodKey16,
 				projectId, ClpSerializer.translateInput(description),
 				purchasedDateMonth, purchasedDateDay, purchasedDateYear, type,
-				value, fileEntryId);
+				value, fileEntryId, ClpSerializer.translateInput(serviceContext));
 
 		try {
 			returnObj = _classLoaderProxy.invoke(methodHandler);
@@ -564,12 +584,105 @@ public class ExpenseLocalServiceClp implements ExpenseLocalService {
 		return (com.liferay.timesheet.model.Expense)ClpSerializer.translateOutput(returnObj);
 	}
 
+	public void addExpenseResources(
+		com.liferay.timesheet.model.Expense expense, long companyId,
+		long groupId, long userId, boolean addGroupPermissions,
+		boolean addGuestPermissions)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		MethodHandler methodHandler = new MethodHandler(_addExpenseResourcesMethodKey17,
+				ClpSerializer.translateInput(expense), companyId, groupId,
+				userId, addGroupPermissions, addGuestPermissions);
+
+		try {
+			_classLoaderProxy.invoke(methodHandler);
+		}
+		catch (Throwable t) {
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+	}
+
+	public void addExpenseResources(
+		com.liferay.timesheet.model.Expense expense, long companyId,
+		long groupId, long userId, java.lang.String[] groupPermissions,
+		java.lang.String[] guestPermissions)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		MethodHandler methodHandler = new MethodHandler(_addExpenseResourcesMethodKey18,
+				ClpSerializer.translateInput(expense), companyId, groupId,
+				userId, ClpSerializer.translateInput(groupPermissions),
+				ClpSerializer.translateInput(guestPermissions));
+
+		try {
+			_classLoaderProxy.invoke(methodHandler);
+		}
+		catch (Throwable t) {
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+	}
+
+	public void deleteExpense(long companyId, long expenseId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		MethodHandler methodHandler = new MethodHandler(_deleteExpenseMethodKey19,
+				companyId, expenseId);
+
+		try {
+			_classLoaderProxy.invoke(methodHandler);
+		}
+		catch (Throwable t) {
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+	}
+
 	public java.util.List<com.liferay.timesheet.model.Expense> getExpenseByProjectId(
 		long projectId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_getExpenseByProjectIdMethodKey17,
+		MethodHandler methodHandler = new MethodHandler(_getExpenseByProjectIdMethodKey20,
 				projectId);
 
 		try {
@@ -592,18 +705,47 @@ public class ExpenseLocalServiceClp implements ExpenseLocalService {
 		return (java.util.List<com.liferay.timesheet.model.Expense>)ClpSerializer.translateOutput(returnObj);
 	}
 
+	public double getTotal(long projectId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		Object returnObj = null;
+
+		MethodHandler methodHandler = new MethodHandler(_getTotalMethodKey21,
+				projectId);
+
+		try {
+			returnObj = _classLoaderProxy.invoke(methodHandler);
+		}
+		catch (Throwable t) {
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return ((Double)returnObj).doubleValue();
+	}
+
 	public com.liferay.timesheet.model.Expense updateExpense(long expenseId,
 		long projectId, java.lang.String description, int purchasedDateMonth,
 		int purchasedDateDay, int purchasedDateYear, int type, double value,
-		long fileEntryId)
+		long fileEntryId,
+		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_updateExpenseMethodKey18,
+		MethodHandler methodHandler = new MethodHandler(_updateExpenseMethodKey22,
 				expenseId, projectId,
 				ClpSerializer.translateInput(description), purchasedDateMonth,
-				purchasedDateDay, purchasedDateYear, type, value, fileEntryId);
+				purchasedDateDay, purchasedDateYear, type, value, fileEntryId,
+				ClpSerializer.translateInput(serviceContext));
 
 		try {
 			returnObj = _classLoaderProxy.invoke(methodHandler);
@@ -651,6 +793,10 @@ public class ExpenseLocalServiceClp implements ExpenseLocalService {
 	private MethodKey _getBeanIdentifierMethodKey14;
 	private MethodKey _setBeanIdentifierMethodKey15;
 	private MethodKey _addExpenseMethodKey16;
-	private MethodKey _getExpenseByProjectIdMethodKey17;
-	private MethodKey _updateExpenseMethodKey18;
+	private MethodKey _addExpenseResourcesMethodKey17;
+	private MethodKey _addExpenseResourcesMethodKey18;
+	private MethodKey _deleteExpenseMethodKey19;
+	private MethodKey _getExpenseByProjectIdMethodKey20;
+	private MethodKey _getTotalMethodKey21;
+	private MethodKey _updateExpenseMethodKey22;
 }

@@ -244,12 +244,39 @@ public class ExpenseLocalServiceWrapper implements ExpenseLocalService {
 	public com.liferay.timesheet.model.Expense addExpense(long projectId,
 		java.lang.String description, int purchasedDateMonth,
 		int purchasedDateDay, int purchasedDateYear, int type, double value,
-		long fileEntryId)
+		long fileEntryId,
+		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _expenseLocalService.addExpense(projectId, description,
 			purchasedDateMonth, purchasedDateDay, purchasedDateYear, type,
-			value, fileEntryId);
+			value, fileEntryId, serviceContext);
+	}
+
+	public void addExpenseResources(
+		com.liferay.timesheet.model.Expense expense, long companyId,
+		long groupId, long userId, boolean addGroupPermissions,
+		boolean addGuestPermissions)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_expenseLocalService.addExpenseResources(expense, companyId, groupId,
+			userId, addGroupPermissions, addGuestPermissions);
+	}
+
+	public void addExpenseResources(
+		com.liferay.timesheet.model.Expense expense, long companyId,
+		long groupId, long userId, java.lang.String[] groupPermissions,
+		java.lang.String[] guestPermissions)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_expenseLocalService.addExpenseResources(expense, companyId, groupId,
+			userId, groupPermissions, guestPermissions);
+	}
+
+	public void deleteExpense(long companyId, long expenseId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_expenseLocalService.deleteExpense(companyId, expenseId);
 	}
 
 	public java.util.List<com.liferay.timesheet.model.Expense> getExpenseByProjectId(
@@ -258,15 +285,21 @@ public class ExpenseLocalServiceWrapper implements ExpenseLocalService {
 		return _expenseLocalService.getExpenseByProjectId(projectId);
 	}
 
+	public double getTotal(long projectId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _expenseLocalService.getTotal(projectId);
+	}
+
 	public com.liferay.timesheet.model.Expense updateExpense(long expenseId,
 		long projectId, java.lang.String description, int purchasedDateMonth,
 		int purchasedDateDay, int purchasedDateYear, int type, double value,
-		long fileEntryId)
+		long fileEntryId,
+		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _expenseLocalService.updateExpense(expenseId, projectId,
 			description, purchasedDateMonth, purchasedDateDay,
-			purchasedDateYear, type, value, fileEntryId);
+			purchasedDateYear, type, value, fileEntryId, serviceContext);
 	}
 
 	public ExpenseLocalService getWrappedExpenseLocalService() {

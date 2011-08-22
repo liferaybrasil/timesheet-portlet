@@ -245,12 +245,38 @@ public class TaskLocalServiceWrapper implements TaskLocalService {
 		java.lang.String name, int type, int startDateMonth, int startDateDay,
 		int startDateYear, int startDateHour, int startDateMinute,
 		int endDateMonth, int endDateDay, int endDateYear, int endDateHour,
-		int endDateMinute)
+		int endDateMinute,
+		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _taskLocalService.addTask(projectId, name, type, startDateMonth,
 			startDateDay, startDateYear, startDateHour, startDateMinute,
-			endDateMonth, endDateDay, endDateYear, endDateHour, endDateMinute);
+			endDateMonth, endDateDay, endDateYear, endDateHour, endDateMinute,
+			serviceContext);
+	}
+
+	public void addTaskResources(com.liferay.timesheet.model.Task task,
+		long companyId, long groupId, long userId, boolean addGroupPermissions,
+		boolean addGuestPermissions)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_taskLocalService.addTaskResources(task, companyId, groupId, userId,
+			addGroupPermissions, addGuestPermissions);
+	}
+
+	public void addTaskResources(com.liferay.timesheet.model.Task task,
+		long companyId, long groupId, long userId,
+		java.lang.String[] groupPermissions, java.lang.String[] guestPermissions)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_taskLocalService.addTaskResources(task, companyId, groupId, userId,
+			groupPermissions, guestPermissions);
+	}
+
+	public void deleteTask(long companyId, long taskId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_taskLocalService.deleteTask(companyId, taskId);
 	}
 
 	public java.util.List<com.liferay.timesheet.model.Task> getTaskByProjectId(
@@ -259,17 +285,23 @@ public class TaskLocalServiceWrapper implements TaskLocalService {
 		return _taskLocalService.getTaskByProjectId(projectId);
 	}
 
+	public double getSumHoursByProject(long projectId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _taskLocalService.getSumHoursByProject(projectId);
+	}
+
 	public com.liferay.timesheet.model.Task updateTask(long taskId,
 		long projectId, java.lang.String name, int type, int startDateMonth,
 		int startDateDay, int startDateYear, int startDateHour,
 		int startDateMinute, int endDateMonth, int endDateDay, int endDateYear,
-		int endDateHour, int endDateMinute)
+		int endDateHour, int endDateMinute,
+		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _taskLocalService.updateTask(taskId, projectId, name, type,
 			startDateMonth, startDateDay, startDateYear, startDateHour,
 			startDateMinute, endDateMonth, endDateDay, endDateYear,
-			endDateHour, endDateMinute);
+			endDateHour, endDateMinute, serviceContext);
 	}
 
 	public TaskLocalService getWrappedTaskLocalService() {

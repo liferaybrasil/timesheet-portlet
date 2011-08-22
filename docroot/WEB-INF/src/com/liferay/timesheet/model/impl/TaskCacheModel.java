@@ -32,10 +32,12 @@ import java.util.Date;
 public class TaskCacheModel implements CacheModel<Task> {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(13);
+		StringBundler sb = new StringBundler(15);
 
 		sb.append("{taskId=");
 		sb.append(taskId);
+		sb.append(", userId=");
+		sb.append(userId);
 		sb.append(", projectId=");
 		sb.append(projectId);
 		sb.append(", name=");
@@ -55,6 +57,7 @@ public class TaskCacheModel implements CacheModel<Task> {
 		TaskImpl taskImpl = new TaskImpl();
 
 		taskImpl.setTaskId(taskId);
+		taskImpl.setUserId(userId);
 		taskImpl.setProjectId(projectId);
 
 		if (name == null) {
@@ -86,6 +89,7 @@ public class TaskCacheModel implements CacheModel<Task> {
 	}
 
 	public long taskId;
+	public long userId;
 	public long projectId;
 	public String name;
 	public int type;

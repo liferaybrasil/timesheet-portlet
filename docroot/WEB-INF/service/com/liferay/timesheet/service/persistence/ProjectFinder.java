@@ -18,27 +18,30 @@ package com.liferay.timesheet.service.persistence;
  * @author Brian Wing Shun Chan
  */
 public interface ProjectFinder {
-	public int countByKeywords(java.lang.String keywords)
+	public int countByKeywords(long companyId, long groupId,
+		java.lang.String keywords)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
-	public int countByN_D(java.lang.String name, java.lang.String description,
-		boolean andOperator)
+	public int countByN_D(long companyId, long groupId, java.lang.String name,
+		java.lang.String description, boolean andOperator)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	public java.util.List<com.liferay.timesheet.model.Project> findByKeywords(
-		java.lang.String keywords, int start, int end,
+		long companyId, long groupId, java.lang.String keywords, int start,
+		int end,
 		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	public java.util.List<com.liferay.timesheet.model.Project> findByN_D(
-		java.lang.String name, java.lang.String description,
-		boolean andOperator, int start, int end,
+		long companyId, long groupId, java.lang.String name,
+		java.lang.String description, boolean andOperator, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	public java.util.List<com.liferay.timesheet.model.Project> findByN_D(
-		java.lang.String[] names, java.lang.String[] descriptions,
-		boolean andOperator, int start, int end,
+		long companyId, long groupId, java.lang.String[] names,
+		java.lang.String[] descriptions, boolean andOperator, int start,
+		int end,
 		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
 		throws com.liferay.portal.kernel.exception.SystemException;
 }

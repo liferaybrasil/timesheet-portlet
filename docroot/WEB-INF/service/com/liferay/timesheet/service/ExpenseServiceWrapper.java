@@ -28,6 +28,43 @@ public class ExpenseServiceWrapper implements ExpenseService {
 		_expenseService = expenseService;
 	}
 
+	public com.liferay.timesheet.model.Expense addExpense(long projectId,
+		java.lang.String description, int purchasedDateMonth,
+		int purchasedDateDay, int purchasedDateYear, int type, double value,
+		long fileEntryId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _expenseService.addExpense(projectId, description,
+			purchasedDateMonth, purchasedDateDay, purchasedDateYear, type,
+			value, fileEntryId, serviceContext);
+	}
+
+	public void deleteExpense(long companyId, long expenseId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_expenseService.deleteExpense(companyId, expenseId);
+	}
+
+	public com.liferay.timesheet.model.Expense getExpense(long expenseId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException,
+			com.liferay.portal.security.auth.PrincipalException {
+		return _expenseService.getExpense(expenseId);
+	}
+
+	public com.liferay.timesheet.model.Expense updateExpense(long expenseId,
+		long projectId, java.lang.String description, int purchasedDateMonth,
+		int purchasedDateDay, int purchasedDateYear, int type, double value,
+		long fileEntryId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _expenseService.updateExpense(expenseId, projectId, description,
+			purchasedDateMonth, purchasedDateDay, purchasedDateYear, type,
+			value, fileEntryId, serviceContext);
+	}
+
 	public ExpenseService getWrappedExpenseService() {
 		return _expenseService;
 	}

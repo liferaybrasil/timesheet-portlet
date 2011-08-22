@@ -68,6 +68,22 @@ public class ProjectClp extends BaseModelImpl<Project> implements Project {
 		_projectId = projectId;
 	}
 
+	public long getGroupId() {
+		return _groupId;
+	}
+
+	public void setGroupId(long groupId) {
+		_groupId = groupId;
+	}
+
+	public long getCompanyId() {
+		return _companyId;
+	}
+
+	public void setCompanyId(long companyId) {
+		_companyId = companyId;
+	}
+
 	public long getUserId() {
 		return _userId;
 	}
@@ -124,15 +140,15 @@ public class ProjectClp extends BaseModelImpl<Project> implements Project {
 		_wage = wage;
 	}
 
+	public double getTotalExpenseCost() {
+		throw new UnsupportedOperationException();
+	}
+
 	public double getTotalProjectCost() {
 		throw new UnsupportedOperationException();
 	}
 
 	public double getTotalTaskCost() {
-		throw new UnsupportedOperationException();
-	}
-
-	public double getTotalExpenseCost() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -156,6 +172,8 @@ public class ProjectClp extends BaseModelImpl<Project> implements Project {
 		ProjectClp clone = new ProjectClp();
 
 		clone.setProjectId(getProjectId());
+		clone.setGroupId(getGroupId());
+		clone.setCompanyId(getCompanyId());
 		clone.setUserId(getUserId());
 		clone.setDescription(getDescription());
 		clone.setEndDate(getEndDate());
@@ -212,10 +230,14 @@ public class ProjectClp extends BaseModelImpl<Project> implements Project {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(15);
+		StringBundler sb = new StringBundler(19);
 
 		sb.append("{projectId=");
 		sb.append(getProjectId());
+		sb.append(", groupId=");
+		sb.append(getGroupId());
+		sb.append(", companyId=");
+		sb.append(getCompanyId());
 		sb.append(", userId=");
 		sb.append(getUserId());
 		sb.append(", description=");
@@ -234,7 +256,7 @@ public class ProjectClp extends BaseModelImpl<Project> implements Project {
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(31);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.timesheet.model.Project");
@@ -243,6 +265,14 @@ public class ProjectClp extends BaseModelImpl<Project> implements Project {
 		sb.append(
 			"<column><column-name>projectId</column-name><column-value><![CDATA[");
 		sb.append(getProjectId());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>groupId</column-name><column-value><![CDATA[");
+		sb.append(getGroupId());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>companyId</column-name><column-value><![CDATA[");
+		sb.append(getCompanyId());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>userId</column-name><column-value><![CDATA[");
@@ -275,6 +305,8 @@ public class ProjectClp extends BaseModelImpl<Project> implements Project {
 	}
 
 	private long _projectId;
+	private long _groupId;
+	private long _companyId;
 	private long _userId;
 	private String _userUuid;
 	private String _description;

@@ -14,6 +14,13 @@
 
 package com.liferay.timesheet.service.http;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+
+import com.liferay.timesheet.service.ProjectServiceUtil;
+
+import java.rmi.RemoteException;
+
 /**
  * <p>
  * This class provides a SOAP utility for the
@@ -58,4 +65,73 @@ package com.liferay.timesheet.service.http;
  * @generated
  */
 public class ProjectServiceSoap {
+	public static com.liferay.timesheet.model.ProjectSoap addProject(
+		long userId, java.lang.String description, int endDateMonth,
+		int endDateDay, int endDateYear, int startDateMonth, int startDateDay,
+		int startDateYear, java.lang.String name, double wage,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			com.liferay.timesheet.model.Project returnValue = ProjectServiceUtil.addProject(userId,
+					description, endDateMonth, endDateDay, endDateYear,
+					startDateMonth, startDateDay, startDateYear, name, wage,
+					serviceContext);
+
+			return com.liferay.timesheet.model.ProjectSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void deleteProject(long companyId, long projectId)
+		throws RemoteException {
+		try {
+			ProjectServiceUtil.deleteProject(companyId, projectId);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.timesheet.model.ProjectSoap getProject(
+		long projectId) throws RemoteException {
+		try {
+			com.liferay.timesheet.model.Project returnValue = ProjectServiceUtil.getProject(projectId);
+
+			return com.liferay.timesheet.model.ProjectSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.timesheet.model.ProjectSoap updateProject(
+		long projectId, long userId, java.lang.String description,
+		int endDateMonth, int endDateDay, int endDateYear, int startDateMonth,
+		int startDateDay, int startDateYear, java.lang.String name,
+		double wage, com.liferay.portal.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			com.liferay.timesheet.model.Project returnValue = ProjectServiceUtil.updateProject(projectId,
+					userId, description, endDateMonth, endDateDay, endDateYear,
+					startDateMonth, startDateDay, startDateYear, name, wage,
+					serviceContext);
+
+			return com.liferay.timesheet.model.ProjectSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	private static Log _log = LogFactoryUtil.getLog(ProjectServiceSoap.class);
 }

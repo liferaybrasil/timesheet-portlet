@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.transaction.Isolation;
+import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 
 /**
@@ -42,4 +43,29 @@ public interface ExpenseService {
 	 *
 	 * Never modify or reference this interface directly. Always use {@link ExpenseServiceUtil} to access the expense remote service. Add custom service methods to {@link com.liferay.timesheet.service.impl.ExpenseServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
+	public com.liferay.timesheet.model.Expense addExpense(long projectId,
+		java.lang.String description, int purchasedDateMonth,
+		int purchasedDateDay, int purchasedDateYear, int type, double value,
+		long fileEntryId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	public void deleteExpense(long companyId, long expenseId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public com.liferay.timesheet.model.Expense getExpense(long expenseId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException,
+			com.liferay.portal.security.auth.PrincipalException;
+
+	public com.liferay.timesheet.model.Expense updateExpense(long expenseId,
+		long projectId, java.lang.String description, int purchasedDateMonth,
+		int purchasedDateDay, int purchasedDateYear, int type, double value,
+		long fileEntryId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
 }

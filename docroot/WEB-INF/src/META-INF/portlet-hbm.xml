@@ -10,6 +10,7 @@
 		<id name="expenseId" type="long">
 			<generator class="assigned" />
 		</id>
+		<property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="projectId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="description" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="purchasedDate" type="org.hibernate.type.TimestampType" />
@@ -22,6 +23,8 @@
 		<id name="projectId" type="long">
 			<generator class="assigned" />
 		</id>
+		<property name="groupId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="companyId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="description" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="endDate" type="org.hibernate.type.TimestampType" />
@@ -34,6 +37,7 @@
 		<id name="taskId" type="long">
 			<generator class="assigned" />
 		</id>
+		<property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="projectId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="type" type="com.liferay.portal.dao.orm.hibernate.IntegerType" column="type_" />

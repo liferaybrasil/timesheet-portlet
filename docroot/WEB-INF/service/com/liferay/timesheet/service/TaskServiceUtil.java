@@ -38,6 +38,49 @@ public class TaskServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to {@link com.liferay.timesheet.service.impl.TaskServiceImpl} and rerun ServiceBuilder to regenerate this class.
 	 */
+	public static com.liferay.timesheet.model.Task addTask(long projectId,
+		java.lang.String name, int type, int startDateMonth, int startDateDay,
+		int startDateYear, int startDateHour, int startDateMinute,
+		int endDateMonth, int endDateDay, int endDateYear, int endDateHour,
+		int endDateMinute,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .addTask(projectId, name, type, startDateMonth,
+			startDateDay, startDateYear, startDateHour, startDateMinute,
+			endDateMonth, endDateDay, endDateYear, endDateHour, endDateMinute,
+			serviceContext);
+	}
+
+	public static void deleteTask(long companyId, long taskId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService().deleteTask(companyId, taskId);
+	}
+
+	public static com.liferay.timesheet.model.Task getTask(long taskId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException,
+			com.liferay.portal.security.auth.PrincipalException {
+		return getService().getTask(taskId);
+	}
+
+	public static com.liferay.timesheet.model.Task updateTask(long taskId,
+		long projectId, java.lang.String name, int type, int startDateMonth,
+		int startDateDay, int startDateYear, int startDateHour,
+		int startDateMinute, int endDateMonth, int endDateDay, int endDateYear,
+		int endDateHour, int endDateMinute,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .updateTask(taskId, projectId, name, type, startDateMonth,
+			startDateDay, startDateYear, startDateHour, startDateMinute,
+			endDateMonth, endDateDay, endDateYear, endDateHour, endDateMinute,
+			serviceContext);
+	}
+
 	public static void clearService() {
 		_service = null;
 	}

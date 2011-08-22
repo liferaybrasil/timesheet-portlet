@@ -14,15 +14,14 @@
  */
 --%>
 
-<%@ page import="com.liferay.timesheet.service.ProjectLocalServiceUtil" %>
 <%
 if (searchTerms.isAdvancedSearch()) {
-	total = ProjectLocalServiceUtil.searchCount(searchTerms.getName(), searchTerms.getDescription(), searchTerms.isAndOperator());
-	results = ProjectLocalServiceUtil.search(searchTerms.getName(), searchTerms.getDescription(), searchTerms.isAndOperator(), searchContainer.getStart(), searchContainer.getEnd(), searchContainer.getOrderByComparator());
+	total = ProjectLocalServiceUtil.searchCount(company.getCompanyId(), scopeGroupId, searchTerms.getName(), searchTerms.getDescription(), searchTerms.isAndOperator());
+	results = ProjectLocalServiceUtil.search(company.getCompanyId(), scopeGroupId, searchTerms.getName(), searchTerms.getDescription(), searchTerms.isAndOperator(), searchContainer.getStart(), searchContainer.getEnd(), searchContainer.getOrderByComparator());
 }
 else {
-	total = ProjectLocalServiceUtil.searchCount(searchTerms.getKeywords());
-	results = ProjectLocalServiceUtil.search(searchTerms.getKeywords(), searchContainer.getStart(), searchContainer.getEnd(), searchContainer.getOrderByComparator());
+	total = ProjectLocalServiceUtil.searchCount(company.getCompanyId(), scopeGroupId, searchTerms.getKeywords());
+	results = ProjectLocalServiceUtil.search(company.getCompanyId(), scopeGroupId, searchTerms.getKeywords(), searchContainer.getStart(), searchContainer.getEnd(), searchContainer.getOrderByComparator());
 }
 pageContext.setAttribute("results", results);
 pageContext.setAttribute("total", total);

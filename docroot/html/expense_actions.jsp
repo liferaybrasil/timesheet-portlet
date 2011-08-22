@@ -18,29 +18,50 @@
 
 <%
 ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
+
 Expense expense = (Expense)row.getObject();
 
 long projectId = ParamUtil.getLong(request, "projectId");
+
 String name = Expense.class.getName();
+
 long expenseId = expense.getExpenseId();
 
 String redirect = PortalUtil.getCurrentURL(renderRequest);
 %>
 
 <liferay-ui:icon-menu>
-	<portlet:renderURL var="editURL">
-		<portlet:param name="jspPage" value="/html/edit_expense.jsp" />
-		<portlet:param name="expenseId" value="<%= String.valueOf(expenseId) %>" />
-		<portlet:param name="projectId" value="<%= String.valueOf(projectId) %>" />
-		<portlet:param name="redirect" value="<%= redirect %>" />
-	</portlet:renderURL>
+	<c:if test="<%= TimesheetExpensePermission.contains(permissionChecker, expenseId, ActionKeys.UPDATE) %>">
+		<portlet:renderURL var="editURL">
+			<portlet:param name="jspPage" value="/html/edit_expense.jsp" />
+			<portlet:param name="expenseId" value="<%= String.valueOf(expenseId) %>" />
+			<portlet:param name="projectId" value="<%= String.valueOf(projectId) %>" />
+			<portlet:param name="redirect" value="<%= redirect %>" />
+		</portlet:renderURL>
 
-	<liferay-ui:icon image="edit" url="<%=editURL.toString() %>" />
+		<liferay-ui:icon
+			image="edit"
+			url="<%=editURL.toString() %>"
+		/>
+	</c:if>
 
-	<portlet:actionURL name="deleteExpense" var="deleteURL">
-		<portlet:param name="expenseId" value="<%= String.valueOf(expenseId) %>" />
-		<portlet:param name="redirect" value="<%= redirect %>" />
-	</portlet:actionURL>
+	<c:if test="<%= TimesheetExpensePermission.contains(permissionChecker, expenseId, ActionKeys.PERMISSIONS) %>">
+		<liferay-security:permissionsURL
+			modelResource="<%= Expense.class.getName() %>"
+			modelResourceDescription="<%= expense.getDescription() %>"
+			resourcePrimKey="<%= String.valueOf(expenseId) %>"
+			var="entryURL"
+		/>
 
-	<liferay-ui:icon-delete url="<%=deleteURL.toString() %>" />
+		<liferay-ui:icon image="permissions" url="<%= entryURL %>" />
+	</c:if>
+
+	<c:if test="<%= TimesheetExpensePermission.contains(permissionChecker, expenseId, ActionKeys.DELETE) %>">
+		<portlet:actionURL name="deleteExpense" var="deleteURL">
+			<portlet:param name="expenseId" value="<%= String.valueOf(expenseId) %>" />
+			<portlet:param name="redirect" value="<%= redirect %>" />
+		</portlet:actionURL>
+
+		<liferay-ui:icon-delete url="<%= deleteURL.toString() %>" />
+	</c:if>
 </liferay-ui:icon-menu>

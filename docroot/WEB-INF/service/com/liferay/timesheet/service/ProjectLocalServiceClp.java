@@ -84,29 +84,45 @@ public class ProjectLocalServiceClp implements ProjectLocalService {
 		_addProjectMethodKey16 = new MethodKey(_classLoaderProxy.getClassName(),
 				"addProject", long.class, java.lang.String.class, int.class,
 				int.class, int.class, int.class, int.class, int.class,
-				java.lang.String.class, double.class);
+				java.lang.String.class, double.class,
+				com.liferay.portal.service.ServiceContext.class);
 
-		_searchMethodKey17 = new MethodKey(_classLoaderProxy.getClassName(),
-				"search", java.lang.String.class, int.class, int.class,
+		_addProjectResourcesMethodKey17 = new MethodKey(_classLoaderProxy.getClassName(),
+				"addProjectResources",
+				com.liferay.timesheet.model.Project.class, long.class,
+				long.class, long.class, boolean.class, boolean.class);
+
+		_addProjectResourcesMethodKey18 = new MethodKey(_classLoaderProxy.getClassName(),
+				"addProjectResources",
+				com.liferay.timesheet.model.Project.class, long.class,
+				long.class, long.class, java.lang.String[].class,
+				java.lang.String[].class);
+
+		_deleteProjectMethodKey19 = new MethodKey(_classLoaderProxy.getClassName(),
+				"deleteProject", long.class, long.class);
+
+		_searchMethodKey20 = new MethodKey(_classLoaderProxy.getClassName(),
+				"search", long.class, long.class, java.lang.String.class,
+				int.class, int.class,
 				com.liferay.portal.kernel.util.OrderByComparator.class);
 
-		_searchMethodKey18 = new MethodKey(_classLoaderProxy.getClassName(),
-				"search", java.lang.String.class, java.lang.String.class,
-				boolean.class, int.class, int.class,
+		_searchMethodKey21 = new MethodKey(_classLoaderProxy.getClassName(),
+				"search", long.class, long.class, java.lang.String.class,
+				java.lang.String.class, boolean.class, int.class, int.class,
 				com.liferay.portal.kernel.util.OrderByComparator.class);
 
-		_searchCountMethodKey19 = new MethodKey(_classLoaderProxy.getClassName(),
-				"searchCount", java.lang.String.class, java.lang.String.class,
-				boolean.class);
+		_searchCountMethodKey22 = new MethodKey(_classLoaderProxy.getClassName(),
+				"searchCount", long.class, long.class, java.lang.String.class,
+				java.lang.String.class, boolean.class);
 
-		_searchCountMethodKey20 = new MethodKey(_classLoaderProxy.getClassName(),
-				"searchCount", java.lang.String.class);
+		_searchCountMethodKey23 = new MethodKey(_classLoaderProxy.getClassName(),
+				"searchCount", long.class, long.class, java.lang.String.class);
 
-		_updateProjectMethodKey21 = new MethodKey(_classLoaderProxy.getClassName(),
+		_updateProjectMethodKey24 = new MethodKey(_classLoaderProxy.getClassName(),
 				"updateProject", long.class, long.class,
 				java.lang.String.class, int.class, int.class, int.class,
 				int.class, int.class, int.class, java.lang.String.class,
-				double.class);
+				double.class, com.liferay.portal.service.ServiceContext.class);
 	}
 
 	public com.liferay.timesheet.model.Project addProject(
@@ -545,7 +561,8 @@ public class ProjectLocalServiceClp implements ProjectLocalService {
 	public com.liferay.timesheet.model.Project addProject(long userId,
 		java.lang.String description, int endDateMonth, int endDateDay,
 		int endDateYear, int startDateMonth, int startDateDay,
-		int startDateYear, java.lang.String name, double wage)
+		int startDateYear, java.lang.String name, double wage,
+		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
@@ -554,7 +571,8 @@ public class ProjectLocalServiceClp implements ProjectLocalService {
 				userId, ClpSerializer.translateInput(description),
 				endDateMonth, endDateDay, endDateYear, startDateMonth,
 				startDateDay, startDateYear,
-				ClpSerializer.translateInput(name), wage);
+				ClpSerializer.translateInput(name), wage,
+				ClpSerializer.translateInput(serviceContext));
 
 		try {
 			returnObj = _classLoaderProxy.invoke(methodHandler);
@@ -580,15 +598,109 @@ public class ProjectLocalServiceClp implements ProjectLocalService {
 		return (com.liferay.timesheet.model.Project)ClpSerializer.translateOutput(returnObj);
 	}
 
+	public void addProjectResources(
+		com.liferay.timesheet.model.Project project, long companyId,
+		long groupId, long userId, boolean addGroupPermissions,
+		boolean addGuestPermissions)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		MethodHandler methodHandler = new MethodHandler(_addProjectResourcesMethodKey17,
+				ClpSerializer.translateInput(project), companyId, groupId,
+				userId, addGroupPermissions, addGuestPermissions);
+
+		try {
+			_classLoaderProxy.invoke(methodHandler);
+		}
+		catch (Throwable t) {
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+	}
+
+	public void addProjectResources(
+		com.liferay.timesheet.model.Project project, long companyId,
+		long groupId, long userId, java.lang.String[] groupPermissions,
+		java.lang.String[] guestPermissions)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		MethodHandler methodHandler = new MethodHandler(_addProjectResourcesMethodKey18,
+				ClpSerializer.translateInput(project), companyId, groupId,
+				userId, ClpSerializer.translateInput(groupPermissions),
+				ClpSerializer.translateInput(guestPermissions));
+
+		try {
+			_classLoaderProxy.invoke(methodHandler);
+		}
+		catch (Throwable t) {
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+	}
+
+	public void deleteProject(long companyId, long projectId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		MethodHandler methodHandler = new MethodHandler(_deleteProjectMethodKey19,
+				companyId, projectId);
+
+		try {
+			_classLoaderProxy.invoke(methodHandler);
+		}
+		catch (Throwable t) {
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+	}
+
 	public java.util.List<com.liferay.timesheet.model.Project> search(
-		java.lang.String keywords, int start, int end,
+		long companyId, long groupId, java.lang.String keywords, int start,
+		int end,
 		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_searchMethodKey17,
-				ClpSerializer.translateInput(keywords), start, end,
-				ClpSerializer.translateInput(orderByComparator));
+		MethodHandler methodHandler = new MethodHandler(_searchMethodKey20,
+				companyId, groupId, ClpSerializer.translateInput(keywords),
+				start, end, ClpSerializer.translateInput(orderByComparator));
 
 		try {
 			returnObj = _classLoaderProxy.invoke(methodHandler);
@@ -611,14 +723,14 @@ public class ProjectLocalServiceClp implements ProjectLocalService {
 	}
 
 	public java.util.List<com.liferay.timesheet.model.Project> search(
-		java.lang.String name, java.lang.String description,
-		boolean andOperator, int start, int end,
+		long companyId, long groupId, java.lang.String name,
+		java.lang.String description, boolean andOperator, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_searchMethodKey18,
-				ClpSerializer.translateInput(name),
+		MethodHandler methodHandler = new MethodHandler(_searchMethodKey21,
+				companyId, groupId, ClpSerializer.translateInput(name),
 				ClpSerializer.translateInput(description), andOperator, start,
 				end, ClpSerializer.translateInput(orderByComparator));
 
@@ -642,13 +754,13 @@ public class ProjectLocalServiceClp implements ProjectLocalService {
 		return (java.util.List<com.liferay.timesheet.model.Project>)ClpSerializer.translateOutput(returnObj);
 	}
 
-	public int searchCount(java.lang.String name, java.lang.String description,
-		boolean andOperator)
+	public int searchCount(long companyId, long groupId, java.lang.String name,
+		java.lang.String description, boolean andOperator)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_searchCountMethodKey19,
-				ClpSerializer.translateInput(name),
+		MethodHandler methodHandler = new MethodHandler(_searchCountMethodKey22,
+				companyId, groupId, ClpSerializer.translateInput(name),
 				ClpSerializer.translateInput(description), andOperator);
 
 		try {
@@ -671,12 +783,13 @@ public class ProjectLocalServiceClp implements ProjectLocalService {
 		return ((Integer)returnObj).intValue();
 	}
 
-	public int searchCount(java.lang.String keywords)
+	public int searchCount(long companyId, long groupId,
+		java.lang.String keywords)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_searchCountMethodKey20,
-				ClpSerializer.translateInput(keywords));
+		MethodHandler methodHandler = new MethodHandler(_searchCountMethodKey23,
+				companyId, groupId, ClpSerializer.translateInput(keywords));
 
 		try {
 			returnObj = _classLoaderProxy.invoke(methodHandler);
@@ -701,16 +814,18 @@ public class ProjectLocalServiceClp implements ProjectLocalService {
 	public com.liferay.timesheet.model.Project updateProject(long projectId,
 		long userId, java.lang.String description, int endDateMonth,
 		int endDateDay, int endDateYear, int startDateMonth, int startDateDay,
-		int startDateYear, java.lang.String name, double wage)
+		int startDateYear, java.lang.String name, double wage,
+		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_updateProjectMethodKey21,
+		MethodHandler methodHandler = new MethodHandler(_updateProjectMethodKey24,
 				projectId, userId, ClpSerializer.translateInput(description),
 				endDateMonth, endDateDay, endDateYear, startDateMonth,
 				startDateDay, startDateYear,
-				ClpSerializer.translateInput(name), wage);
+				ClpSerializer.translateInput(name), wage,
+				ClpSerializer.translateInput(serviceContext));
 
 		try {
 			returnObj = _classLoaderProxy.invoke(methodHandler);
@@ -758,9 +873,12 @@ public class ProjectLocalServiceClp implements ProjectLocalService {
 	private MethodKey _getBeanIdentifierMethodKey14;
 	private MethodKey _setBeanIdentifierMethodKey15;
 	private MethodKey _addProjectMethodKey16;
-	private MethodKey _searchMethodKey17;
-	private MethodKey _searchMethodKey18;
-	private MethodKey _searchCountMethodKey19;
-	private MethodKey _searchCountMethodKey20;
-	private MethodKey _updateProjectMethodKey21;
+	private MethodKey _addProjectResourcesMethodKey17;
+	private MethodKey _addProjectResourcesMethodKey18;
+	private MethodKey _deleteProjectMethodKey19;
+	private MethodKey _searchMethodKey20;
+	private MethodKey _searchMethodKey21;
+	private MethodKey _searchCountMethodKey22;
+	private MethodKey _searchCountMethodKey23;
+	private MethodKey _updateProjectMethodKey24;
 }

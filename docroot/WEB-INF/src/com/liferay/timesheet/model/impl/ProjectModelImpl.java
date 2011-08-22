@@ -67,6 +67,8 @@ public class ProjectModelImpl extends BaseModelImpl<Project>
 	public static final String TABLE_NAME = "Timesheet_Project";
 	public static final Object[][] TABLE_COLUMNS = {
 			{ "projectId", Types.BIGINT },
+			{ "groupId", Types.BIGINT },
+			{ "companyId", Types.BIGINT },
 			{ "userId", Types.BIGINT },
 			{ "description", Types.VARCHAR },
 			{ "endDate", Types.TIMESTAMP },
@@ -74,7 +76,7 @@ public class ProjectModelImpl extends BaseModelImpl<Project>
 			{ "name", Types.VARCHAR },
 			{ "wage", Types.DOUBLE }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Timesheet_Project (projectId LONG not null primary key,userId LONG,description VARCHAR(75) null,endDate DATE null,startDate DATE null,name VARCHAR(75) null,wage DOUBLE)";
+	public static final String TABLE_SQL_CREATE = "create table Timesheet_Project (projectId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,description VARCHAR(75) null,endDate DATE null,startDate DATE null,name VARCHAR(75) null,wage DOUBLE)";
 	public static final String TABLE_SQL_DROP = "drop table Timesheet_Project";
 	public static final String ORDER_BY_JPQL = " ORDER BY project.startDate DESC";
 	public static final String ORDER_BY_SQL = " ORDER BY Timesheet_Project.startDate DESC";
@@ -98,6 +100,8 @@ public class ProjectModelImpl extends BaseModelImpl<Project>
 		Project model = new ProjectImpl();
 
 		model.setProjectId(soapModel.getProjectId());
+		model.setGroupId(soapModel.getGroupId());
+		model.setCompanyId(soapModel.getCompanyId());
 		model.setUserId(soapModel.getUserId());
 		model.setDescription(soapModel.getDescription());
 		model.setEndDate(soapModel.getEndDate());
@@ -161,6 +165,24 @@ public class ProjectModelImpl extends BaseModelImpl<Project>
 
 	public void setProjectId(long projectId) {
 		_projectId = projectId;
+	}
+
+	@JSON
+	public long getGroupId() {
+		return _groupId;
+	}
+
+	public void setGroupId(long groupId) {
+		_groupId = groupId;
+	}
+
+	@JSON
+	public long getCompanyId() {
+		return _companyId;
+	}
+
+	public void setCompanyId(long companyId) {
+		_companyId = companyId;
 	}
 
 	@JSON
@@ -254,7 +276,7 @@ public class ProjectModelImpl extends BaseModelImpl<Project>
 	@Override
 	public ExpandoBridge getExpandoBridge() {
 		if (_expandoBridge == null) {
-			_expandoBridge = ExpandoBridgeFactoryUtil.getExpandoBridge(0,
+			_expandoBridge = ExpandoBridgeFactoryUtil.getExpandoBridge(getCompanyId(),
 					Project.class.getName(), getPrimaryKey());
 		}
 
@@ -271,6 +293,8 @@ public class ProjectModelImpl extends BaseModelImpl<Project>
 		ProjectImpl projectImpl = new ProjectImpl();
 
 		projectImpl.setProjectId(getProjectId());
+		projectImpl.setGroupId(getGroupId());
+		projectImpl.setCompanyId(getCompanyId());
 		projectImpl.setUserId(getUserId());
 		projectImpl.setDescription(getDescription());
 		projectImpl.setEndDate(getEndDate());
@@ -337,6 +361,10 @@ public class ProjectModelImpl extends BaseModelImpl<Project>
 
 		projectCacheModel.projectId = getProjectId();
 
+		projectCacheModel.groupId = getGroupId();
+
+		projectCacheModel.companyId = getCompanyId();
+
 		projectCacheModel.userId = getUserId();
 
 		projectCacheModel.description = getDescription();
@@ -380,10 +408,14 @@ public class ProjectModelImpl extends BaseModelImpl<Project>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(15);
+		StringBundler sb = new StringBundler(19);
 
 		sb.append("{projectId=");
 		sb.append(getProjectId());
+		sb.append(", groupId=");
+		sb.append(getGroupId());
+		sb.append(", companyId=");
+		sb.append(getCompanyId());
 		sb.append(", userId=");
 		sb.append(getUserId());
 		sb.append(", description=");
@@ -402,7 +434,7 @@ public class ProjectModelImpl extends BaseModelImpl<Project>
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(31);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.timesheet.model.Project");
@@ -411,6 +443,14 @@ public class ProjectModelImpl extends BaseModelImpl<Project>
 		sb.append(
 			"<column><column-name>projectId</column-name><column-value><![CDATA[");
 		sb.append(getProjectId());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>groupId</column-name><column-value><![CDATA[");
+		sb.append(getGroupId());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>companyId</column-name><column-value><![CDATA[");
+		sb.append(getCompanyId());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>userId</column-name><column-value><![CDATA[");
@@ -447,6 +487,8 @@ public class ProjectModelImpl extends BaseModelImpl<Project>
 			Project.class
 		};
 	private long _projectId;
+	private long _groupId;
+	private long _companyId;
 	private long _userId;
 	private String _userUuid;
 	private String _description;

@@ -31,12 +31,12 @@ public interface Project extends ProjectModel, PersistedModel {
 	 *
 	 * Never modify this interface directly. Add methods to {@link com.liferay.timesheet.model.impl.ProjectImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
+	public double getTotalExpenseCost()
+		throws com.liferay.portal.kernel.exception.SystemException;
+
 	public double getTotalProjectCost()
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	public double getTotalTaskCost()
-		throws com.liferay.portal.kernel.exception.SystemException;
-
-	public double getTotalExpenseCost()
 		throws com.liferay.portal.kernel.exception.SystemException;
 }

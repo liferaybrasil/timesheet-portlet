@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.model.impl.BaseModelImpl;
+import com.liferay.portal.util.PortalUtil;
 
 import com.liferay.timesheet.service.ExpenseLocalServiceUtil;
 
@@ -65,6 +66,22 @@ public class ExpenseClp extends BaseModelImpl<Expense> implements Expense {
 
 	public void setExpenseId(long expenseId) {
 		_expenseId = expenseId;
+	}
+
+	public long getUserId() {
+		return _userId;
+	}
+
+	public void setUserId(long userId) {
+		_userId = userId;
+	}
+
+	public String getUserUuid() throws SystemException {
+		return PortalUtil.getUserValue(getUserId(), "uuid", _userUuid);
+	}
+
+	public void setUserUuid(String userUuid) {
+		_userUuid = userUuid;
 	}
 
 	public long getProjectId() {
@@ -115,7 +132,7 @@ public class ExpenseClp extends BaseModelImpl<Expense> implements Expense {
 		_fileEntryId = fileEntryId;
 	}
 
-	public java.lang.String getTypeDescription() {
+	public java.lang.String getFileName() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -123,15 +140,15 @@ public class ExpenseClp extends BaseModelImpl<Expense> implements Expense {
 		throw new UnsupportedOperationException();
 	}
 
-	public void setFilePath(java.lang.String filePath) {
-		throw new UnsupportedOperationException();
-	}
-
-	public java.lang.String getFileName() {
+	public java.lang.String getTypeDescription() {
 		throw new UnsupportedOperationException();
 	}
 
 	public void setFileName(java.lang.String fileName) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setFilePath(java.lang.String filePath) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -155,6 +172,7 @@ public class ExpenseClp extends BaseModelImpl<Expense> implements Expense {
 		ExpenseClp clone = new ExpenseClp();
 
 		clone.setExpenseId(getExpenseId());
+		clone.setUserId(getUserId());
 		clone.setProjectId(getProjectId());
 		clone.setDescription(getDescription());
 		clone.setPurchasedDate(getPurchasedDate());
@@ -212,10 +230,12 @@ public class ExpenseClp extends BaseModelImpl<Expense> implements Expense {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(15);
+		StringBundler sb = new StringBundler(17);
 
 		sb.append("{expenseId=");
 		sb.append(getExpenseId());
+		sb.append(", userId=");
+		sb.append(getUserId());
 		sb.append(", projectId=");
 		sb.append(getProjectId());
 		sb.append(", description=");
@@ -234,7 +254,7 @@ public class ExpenseClp extends BaseModelImpl<Expense> implements Expense {
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(28);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.timesheet.model.Expense");
@@ -243,6 +263,10 @@ public class ExpenseClp extends BaseModelImpl<Expense> implements Expense {
 		sb.append(
 			"<column><column-name>expenseId</column-name><column-value><![CDATA[");
 		sb.append(getExpenseId());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>userId</column-name><column-value><![CDATA[");
+		sb.append(getUserId());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>projectId</column-name><column-value><![CDATA[");
@@ -275,6 +299,8 @@ public class ExpenseClp extends BaseModelImpl<Expense> implements Expense {
 	}
 
 	private long _expenseId;
+	private long _userId;
+	private String _userUuid;
 	private long _projectId;
 	private String _description;
 	private Date _purchasedDate;

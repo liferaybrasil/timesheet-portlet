@@ -14,27 +14,69 @@
 
 package com.liferay.timesheet.service.impl;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.timesheet.model.Project;
 import com.liferay.timesheet.service.base.ProjectServiceBaseImpl;
+import com.liferay.timesheet.service.permission.TimesheetPermission;
+import com.liferay.timesheet.service.permission.TimesheetProjectPermission;
+import com.liferay.timesheet.util.ActionKeys;
 
 /**
- * The implementation of the project remote service.
- *
- * <p>
- * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link com.liferay.timesheet.service.ProjectService} interface.
- *
- * <p>
- * This is a remote service. Methods of this service are expected to have security checks based on the propagated JAAS credentials because this service can be accessed remotely.
- * </p>
- *
- * @author Brian Wing Shun Chan
- * @see com.liferay.timesheet.service.base.ProjectServiceBaseImpl
- * @see com.liferay.timesheet.service.ProjectServiceUtil
+ * @author Antonio Junior
  */
 public class ProjectServiceImpl extends ProjectServiceBaseImpl {
-	/**
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this interface directly. Always use {@link com.liferay.timesheet.service.ProjectServiceUtil} to access the project remote service.
-	 */
-	
+
+	public Project addProject(
+			long userId, String description, int endDateMonth, int endDateDay,
+			int endDateYear, int startDateMonth, int startDateDay,
+			int startDateYear, String name, double wage,
+			ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		TimesheetPermission.check(
+			getPermissionChecker(), serviceContext.getScopeGroupId(),
+			ActionKeys.ADD_PROJECT);
+
+		return projectLocalService.addProject(
+			userId, description, endDateMonth, endDateDay, endDateYear,
+			startDateMonth, startDateDay, startDateYear,name, wage,
+			serviceContext);
+	}
+
+	public void deleteProject(long companyId, long projectId)
+		throws PortalException, SystemException {
+
+		TimesheetProjectPermission.check(
+			getPermissionChecker(), projectId, ActionKeys.DELETE);
+
+		projectLocalService.deleteProject(companyId, projectId);
+	}
+
+	public Project getProject(long projectId)
+		throws PortalException, SystemException {
+
+		TimesheetProjectPermission.check(
+			getPermissionChecker(), projectId, ActionKeys.VIEW);
+
+		return projectLocalService.getProject(projectId);
+	}
+
+	public Project updateProject(
+			long projectId, long userId, String description, int endDateMonth,
+			int endDateDay, int endDateYear, int startDateMonth,
+			int startDateDay, int startDateYear, String name, double wage,
+			ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		TimesheetProjectPermission.check(
+			getPermissionChecker(), projectId, ActionKeys.UPDATE);
+
+		return projectLocalService.updateProject(
+			projectId, userId, description, endDateMonth,
+			endDateDay, endDateYear, startDateMonth, startDateDay,
+			startDateYear,name, wage, serviceContext);
+	}
+
 }

@@ -1,6 +1,6 @@
 .portlet-body .lfr-portlet-timesheet-report-icon
 {
-	float: right;
+	float: none;
 }
 
 .aui-dialog-content .lfr-portlet-timesheet-total-label 
@@ -12,8 +12,14 @@
 	font-weight: bold;
 }
 
-.aui-dialog-content .lfr-portlet-timesheet-total-label-right
+.aui-dialog-content .lfr-portlet-timesheet-total-label-left
 {
 	float: none;
 	text-align: left;
+}
+
+.portlet-body .lfr-portlet-timesheet-div-icon {
+	float: right;	
+	font-weight: bold;
+	cursor: pointer;
 }

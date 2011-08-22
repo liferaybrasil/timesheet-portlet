@@ -15,6 +15,7 @@
 package com.liferay.timesheet.model;
 
 import com.liferay.portal.kernel.bean.AutoEscape;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.service.ServiceContext;
@@ -72,6 +73,35 @@ public interface ExpenseModel extends BaseModel<Expense> {
 	 * @param expenseId the expense ID of this expense
 	 */
 	public void setExpenseId(long expenseId);
+
+	/**
+	 * Returns the user ID of this expense.
+	 *
+	 * @return the user ID of this expense
+	 */
+	public long getUserId();
+
+	/**
+	 * Sets the user ID of this expense.
+	 *
+	 * @param userId the user ID of this expense
+	 */
+	public void setUserId(long userId);
+
+	/**
+	 * Returns the user uuid of this expense.
+	 *
+	 * @return the user uuid of this expense
+	 * @throws SystemException if a system exception occurred
+	 */
+	public String getUserUuid() throws SystemException;
+
+	/**
+	 * Sets the user uuid of this expense.
+	 *
+	 * @param userUuid the user uuid of this expense
+	 */
+	public void setUserUuid(String userUuid);
 
 	/**
 	 * Returns the project ID of this expense.

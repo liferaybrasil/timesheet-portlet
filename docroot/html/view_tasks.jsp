@@ -17,22 +17,26 @@
 <%@ include file="/html/init.jsp" %>
 
 <%
-	long projectId = ParamUtil.getLong(request, "projectId");
-	String currentUrl = PortalUtil.getCurrentURL(renderRequest);
-	List<Task> tasks = TaskLocalServiceUtil.getTaskByProjectId(projectId);
-	int count = tasks.size();
-	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+long projectId = ParamUtil.getLong(request, "projectId");
+
+String currentUrl = PortalUtil.getCurrentURL(renderRequest);
+
+List<Task> tasks = TaskLocalServiceUtil.getTaskByProjectId(projectId);
+
+int count = tasks.size();
 %>
 
-<aui:button-row>
-	<portlet:renderURL var="addTaskURL">
-		<portlet:param name="jspPage" value="/html/edit_task.jsp" />
-		<portlet:param name="projectId" value="<%= String.valueOf(projectId) %>" />
-		<portlet:param name="redirect" value="<%= HtmlUtil.escapeHREF(currentUrl) %>" />
-	</portlet:renderURL>
+<c:if test="<%= TimesheetPermission.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_TASK) %>">
+	<aui:button-row>
+		<portlet:renderURL var="addTaskURL">
+			<portlet:param name="jspPage" value="/html/edit_task.jsp" />
+			<portlet:param name="projectId" value="<%= String.valueOf(projectId) %>" />
+			<portlet:param name="redirect" value="<%= HtmlUtil.escapeHREF(currentUrl) %>" />
+		</portlet:renderURL>
 
-	<aui:button value="add-task" onClick="<%= addTaskURL.toString() %>" />
-</aui:button-row>
+		<aui:button value="add-task" onClick="<%= addTaskURL.toString() %>" />
+	</aui:button-row>
+</c:if>
 
 <liferay-ui:search-container
 	emptyResultsMessage="no-entries-were-found">
@@ -44,11 +48,14 @@
 		keyProperty="taskId" modelVar="task">
 		<liferay-ui:search-container-column-text name="name" property="name" />
 
+		<liferay-ui:search-container-column-text name="responsible"
+			value='<%= PortalUtil.getUserName(task.getUserId(), "none") %>' />
+
 		<liferay-ui:search-container-column-text name="startDate"
-			value="<%= sdf.format(task.getStartDate()) %>" />
+			value="<%= formatTask.format(task.getStartDate()) %>" />
 
 		<liferay-ui:search-container-column-text name="endDate"
-			value="<%= sdf.format(task.getEndDate()) %>" />
+			value="<%= formatTask.format(task.getEndDate()) %>" />
 
 		<liferay-ui:search-container-column-text name="typeDescription"
 			property="typeDescription" translate="<%= true %>" />

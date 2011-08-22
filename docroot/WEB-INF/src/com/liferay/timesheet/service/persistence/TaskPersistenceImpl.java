@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.dao.orm.FinderPath;
 import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -37,6 +38,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
+import com.liferay.portal.security.permission.InlineSQLHelperUtil;
 import com.liferay.portal.service.persistence.BatchSessionUtil;
 import com.liferay.portal.service.persistence.ResourcePersistence;
 import com.liferay.portal.service.persistence.UserPersistence;
@@ -297,6 +299,7 @@ public class TaskPersistenceImpl extends BasePersistenceImpl<Task>
 		taskImpl.setPrimaryKey(task.getPrimaryKey());
 
 		taskImpl.setTaskId(task.getTaskId());
+		taskImpl.setUserId(task.getUserId());
 		taskImpl.setProjectId(task.getProjectId());
 		taskImpl.setName(task.getName());
 		taskImpl.setType(task.getType());
@@ -741,6 +744,313 @@ public class TaskPersistenceImpl extends BasePersistenceImpl<Task>
 	}
 
 	/**
+	 * Returns all the tasks that the user has permission to view where projectId = &#63;.
+	 *
+	 * @param projectId the project ID
+	 * @return the matching tasks that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<Task> filterFindByProjectId(long projectId)
+		throws SystemException {
+		return filterFindByProjectId(projectId, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the tasks that the user has permission to view where projectId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param projectId the project ID
+	 * @param start the lower bound of the range of tasks
+	 * @param end the upper bound of the range of tasks (not inclusive)
+	 * @return the range of matching tasks that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<Task> filterFindByProjectId(long projectId, int start, int end)
+		throws SystemException {
+		return filterFindByProjectId(projectId, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the tasks that the user has permissions to view where projectId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param projectId the project ID
+	 * @param start the lower bound of the range of tasks
+	 * @param end the upper bound of the range of tasks (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching tasks that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<Task> filterFindByProjectId(long projectId, int start, int end,
+		OrderByComparator orderByComparator) throws SystemException {
+		if (!InlineSQLHelperUtil.isEnabled()) {
+			return findByProjectId(projectId, start, end, orderByComparator);
+		}
+
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(3 +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			query = new StringBundler(3);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_TASK_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_TASK_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_PROJECTID_PROJECTID_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_TASK_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			if (getDB().isSupportsInlineDistinct()) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+			else {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_TABLE,
+					orderByComparator);
+			}
+		}
+
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(TaskModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(TaskModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				Task.class.getName(), _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSQLQuery(sql);
+
+			if (getDB().isSupportsInlineDistinct()) {
+				q.addEntity(_FILTER_ENTITY_ALIAS, TaskImpl.class);
+			}
+			else {
+				q.addEntity(_FILTER_ENTITY_TABLE, TaskImpl.class);
+			}
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(projectId);
+
+			return (List<Task>)QueryUtil.list(q, getDialect(), start, end);
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	/**
+	 * Returns the tasks before and after the current task in the ordered set of tasks that the user has permission to view where projectId = &#63;.
+	 *
+	 * @param taskId the primary key of the current task
+	 * @param projectId the project ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next task
+	 * @throws com.liferay.timesheet.NoSuchTaskException if a task with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Task[] filterFindByProjectId_PrevAndNext(long taskId,
+		long projectId, OrderByComparator orderByComparator)
+		throws NoSuchTaskException, SystemException {
+		if (!InlineSQLHelperUtil.isEnabled()) {
+			return findByProjectId_PrevAndNext(taskId, projectId,
+				orderByComparator);
+		}
+
+		Task task = findByPrimaryKey(taskId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			Task[] array = new TaskImpl[3];
+
+			array[0] = filterGetByProjectId_PrevAndNext(session, task,
+					projectId, orderByComparator, true);
+
+			array[1] = task;
+
+			array[2] = filterGetByProjectId_PrevAndNext(session, task,
+					projectId, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected Task filterGetByProjectId_PrevAndNext(Session session, Task task,
+		long projectId, OrderByComparator orderByComparator, boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByFields().length * 6));
+		}
+		else {
+			query = new StringBundler(3);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_TASK_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_TASK_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_PROJECTID_PROJECTID_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_TASK_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			if (orderByFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(TaskModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(TaskModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				Task.class.getName(), _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN);
+
+		SQLQuery q = session.createSQLQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		if (getDB().isSupportsInlineDistinct()) {
+			q.addEntity(_FILTER_ENTITY_ALIAS, TaskImpl.class);
+		}
+		else {
+			q.addEntity(_FILTER_ENTITY_TABLE, TaskImpl.class);
+		}
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(projectId);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByValues(task);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<Task> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
 	 * Returns all the tasks.
 	 *
 	 * @return the tasks
@@ -925,6 +1235,53 @@ public class TaskPersistenceImpl extends BasePersistenceImpl<Task>
 	}
 
 	/**
+	 * Returns the number of tasks that the user has permission to view where projectId = &#63;.
+	 *
+	 * @param projectId the project ID
+	 * @return the number of matching tasks that the user has permission to view
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int filterCountByProjectId(long projectId) throws SystemException {
+		if (!InlineSQLHelperUtil.isEnabled()) {
+			return countByProjectId(projectId);
+		}
+
+		StringBundler query = new StringBundler(2);
+
+		query.append(_FILTER_SQL_COUNT_TASK_WHERE);
+
+		query.append(_FINDER_COLUMN_PROJECTID_PROJECTID_2);
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				Task.class.getName(), _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSQLQuery(sql);
+
+			q.addScalar(COUNT_COLUMN_NAME,
+				com.liferay.portal.kernel.dao.orm.Type.LONG);
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(projectId);
+
+			Long count = (Long)q.uniqueResult();
+
+			return count.intValue();
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	/**
 	 * Returns the number of tasks.
 	 *
 	 * @return the number of tasks
@@ -1010,7 +1367,17 @@ public class TaskPersistenceImpl extends BasePersistenceImpl<Task>
 	private static final String _SQL_COUNT_TASK = "SELECT COUNT(task) FROM Task task";
 	private static final String _SQL_COUNT_TASK_WHERE = "SELECT COUNT(task) FROM Task task WHERE ";
 	private static final String _FINDER_COLUMN_PROJECTID_PROJECTID_2 = "task.projectId = ?";
+	private static final String _FILTER_SQL_SELECT_TASK_WHERE = "SELECT DISTINCT {task.*} FROM Timesheet_Task task WHERE ";
+	private static final String _FILTER_SQL_SELECT_TASK_NO_INLINE_DISTINCT_WHERE_1 =
+		"SELECT {Timesheet_Task.*} FROM (SELECT DISTINCT task.taskId FROM Timesheet_Task task WHERE ";
+	private static final String _FILTER_SQL_SELECT_TASK_NO_INLINE_DISTINCT_WHERE_2 =
+		") TEMP_TABLE INNER JOIN Timesheet_Task ON TEMP_TABLE.taskId = Timesheet_Task.taskId";
+	private static final String _FILTER_SQL_COUNT_TASK_WHERE = "SELECT COUNT(DISTINCT task.taskId) AS COUNT_VALUE FROM Timesheet_Task task WHERE ";
+	private static final String _FILTER_ENTITY_ALIAS = "task";
+	private static final String _FILTER_ENTITY_TABLE = "Timesheet_Task";
+	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "task.taskId";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "task.";
+	private static final String _ORDER_BY_ENTITY_TABLE = "Timesheet_Task.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No Task exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No Task exists with the key {";
 	private static final boolean _HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE = GetterUtil.getBoolean(PropsUtil.get(

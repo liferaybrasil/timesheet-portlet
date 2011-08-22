@@ -13,40 +13,42 @@
  * details.
  */
 --%>
-
-<%@ page import="com.liferay.portal.kernel.language.LanguageUtil" %>
 <%@ include file="/html/init.jsp" %>
 
 <%
-	String currentUrl = PortalUtil.getCurrentURL(renderRequest);
-	String redirect = ParamUtil.getString(request, "redirect");
-	Project project = null;
-	long projectId = ParamUtil.getLong(request, "projectId");
-	Calendar startDate = Calendar.getInstance();
-	Calendar endDate = Calendar.getInstance();
-	if (projectId > 0) {
-		project = ProjectLocalServiceUtil.getProject(projectId);
-		startDate = CalendarFactoryUtil.getCalendar(project
-				.getStartDate().getYear() + 1900, project
-				.getStartDate().getMonth(), project.getStartDate()
-				.getDate());
+String currentUrl = PortalUtil.getCurrentURL(renderRequest);
 
-		endDate = CalendarFactoryUtil.getCalendar(project.getEndDate()
-				.getYear() + 1900, project.getEndDate().getMonth(),
-				project.getEndDate().getDate());
-	}
+String redirect = ParamUtil.getString(request, "redirect");
+
+Project project = null;
+
+long projectId = ParamUtil.getLong(request, "projectId");
+
+Calendar startCal = Calendar.getInstance();
+Calendar endCal = Calendar.getInstance();
+
+Date startDate = DateUtil.newDate();
+Date endDate = DateUtil.newDate();
+
+if (projectId > 0) {
+	project = ProjectLocalServiceUtil.getProject(projectId);
+	startDate = project.getStartDate();
+	endDate = project.getEndDate();
+}
+
+startCal.setTime(startDate);
+endCal.setTime(endDate);
 %>
 
 <liferay-util:include page="/html/toolbar.jsp" servletContext="<%= application %>" />
 
-<liferay-ui:error exception="<%= InvalidNameException.class %>"
-	message="please-enter-a-valid-name" />
-<liferay-ui:error exception="<%= InvalidDescriptionException.class %>"
-	message="please-enter-a-valid-description" />
-<liferay-ui:error exception="<%= InvalidMoneyFormatException.class %>"
-	message="please-enter-a-valid-money" />
-<liferay-ui:error exception="<%= InvalidDatesException.class %>"
-	message="please-enter-a-valid-period-date" />
+<liferay-ui:error exception="<%= InvalidNameException.class %>" message="please-enter-a-valid-name" />
+
+<liferay-ui:error exception="<%= InvalidDescriptionException.class %>" message="please-enter-a-valid-description" />
+
+<liferay-ui:error exception="<%= InvalidCurrencyFormatException.class %>" message="please-enter-a-valid-currency-format" />
+
+<liferay-ui:error exception="<%= InvalidDatesException.class %>" message="please-enter-a-valid-period-date" />
 
 <liferay-ui:asset-categories-error />
 
@@ -60,43 +62,49 @@
 <portlet:actionURL name="updateProject" var="editProjectURL" />
 
 <aui:form action="<%= editProjectURL %>" method="POST" name="fm">
-	<aui:fieldset>
 		<aui:input type="hidden" name="redirect" value="<%= redirect %>" />
+		<aui:input type="hidden" name="userId" value="<%= request.getRemoteUser() %>" />
+		<aui:input type="hidden" name="projectId" value='<%= project == null ? "" : project.getProjectId() %>' />
 
-		<aui:input type="hidden" name="userId"
-			value="<%= request.getRemoteUser() %>" />
-
-		<aui:input type="hidden" name="projectId"
-			value='<%= project == null ? "" : project.getProjectId() %>' />
-
+	<aui:fieldset>
 		<aui:input name="name" />
 
 		<aui:input name="wage" />
 
 		<aui:input name="description" />
 
-		<label class="aui-field-label"> <liferay-ui:message
-				key="startDate" /> </label>
+		<label class="aui-field-label"> <liferay-ui:message key="startDate" /> </label>
+
 		<liferay-ui:input-date yearRangeEnd="2050" yearRangeStart="1980"
-			dayValue="<%=startDate.get(Calendar.DAY_OF_MONTH) %>"
-			dayParam="startDateDay" monthParam="startDateMonth"
-			monthValue="<%= startDate.get(Calendar.MONTH) %>"
+			dayParam="startDateDay"
+			dayValue="<%= startCal.get(Calendar.DAY_OF_MONTH) %>"
+			monthParam="startDateMonth"
+			monthValue="<%= startCal.get(Calendar.MONTH) %>"
 			yearParam="startDateYear"
-			yearValue="<%= startDate.get(Calendar.YEAR) %>" />
+			yearValue="<%= startCal.get(Calendar.YEAR) %>"
+		/>
+
 		<br />
+
 		<br />
-		<label class="aui-field-label"> <liferay-ui:message
-				key="endDate" /> </label>
+
+		<label class="aui-field-label"> <liferay-ui:message key="endDate" /> </label>
+
 		<liferay-ui:input-date yearRangeEnd="2050" yearRangeStart="1980"
-			dayValue="<%= endDate.get(Calendar.DAY_OF_MONTH) %>"
-			dayParam="endDateDay" monthParam="endDateMonth"
-			monthValue="<%=endDate.get(Calendar.MONTH) %>"
-			yearParam="endDateYear" yearValue="<%=endDate.get(Calendar.YEAR) %>" />
+			dayParam="endDateDay"
+			dayValue="<%= endCal.get(Calendar.DAY_OF_MONTH) %>"
+			monthParam="endDateMonth"
+			monthValue="<%= endCal.get(Calendar.MONTH) %>"
+			yearParam="endDateYear"
+			yearValue="<%= endCal.get(Calendar.YEAR) %>"
+		/>
+
 		<br />
 	</aui:fieldset>
 
 	<aui:button-row>
 		<aui:button type="submit" />
+
 		<aui:button type="cancel" onClick="<%= redirect %>" />
 	</aui:button-row>
 </aui:form>

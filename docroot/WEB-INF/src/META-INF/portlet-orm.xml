@@ -10,6 +10,7 @@
 	<mapped-superclass class="com.liferay.timesheet.model.impl.ExpenseModelImpl">
 		<attributes>
 			<id name="expenseId" />
+			<basic name="userId" />
 			<basic name="projectId" />
 			<basic name="description" />
 			<basic name="purchasedDate">
@@ -22,11 +23,14 @@
 			<basic name="fileEntryId" />
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />
+			<transient name="userUuid" />
 		</attributes>
 	</mapped-superclass>
 	<mapped-superclass class="com.liferay.timesheet.model.impl.ProjectModelImpl">
 		<attributes>
 			<id name="projectId" />
+			<basic name="groupId" />
+			<basic name="companyId" />
 			<basic name="userId" />
 			<basic name="description" />
 			<basic name="endDate">
@@ -45,6 +49,7 @@
 	<mapped-superclass class="com.liferay.timesheet.model.impl.TaskModelImpl">
 		<attributes>
 			<id name="taskId" />
+			<basic name="userId" />
 			<basic name="projectId" />
 			<basic name="name" />
 			<basic name="type">
@@ -58,6 +63,7 @@
 			</basic>
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />
+			<transient name="userUuid" />
 		</attributes>
 	</mapped-superclass>
 	<entity class="com.liferay.timesheet.model.impl.ExpenseImpl" name="Expense">

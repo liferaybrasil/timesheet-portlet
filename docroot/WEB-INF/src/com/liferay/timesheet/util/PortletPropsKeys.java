@@ -19,8 +19,8 @@ package com.liferay.timesheet.util;
  */
 public class PortletPropsKeys {
 
-	public static final String TASK_TYPES = "task.types";
-
 	public static final String EXPENSE_TYPES = "expense.types";
+
+	public static final String TASK_TYPES = "task.types";
 
 }

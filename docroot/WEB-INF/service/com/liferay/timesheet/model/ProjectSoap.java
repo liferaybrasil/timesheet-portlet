@@ -32,6 +32,8 @@ public class ProjectSoap implements Serializable {
 		ProjectSoap soapModel = new ProjectSoap();
 
 		soapModel.setProjectId(model.getProjectId());
+		soapModel.setGroupId(model.getGroupId());
+		soapModel.setCompanyId(model.getCompanyId());
 		soapModel.setUserId(model.getUserId());
 		soapModel.setDescription(model.getDescription());
 		soapModel.setEndDate(model.getEndDate());
@@ -98,6 +100,22 @@ public class ProjectSoap implements Serializable {
 		_projectId = projectId;
 	}
 
+	public long getGroupId() {
+		return _groupId;
+	}
+
+	public void setGroupId(long groupId) {
+		_groupId = groupId;
+	}
+
+	public long getCompanyId() {
+		return _companyId;
+	}
+
+	public void setCompanyId(long companyId) {
+		_companyId = companyId;
+	}
+
 	public long getUserId() {
 		return _userId;
 	}
@@ -147,6 +165,8 @@ public class ProjectSoap implements Serializable {
 	}
 
 	private long _projectId;
+	private long _groupId;
+	private long _companyId;
 	private long _userId;
 	private String _description;
 	private Date _endDate;

@@ -21,18 +21,18 @@ import com.liferay.timesheet.util.PortletPropsValues;
  */
 public class ExpenseImpl extends ExpenseBaseImpl {
 
-	public String getTypeDescription() {
-		return PortletPropsValues.EXPENSE_TYPES[getType()];
-	}
-	
 	public String getFileName() {
 		return _fileName;
 	}
-	
+
 	public String getFilePath() {
 		return _filePath;
 	}
-	
+
+	public String getTypeDescription() {
+		return PortletPropsValues.EXPENSE_TYPES[getType()];
+	}
+
 	public void setFileName(String fileName) {
 		_fileName = fileName;
 	}

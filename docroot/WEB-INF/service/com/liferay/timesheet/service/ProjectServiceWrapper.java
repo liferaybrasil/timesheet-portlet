@@ -28,6 +28,42 @@ public class ProjectServiceWrapper implements ProjectService {
 		_projectService = projectService;
 	}
 
+	public com.liferay.timesheet.model.Project addProject(long userId,
+		java.lang.String description, int endDateMonth, int endDateDay,
+		int endDateYear, int startDateMonth, int startDateDay,
+		int startDateYear, java.lang.String name, double wage,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _projectService.addProject(userId, description, endDateMonth,
+			endDateDay, endDateYear, startDateMonth, startDateDay,
+			startDateYear, name, wage, serviceContext);
+	}
+
+	public void deleteProject(long companyId, long projectId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_projectService.deleteProject(companyId, projectId);
+	}
+
+	public com.liferay.timesheet.model.Project getProject(long projectId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _projectService.getProject(projectId);
+	}
+
+	public com.liferay.timesheet.model.Project updateProject(long projectId,
+		long userId, java.lang.String description, int endDateMonth,
+		int endDateDay, int endDateYear, int startDateMonth, int startDateDay,
+		int startDateYear, java.lang.String name, double wage,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _projectService.updateProject(projectId, userId, description,
+			endDateMonth, endDateDay, endDateYear, startDateMonth,
+			startDateDay, startDateYear, name, wage, serviceContext);
+	}
+
 	public ProjectService getWrappedProjectService() {
 		return _projectService;
 	}

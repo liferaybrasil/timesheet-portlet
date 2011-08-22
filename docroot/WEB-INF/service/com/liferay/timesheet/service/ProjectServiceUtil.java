@@ -38,6 +38,44 @@ public class ProjectServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to {@link com.liferay.timesheet.service.impl.ProjectServiceImpl} and rerun ServiceBuilder to regenerate this class.
 	 */
+	public static com.liferay.timesheet.model.Project addProject(long userId,
+		java.lang.String description, int endDateMonth, int endDateDay,
+		int endDateYear, int startDateMonth, int startDateDay,
+		int startDateYear, java.lang.String name, double wage,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .addProject(userId, description, endDateMonth, endDateDay,
+			endDateYear, startDateMonth, startDateDay, startDateYear, name,
+			wage, serviceContext);
+	}
+
+	public static void deleteProject(long companyId, long projectId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService().deleteProject(companyId, projectId);
+	}
+
+	public static com.liferay.timesheet.model.Project getProject(long projectId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService().getProject(projectId);
+	}
+
+	public static com.liferay.timesheet.model.Project updateProject(
+		long projectId, long userId, java.lang.String description,
+		int endDateMonth, int endDateDay, int endDateYear, int startDateMonth,
+		int startDateDay, int startDateYear, java.lang.String name,
+		double wage, com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .updateProject(projectId, userId, description, endDateMonth,
+			endDateDay, endDateYear, startDateMonth, startDateDay,
+			startDateYear, name, wage, serviceContext);
+	}
+
 	public static void clearService() {
 		_service = null;
 	}

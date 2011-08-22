@@ -17,10 +17,15 @@ package com.liferay.timesheet.service.impl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.model.ResourceConstants;
+import com.liferay.portal.model.User;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.timesheet.InvalidDatesException;
 import com.liferay.timesheet.InvalidNameException;
+import com.liferay.timesheet.model.Project;
 import com.liferay.timesheet.model.Task;
+import com.liferay.timesheet.service.ProjectLocalServiceUtil;
 import com.liferay.timesheet.service.base.TaskLocalServiceBaseImpl;
 
 import java.util.Date;
@@ -35,8 +40,12 @@ public class TaskLocalServiceImpl extends TaskLocalServiceBaseImpl {
 			long projectId, String name, int type, int startDateMonth,
 			int startDateDay, int startDateYear, int startDateHour,
 			int startDateMinute, int endDateMonth, int endDateDay,
-			int endDateYear, int endDateHour, int endDateMinute)
+			int endDateYear, int endDateHour, int endDateMinute,
+			ServiceContext serviceContext)
 		throws PortalException, SystemException {
+
+		User user = userPersistence.findByPrimaryKey(
+			serviceContext.getUserId());
 
 		Date startDate = PortalUtil.getDate(
 			startDateMonth, startDateDay, startDateYear, startDateHour,
@@ -50,8 +59,11 @@ public class TaskLocalServiceImpl extends TaskLocalServiceBaseImpl {
 
 		long taskId = counterLocalService.increment();
 
+		Project project = ProjectLocalServiceUtil.getProject(projectId);
+
 		Task task = taskPersistence.create(taskId);
 
+		task.setUserId(user.getUserId());
 		task.setProjectId(projectId);
 		task.setName(name);
 		task.setStartDate(startDate);
@@ -60,7 +72,56 @@ public class TaskLocalServiceImpl extends TaskLocalServiceBaseImpl {
 
 		taskPersistence.update(task, false);
 
+		// Resources
+
+		if (serviceContext.getAddGroupPermissions() ||
+			serviceContext.getAddGuestPermissions()) {
+
+			addTaskResources(
+				task, serviceContext.getCompanyId(),
+				serviceContext.getScopeGroupId(), project.getUserId(),
+				serviceContext.getAddGroupPermissions(),
+				serviceContext.getAddGuestPermissions());
+		}
+		else {
+			addTaskResources(
+				task, serviceContext.getCompanyId(),
+				serviceContext.getScopeGroupId(), project.getUserId(),
+				serviceContext.getGroupPermissions(),
+				serviceContext.getGuestPermissions());
+		}
+
 		return task;
+	}
+
+	public void addTaskResources(
+			Task task, long companyId, long groupId, long userId,
+			boolean addGroupPermissions, boolean addGuestPermissions)
+		throws PortalException, SystemException {
+
+		resourceLocalService.addResources(
+			companyId, groupId, userId, Task.class.getName(), task.getTaskId(),
+			false, addGroupPermissions, addGuestPermissions);
+	}
+
+	public void addTaskResources(
+			Task task, long companyId, long groupId, long userId,
+			String[] groupPermissions, String[] guestPermissions)
+		throws PortalException, SystemException {
+
+		resourceLocalService.addModelResources(
+			companyId, groupId, userId, Task.class.getName(), task.getTaskId(),
+			groupPermissions, guestPermissions);
+	}
+
+	public void deleteTask(long companyId, long taskId)
+		throws PortalException, SystemException {
+
+		resourceLocalService.deleteResource(
+			companyId, Project.class.getName(),
+			ResourceConstants.SCOPE_INDIVIDUAL, taskId);
+
+		super.deleteTask(taskId);
 	}
 
 	public List<Task> getTaskByProjectId(long projectId)
@@ -69,12 +130,17 @@ public class TaskLocalServiceImpl extends TaskLocalServiceBaseImpl {
 		return taskPersistence.findByProjectId(projectId);
 	}
 
+	public double getSumHoursByProject(long projectId) throws SystemException {
+
+		return taskFinder.sumHoursByProject(projectId);
+	}
+
 	public Task updateTask(
 			long taskId, long projectId, String name, int type,
 			int startDateMonth, int startDateDay, int startDateYear,
 			int startDateHour, int startDateMinute, int endDateMonth,
-			int endDateDay, int endDateYear, int endDateHour,
-			int endDateMinute)
+			int endDateDay, int endDateYear, int endDateHour, int endDateMinute,
+			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
 		Task task = taskPersistence.findByPrimaryKey(taskId);
@@ -89,6 +155,8 @@ public class TaskLocalServiceImpl extends TaskLocalServiceBaseImpl {
 
 		validate(name, startDate, endDate);
 
+		Project project = ProjectLocalServiceUtil.getProject(projectId);
+
 		task.setProjectId(projectId);
 		task.setName(name);
 		task.setStartDate(startDate);
@@ -96,6 +164,25 @@ public class TaskLocalServiceImpl extends TaskLocalServiceBaseImpl {
 		task.setType(type);
 
 		taskPersistence.update(task, false);
+
+		// Resources
+
+		if (serviceContext.getAddGroupPermissions() ||
+			serviceContext.getAddGuestPermissions()) {
+
+			addTaskResources(
+				task, serviceContext.getCompanyId(),
+				serviceContext.getScopeGroupId(), project.getUserId(),
+				serviceContext.getAddGroupPermissions(),
+				serviceContext.getAddGuestPermissions());
+		}
+		else {
+			addTaskResources(
+				task, serviceContext.getCompanyId(),
+				serviceContext.getScopeGroupId(), project.getUserId(),
+				serviceContext.getGroupPermissions(),
+				serviceContext.getGuestPermissions());
+		}
 
 		return task;
 	}

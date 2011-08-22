@@ -73,6 +73,42 @@ public class ProjectWrapper implements Project {
 	}
 
 	/**
+	* Returns the group ID of this project.
+	*
+	* @return the group ID of this project
+	*/
+	public long getGroupId() {
+		return _project.getGroupId();
+	}
+
+	/**
+	* Sets the group ID of this project.
+	*
+	* @param groupId the group ID of this project
+	*/
+	public void setGroupId(long groupId) {
+		_project.setGroupId(groupId);
+	}
+
+	/**
+	* Returns the company ID of this project.
+	*
+	* @return the company ID of this project
+	*/
+	public long getCompanyId() {
+		return _project.getCompanyId();
+	}
+
+	/**
+	* Sets the company ID of this project.
+	*
+	* @param companyId the company ID of this project
+	*/
+	public void setCompanyId(long companyId) {
+		_project.setCompanyId(companyId);
+	}
+
+	/**
 	* Returns the user ID of this project.
 	*
 	* @return the user ID of this project
@@ -277,6 +313,11 @@ public class ProjectWrapper implements Project {
 		_project.persist();
 	}
 
+	public double getTotalExpenseCost()
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _project.getTotalExpenseCost();
+	}
+
 	public double getTotalProjectCost()
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _project.getTotalProjectCost();
@@ -285,11 +326,6 @@ public class ProjectWrapper implements Project {
 	public double getTotalTaskCost()
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _project.getTotalTaskCost();
-	}
-
-	public double getTotalExpenseCost()
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _project.getTotalExpenseCost();
 	}
 
 	public Project getWrappedProject() {

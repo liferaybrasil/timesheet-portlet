@@ -84,15 +84,32 @@ public class TaskLocalServiceClp implements TaskLocalService {
 		_addTaskMethodKey16 = new MethodKey(_classLoaderProxy.getClassName(),
 				"addTask", long.class, java.lang.String.class, int.class,
 				int.class, int.class, int.class, int.class, int.class,
-				int.class, int.class, int.class, int.class, int.class);
+				int.class, int.class, int.class, int.class, int.class,
+				com.liferay.portal.service.ServiceContext.class);
 
-		_getTaskByProjectIdMethodKey17 = new MethodKey(_classLoaderProxy.getClassName(),
+		_addTaskResourcesMethodKey17 = new MethodKey(_classLoaderProxy.getClassName(),
+				"addTaskResources", com.liferay.timesheet.model.Task.class,
+				long.class, long.class, long.class, boolean.class, boolean.class);
+
+		_addTaskResourcesMethodKey18 = new MethodKey(_classLoaderProxy.getClassName(),
+				"addTaskResources", com.liferay.timesheet.model.Task.class,
+				long.class, long.class, long.class, java.lang.String[].class,
+				java.lang.String[].class);
+
+		_deleteTaskMethodKey19 = new MethodKey(_classLoaderProxy.getClassName(),
+				"deleteTask", long.class, long.class);
+
+		_getTaskByProjectIdMethodKey20 = new MethodKey(_classLoaderProxy.getClassName(),
 				"getTaskByProjectId", long.class);
 
-		_updateTaskMethodKey18 = new MethodKey(_classLoaderProxy.getClassName(),
+		_getSumHoursByProjectMethodKey21 = new MethodKey(_classLoaderProxy.getClassName(),
+				"getSumHoursByProject", long.class);
+
+		_updateTaskMethodKey22 = new MethodKey(_classLoaderProxy.getClassName(),
 				"updateTask", long.class, long.class, java.lang.String.class,
 				int.class, int.class, int.class, int.class, int.class,
-				int.class, int.class, int.class, int.class, int.class, int.class);
+				int.class, int.class, int.class, int.class, int.class,
+				int.class, com.liferay.portal.service.ServiceContext.class);
 	}
 
 	public com.liferay.timesheet.model.Task addTask(
@@ -532,7 +549,8 @@ public class TaskLocalServiceClp implements TaskLocalService {
 		java.lang.String name, int type, int startDateMonth, int startDateDay,
 		int startDateYear, int startDateHour, int startDateMinute,
 		int endDateMonth, int endDateDay, int endDateYear, int endDateHour,
-		int endDateMinute)
+		int endDateMinute,
+		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
@@ -541,7 +559,8 @@ public class TaskLocalServiceClp implements TaskLocalService {
 				projectId, ClpSerializer.translateInput(name), type,
 				startDateMonth, startDateDay, startDateYear, startDateHour,
 				startDateMinute, endDateMonth, endDateDay, endDateYear,
-				endDateHour, endDateMinute);
+				endDateHour, endDateMinute,
+				ClpSerializer.translateInput(serviceContext));
 
 		try {
 			returnObj = _classLoaderProxy.invoke(methodHandler);
@@ -567,12 +586,103 @@ public class TaskLocalServiceClp implements TaskLocalService {
 		return (com.liferay.timesheet.model.Task)ClpSerializer.translateOutput(returnObj);
 	}
 
+	public void addTaskResources(com.liferay.timesheet.model.Task task,
+		long companyId, long groupId, long userId, boolean addGroupPermissions,
+		boolean addGuestPermissions)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		MethodHandler methodHandler = new MethodHandler(_addTaskResourcesMethodKey17,
+				ClpSerializer.translateInput(task), companyId, groupId, userId,
+				addGroupPermissions, addGuestPermissions);
+
+		try {
+			_classLoaderProxy.invoke(methodHandler);
+		}
+		catch (Throwable t) {
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+	}
+
+	public void addTaskResources(com.liferay.timesheet.model.Task task,
+		long companyId, long groupId, long userId,
+		java.lang.String[] groupPermissions, java.lang.String[] guestPermissions)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		MethodHandler methodHandler = new MethodHandler(_addTaskResourcesMethodKey18,
+				ClpSerializer.translateInput(task), companyId, groupId, userId,
+				ClpSerializer.translateInput(groupPermissions),
+				ClpSerializer.translateInput(guestPermissions));
+
+		try {
+			_classLoaderProxy.invoke(methodHandler);
+		}
+		catch (Throwable t) {
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+	}
+
+	public void deleteTask(long companyId, long taskId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		MethodHandler methodHandler = new MethodHandler(_deleteTaskMethodKey19,
+				companyId, taskId);
+
+		try {
+			_classLoaderProxy.invoke(methodHandler);
+		}
+		catch (Throwable t) {
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+	}
+
 	public java.util.List<com.liferay.timesheet.model.Task> getTaskByProjectId(
 		long projectId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_getTaskByProjectIdMethodKey17,
+		MethodHandler methodHandler = new MethodHandler(_getTaskByProjectIdMethodKey20,
 				projectId);
 
 		try {
@@ -595,20 +705,49 @@ public class TaskLocalServiceClp implements TaskLocalService {
 		return (java.util.List<com.liferay.timesheet.model.Task>)ClpSerializer.translateOutput(returnObj);
 	}
 
+	public double getSumHoursByProject(long projectId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		Object returnObj = null;
+
+		MethodHandler methodHandler = new MethodHandler(_getSumHoursByProjectMethodKey21,
+				projectId);
+
+		try {
+			returnObj = _classLoaderProxy.invoke(methodHandler);
+		}
+		catch (Throwable t) {
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return ((Double)returnObj).doubleValue();
+	}
+
 	public com.liferay.timesheet.model.Task updateTask(long taskId,
 		long projectId, java.lang.String name, int type, int startDateMonth,
 		int startDateDay, int startDateYear, int startDateHour,
 		int startDateMinute, int endDateMonth, int endDateDay, int endDateYear,
-		int endDateHour, int endDateMinute)
+		int endDateHour, int endDateMinute,
+		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_updateTaskMethodKey18,
+		MethodHandler methodHandler = new MethodHandler(_updateTaskMethodKey22,
 				taskId, projectId, ClpSerializer.translateInput(name), type,
 				startDateMonth, startDateDay, startDateYear, startDateHour,
 				startDateMinute, endDateMonth, endDateDay, endDateYear,
-				endDateHour, endDateMinute);
+				endDateHour, endDateMinute,
+				ClpSerializer.translateInput(serviceContext));
 
 		try {
 			returnObj = _classLoaderProxy.invoke(methodHandler);
@@ -656,6 +795,10 @@ public class TaskLocalServiceClp implements TaskLocalService {
 	private MethodKey _getBeanIdentifierMethodKey14;
 	private MethodKey _setBeanIdentifierMethodKey15;
 	private MethodKey _addTaskMethodKey16;
-	private MethodKey _getTaskByProjectIdMethodKey17;
-	private MethodKey _updateTaskMethodKey18;
+	private MethodKey _addTaskResourcesMethodKey17;
+	private MethodKey _addTaskResourcesMethodKey18;
+	private MethodKey _deleteTaskMethodKey19;
+	private MethodKey _getTaskByProjectIdMethodKey20;
+	private MethodKey _getSumHoursByProjectMethodKey21;
+	private MethodKey _updateTaskMethodKey22;
 }

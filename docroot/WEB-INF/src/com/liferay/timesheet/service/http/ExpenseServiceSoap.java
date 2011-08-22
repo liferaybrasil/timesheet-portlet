@@ -14,6 +14,13 @@
 
 package com.liferay.timesheet.service.http;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+
+import com.liferay.timesheet.service.ExpenseServiceUtil;
+
+import java.rmi.RemoteException;
+
 /**
  * <p>
  * This class provides a SOAP utility for the
@@ -58,4 +65,72 @@ package com.liferay.timesheet.service.http;
  * @generated
  */
 public class ExpenseServiceSoap {
+	public static com.liferay.timesheet.model.ExpenseSoap addExpense(
+		long projectId, java.lang.String description, int purchasedDateMonth,
+		int purchasedDateDay, int purchasedDateYear, int type, double value,
+		long fileEntryId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			com.liferay.timesheet.model.Expense returnValue = ExpenseServiceUtil.addExpense(projectId,
+					description, purchasedDateMonth, purchasedDateDay,
+					purchasedDateYear, type, value, fileEntryId, serviceContext);
+
+			return com.liferay.timesheet.model.ExpenseSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void deleteExpense(long companyId, long expenseId)
+		throws RemoteException {
+		try {
+			ExpenseServiceUtil.deleteExpense(companyId, expenseId);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.timesheet.model.ExpenseSoap getExpense(
+		long expenseId) throws RemoteException {
+		try {
+			com.liferay.timesheet.model.Expense returnValue = ExpenseServiceUtil.getExpense(expenseId);
+
+			return com.liferay.timesheet.model.ExpenseSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.timesheet.model.ExpenseSoap updateExpense(
+		long expenseId, long projectId, java.lang.String description,
+		int purchasedDateMonth, int purchasedDateDay, int purchasedDateYear,
+		int type, double value, long fileEntryId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			com.liferay.timesheet.model.Expense returnValue = ExpenseServiceUtil.updateExpense(expenseId,
+					projectId, description, purchasedDateMonth,
+					purchasedDateDay, purchasedDateYear, type, value,
+					fileEntryId, serviceContext);
+
+			return com.liferay.timesheet.model.ExpenseSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	private static Log _log = LogFactoryUtil.getLog(ExpenseServiceSoap.class);
 }

@@ -12,29 +12,21 @@
  * details.
  */
 
-package com.liferay.timesheet;
+package com.liferay.timesheet.util;
 
-import com.liferay.portal.kernel.exception.PortalException;
+public class ActionKeys extends
+		com.liferay.portal.security.permission.ActionKeys {
 
-/**
- * @author Brian Wing Shun Chan
- */
-public class InvalidMoneyFormatException extends PortalException {
+	public static final String ADD_EXPENSE = "ADD_EXPENSE";
 
-	public InvalidMoneyFormatException() {
-		super();
-	}
+	public static final String ADD_PROJECT = "ADD_PROJECT";
 
-	public InvalidMoneyFormatException(String msg) {
-		super(msg);
-	}
+	public static final String ADD_TASK = "ADD_TASK";
 
-	public InvalidMoneyFormatException(String msg, Throwable cause) {
-		super(msg, cause);
-	}
+	public static final String DETAILS = "DETAILS";
 
-	public InvalidMoneyFormatException(Throwable cause) {
-		super(cause);
-	}
+	public static final String VIEW = "VIEW";
+
+	public static final String PORTLET_ID = "1_WAR_timesheetportlet";
 
 }

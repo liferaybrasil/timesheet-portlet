@@ -28,6 +28,47 @@ public class TaskServiceWrapper implements TaskService {
 		_taskService = taskService;
 	}
 
+	public com.liferay.timesheet.model.Task addTask(long projectId,
+		java.lang.String name, int type, int startDateMonth, int startDateDay,
+		int startDateYear, int startDateHour, int startDateMinute,
+		int endDateMonth, int endDateDay, int endDateYear, int endDateHour,
+		int endDateMinute,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _taskService.addTask(projectId, name, type, startDateMonth,
+			startDateDay, startDateYear, startDateHour, startDateMinute,
+			endDateMonth, endDateDay, endDateYear, endDateHour, endDateMinute,
+			serviceContext);
+	}
+
+	public void deleteTask(long companyId, long taskId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_taskService.deleteTask(companyId, taskId);
+	}
+
+	public com.liferay.timesheet.model.Task getTask(long taskId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException,
+			com.liferay.portal.security.auth.PrincipalException {
+		return _taskService.getTask(taskId);
+	}
+
+	public com.liferay.timesheet.model.Task updateTask(long taskId,
+		long projectId, java.lang.String name, int type, int startDateMonth,
+		int startDateDay, int startDateYear, int startDateHour,
+		int startDateMinute, int endDateMonth, int endDateDay, int endDateYear,
+		int endDateHour, int endDateMinute,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _taskService.updateTask(taskId, projectId, name, type,
+			startDateMonth, startDateDay, startDateYear, startDateHour,
+			startDateMinute, endDateMonth, endDateDay, endDateYear,
+			endDateHour, endDateMinute, serviceContext);
+	}
+
 	public TaskService getWrappedTaskService() {
 		return _taskService;
 	}

@@ -18,29 +18,50 @@
 
 <%
 ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
+
 Task task = (Task)row.getObject();
 
 long projectId = ParamUtil.getLong(request, "projectId");
+
 String name = Task.class.getName();
+
 long taskId = task.getTaskId();
 
 String redirect = PortalUtil.getCurrentURL(renderRequest);
 %>
 
 <liferay-ui:icon-menu>
-	<portlet:renderURL var="editURL">
-		<portlet:param name="jspPage" value="/html/edit_task.jsp" />
-		<portlet:param name="taskId" value="<%= String.valueOf(taskId) %>" />
-		<portlet:param name="projectId" value="<%= String.valueOf(projectId) %>" />
-		<portlet:param name="redirect" value="<%= redirect %>" />
-	</portlet:renderURL>
+	<c:if test="<%= TimesheetTaskPermission.contains(permissionChecker, taskId, ActionKeys.UPDATE) %>">
+		<portlet:renderURL var="editURL">
+			<portlet:param name="jspPage" value="/html/edit_task.jsp" />
+			<portlet:param name="taskId" value="<%= String.valueOf(taskId) %>" />
+			<portlet:param name="projectId" value="<%= String.valueOf(projectId) %>" />
+			<portlet:param name="redirect" value="<%= redirect %>" />
+		</portlet:renderURL>
 
-	<liferay-ui:icon image="edit" url="<%=editURL.toString() %>" />
+		<liferay-ui:icon
+			image="edit"
+			url="<%=editURL.toString() %>"
+		/>
+	</c:if>
 
-	<portlet:actionURL name="deleteTask" var="deleteURL">
-		<portlet:param name="taskId" value="<%= String.valueOf(taskId) %>" />
-		<portlet:param name="redirect" value="<%= redirect %>" />
-	</portlet:actionURL>
+	<c:if test="<%= TimesheetTaskPermission.contains(permissionChecker, taskId, ActionKeys.PERMISSIONS) %>">
+		<liferay-security:permissionsURL
+			modelResource="<%= Task.class.getName() %>"
+			modelResourceDescription="<%= task.getName() %>"
+			resourcePrimKey="<%= String.valueOf(taskId) %>"
+			var="entryURL"
+		/>
 
-	<liferay-ui:icon-delete url="<%=deleteURL.toString() %>" />
+		<liferay-ui:icon image="permissions" url="<%= entryURL %>" />
+	</c:if>
+
+	<c:if test="<%= TimesheetTaskPermission.contains(permissionChecker, taskId, ActionKeys.DELETE) %>">
+		<portlet:actionURL name="deleteTask" var="deleteURL">
+			<portlet:param name="taskId" value="<%= String.valueOf(taskId) %>" />
+			<portlet:param name="redirect" value="<%= redirect %>" />
+		</portlet:actionURL>
+
+		<liferay-ui:icon-delete url="<%=deleteURL.toString() %>" />
+	</c:if>
 </liferay-ui:icon-menu>

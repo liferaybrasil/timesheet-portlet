@@ -13,11 +13,11 @@
  * details.
  */
 --%>
-<%@ page import="com.liferay.portal.kernel.util.StringPool" %>
 <%@ include file="/html/init.jsp" %>
 
 <%
 String currentURL = PortalUtil.getCurrentURL(renderRequest);
+
 String toolbarItem = ParamUtil.getString(request, "toolbarItem", "view-all");
 %>
 
@@ -27,21 +27,19 @@ String toolbarItem = ParamUtil.getString(request, "toolbarItem", "view-all");
 		<portlet:param name="toolbarItem" value="view-all" />
 	</portlet:renderURL>
 
-	<span
-		class="lfr-toolbar-button view-button <%= toolbarItem.equals("view-all") ? "current" :  StringPool.BLANK %>">
-		<a href="<%= viewEntriesURL %>"><liferay-ui:message key="view-all" />
-	</a> </span>
-
-
-	<portlet:renderURL var="addProjetcURL">
-		<portlet:param name="jspPage" value="/html/edit_project.jsp" />
-		<portlet:param name="redirect" value="<%= currentURL %>" />
-		<portlet:param name="toolbarItem" value="add" />
-	</portlet:renderURL>
-
-	<span
-		class="lfr-toolbar-button add-button <%= toolbarItem.equals("add") ? "current" : StringPool.BLANK %>">
-		<a href="<%= addProjetcURL %>"><liferay-ui:message key="add-project" />	</a>
+	<span class="lfr-toolbar-button view-button <%= toolbarItem.equals("view-all") ? "current" :  StringPool.BLANK %>">
+		<a href="<%= viewEntriesURL %>"><liferay-ui:message key="view-all" /> </a>
 	</span>
 
+	<c:if test="<%= TimesheetPermission.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_PROJECT) %>">
+		<portlet:renderURL var="addProjetcURL">
+			<portlet:param name="jspPage" value="/html/edit_project.jsp" />
+			<portlet:param name="redirect" value="<%= currentURL %>" />
+			<portlet:param name="toolbarItem" value="add" />
+		</portlet:renderURL>
+
+		<span class="lfr-toolbar-button add-button <%= toolbarItem.equals("add") ? "current" : StringPool.BLANK %>">
+			<a href="<%= addProjetcURL %>"><liferay-ui:message key="add-project" />	</a>
+		</span>
+	</c:if>
 </div>

@@ -21,43 +21,49 @@ import com.liferay.portal.kernel.util.ReferenceRegistry;
  * @author Brian Wing Shun Chan
  */
 public class ProjectFinderUtil {
-	public static int countByKeywords(java.lang.String keywords)
+	public static int countByKeywords(long companyId, long groupId,
+		java.lang.String keywords)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		return getFinder().countByKeywords(keywords);
+		return getFinder().countByKeywords(companyId, groupId, keywords);
 	}
 
-	public static int countByN_D(java.lang.String name,
-		java.lang.String description, boolean andOperator)
+	public static int countByN_D(long companyId, long groupId,
+		java.lang.String name, java.lang.String description, boolean andOperator)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		return getFinder().countByN_D(name, description, andOperator);
+		return getFinder()
+				   .countByN_D(companyId, groupId, name, description,
+			andOperator);
 	}
 
 	public static java.util.List<com.liferay.timesheet.model.Project> findByKeywords(
-		java.lang.String keywords, int start, int end,
+		long companyId, long groupId, java.lang.String keywords, int start,
+		int end,
 		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getFinder()
-				   .findByKeywords(keywords, start, end, orderByComparator);
-	}
-
-	public static java.util.List<com.liferay.timesheet.model.Project> findByN_D(
-		java.lang.String name, java.lang.String description,
-		boolean andOperator, int start, int end,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getFinder()
-				   .findByN_D(name, description, andOperator, start, end,
+				   .findByKeywords(companyId, groupId, keywords, start, end,
 			orderByComparator);
 	}
 
 	public static java.util.List<com.liferay.timesheet.model.Project> findByN_D(
-		java.lang.String[] names, java.lang.String[] descriptions,
-		boolean andOperator, int start, int end,
+		long companyId, long groupId, java.lang.String name,
+		java.lang.String description, boolean andOperator, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getFinder()
-				   .findByN_D(names, descriptions, andOperator, start, end,
-			orderByComparator);
+				   .findByN_D(companyId, groupId, name, description,
+			andOperator, start, end, orderByComparator);
+	}
+
+	public static java.util.List<com.liferay.timesheet.model.Project> findByN_D(
+		long companyId, long groupId, java.lang.String[] names,
+		java.lang.String[] descriptions, boolean andOperator, int start,
+		int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getFinder()
+				   .findByN_D(companyId, groupId, names, descriptions,
+			andOperator, start, end, orderByComparator);
 	}
 
 	public static ProjectFinder getFinder() {

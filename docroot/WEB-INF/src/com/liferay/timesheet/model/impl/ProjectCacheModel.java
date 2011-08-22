@@ -32,10 +32,14 @@ import java.util.Date;
 public class ProjectCacheModel implements CacheModel<Project> {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(15);
+		StringBundler sb = new StringBundler(19);
 
 		sb.append("{projectId=");
 		sb.append(projectId);
+		sb.append(", groupId=");
+		sb.append(groupId);
+		sb.append(", companyId=");
+		sb.append(companyId);
 		sb.append(", userId=");
 		sb.append(userId);
 		sb.append(", description=");
@@ -57,6 +61,8 @@ public class ProjectCacheModel implements CacheModel<Project> {
 		ProjectImpl projectImpl = new ProjectImpl();
 
 		projectImpl.setProjectId(projectId);
+		projectImpl.setGroupId(groupId);
+		projectImpl.setCompanyId(companyId);
 		projectImpl.setUserId(userId);
 
 		if (description == null) {
@@ -95,6 +101,8 @@ public class ProjectCacheModel implements CacheModel<Project> {
 	}
 
 	public long projectId;
+	public long groupId;
+	public long companyId;
 	public long userId;
 	public String description;
 	public long endDate;

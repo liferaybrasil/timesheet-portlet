@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.dao.orm.Type;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.timesheet.model.Project;
@@ -43,7 +44,9 @@ public class ProjectFinderImpl extends BasePersistenceImpl<Project>
 	public static String FIND_BY_N_D =
 		ProjectFinder.class.getName() + ".findByN_D";
 
-	public int countByKeywords(String keywords) throws SystemException{
+	public int countByKeywords(long companyId, long groupId, String keywords)
+		throws SystemException {
+
 		String[] names = null;
 		String[] descriptions = null;
 		boolean andOperator = false;
@@ -56,20 +59,24 @@ public class ProjectFinderImpl extends BasePersistenceImpl<Project>
 			andOperator = true;
 		}
 
-		return doCountByN_D(names, descriptions, andOperator);
+		return doCountByN_D(
+			companyId, groupId, names, descriptions, andOperator);
 	}
 
-	public int countByN_D(String name, String description, boolean andOperator)
+	public int countByN_D(
+			long companyId, long groupId, String name, String description,
+			boolean andOperator)
 		throws SystemException {
 
 		String[] names = CustomSQLUtil.keywords(name);
 		String[] descriptions = CustomSQLUtil.keywords(description, false);
 
-		return doCountByN_D(names, descriptions, andOperator);
+		return doCountByN_D(
+			companyId, groupId, names, descriptions, andOperator);
 	}
 
 	public List<Project> findByKeywords(
-			String keywords, int start, int end, 
+			long companyId, long groupId, String keywords, int start, int end,
 			OrderByComparator orderByComparator)
 		throws SystemException {
 
@@ -86,32 +93,38 @@ public class ProjectFinderImpl extends BasePersistenceImpl<Project>
 		}
 
 		return findByN_D(
-			names, descriptions, andOperator, start, end, orderByComparator);
+			companyId, groupId, names, descriptions, andOperator, start, end,
+			orderByComparator);
 	}
 
 	public List<Project> findByN_D(
-			String name, String description, boolean andOperator, int start,
-			int end, OrderByComparator orderByComparator)
+			long companyId, long groupId, String name, String description,
+			boolean andOperator, int start, int end,
+			OrderByComparator orderByComparator)
 		throws SystemException {
 
 		String[] names = CustomSQLUtil.keywords(name);
 		String[] descriptions = CustomSQLUtil.keywords(description, false);
 
 		return findByN_D(
-			names, descriptions, andOperator, start, end, orderByComparator);
+			companyId, groupId, names, descriptions, andOperator, start, end,
+			orderByComparator);
 	}
 
 	public List<Project> findByN_D(
-			String[] names, String[] descriptions, boolean andOperator,
-			int start, int end, OrderByComparator orderByComparator)
+			long companyId, long groupId, String[] names, String[] descriptions,
+			boolean andOperator, int start, int end,
+			OrderByComparator orderByComparator)
 		throws SystemException {
 
 		return doFindByN_D(
-			names, descriptions, andOperator, start, end, orderByComparator);
+			companyId, groupId, names, descriptions, andOperator, start, end,
+			orderByComparator);
 	}
 
 	protected int doCountByN_D(
-			String[] names, String[] descriptions, boolean andOperator)
+			long companyId, long groupId, String[] names, String[] descriptions,
+			boolean andOperator)
 		throws SystemException {
 
 		names = CustomSQLUtil.keywords(names);
@@ -124,6 +137,10 @@ public class ProjectFinderImpl extends BasePersistenceImpl<Project>
 
 			String sql = CustomSQLUtil.get(COUNT_BY_N_D);
 
+			if (groupId <= 0) {
+				sql = StringUtil.replace(sql, "(groupId = ?) AND", "");
+			}
+
 			sql = CustomSQLUtil.replaceKeywords(
 				sql, "lower(name)", StringPool.LIKE, false, names);
 			sql = CustomSQLUtil.replaceKeywords(
@@ -135,6 +152,12 @@ public class ProjectFinderImpl extends BasePersistenceImpl<Project>
 			q.addScalar(COUNT_COLUMN_NAME, Type.LONG);
 
 			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(companyId);
+
+			if (groupId > 0) {
+				qPos.add(groupId);
+			}
 
 			qPos.add(names, 2);
 			qPos.add(descriptions, 2);
@@ -160,7 +183,7 @@ public class ProjectFinderImpl extends BasePersistenceImpl<Project>
 	}
 
 	protected List<Project> doFindByN_D(
-			String[] names, String[] descriptions,
+			long companyId, long groupId, String[] names, String[] descriptions,
 			boolean andOperator, int start, int end,
 			OrderByComparator orderByComparator)
 		throws SystemException {
@@ -175,6 +198,10 @@ public class ProjectFinderImpl extends BasePersistenceImpl<Project>
 
 			String sql = CustomSQLUtil.get(FIND_BY_N_D);
 
+			if (groupId <= 0) {
+				sql = StringUtil.replace(sql, "(groupId = ?) AND", "");
+			}
+
 			sql = CustomSQLUtil.replaceKeywords(
 				sql, "lower(name)", StringPool.LIKE, false, names);
 			sql = CustomSQLUtil.replaceKeywords(
@@ -187,6 +214,12 @@ public class ProjectFinderImpl extends BasePersistenceImpl<Project>
 			q.addEntity("Project", ProjectImpl.class);
 
 			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(companyId);
+
+			if (groupId > 0) {
+				qPos.add(groupId);
+			}
 
 			qPos.add(names, 2);
 			qPos.add(descriptions, 2);
@@ -201,5 +234,5 @@ public class ProjectFinderImpl extends BasePersistenceImpl<Project>
 			closeSession(session);
 		}
 	}
-	
+
 }

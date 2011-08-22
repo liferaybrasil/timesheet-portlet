@@ -15,29 +15,17 @@
 package com.liferay.timesheet.model.impl;
 
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.timesheet.model.Expense;
-import com.liferay.timesheet.model.Task;
 import com.liferay.timesheet.service.ExpenseLocalServiceUtil;
 import com.liferay.timesheet.service.TaskLocalServiceUtil;
-
-import java.util.List;
 
 /**
  * @author Antonio Junior
  */
 public class ProjectImpl extends ProjectBaseImpl {
-	
+
 	public double getTotalExpenseCost() throws SystemException {
-		double total = 0;
-		
-		List<Expense> expenses = ExpenseLocalServiceUtil.getExpenseByProjectId(
-				getProjectId());
-		
-		for (Expense expense : expenses) {
-			total = total + expense.getValue();
-		}
-		
-		return total;
+
+		return ExpenseLocalServiceUtil.getTotal(getProjectId());
 	}
 
 	public double getTotalProjectCost() throws SystemException {
@@ -45,17 +33,11 @@ public class ProjectImpl extends ProjectBaseImpl {
 	}
 
 	public double getTotalTaskCost() throws SystemException {
-		double total = 0;
 
-		List<Task> tasks = TaskLocalServiceUtil.getTaskByProjectId(
+		double totalHours = TaskLocalServiceUtil.getSumHoursByProject(
 			getProjectId());
 
-		// TODO: fazer um finder com SUM(tasks.hour)
-		for (Task task : tasks) {
-			total = total + (task.getTotalHours() * getWage());
-		}
-
-		return total;
+		return totalHours * getWage();
 	}
 
 }

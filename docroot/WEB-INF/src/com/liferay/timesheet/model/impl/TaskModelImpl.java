@@ -15,6 +15,7 @@
 package com.liferay.timesheet.model.impl;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -23,6 +24,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.impl.BaseModelImpl;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.util.PortalUtil;
 
 import com.liferay.portlet.expando.model.ExpandoBridge;
 import com.liferay.portlet.expando.util.ExpandoBridgeFactoryUtil;
@@ -64,13 +66,14 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 	public static final String TABLE_NAME = "Timesheet_Task";
 	public static final Object[][] TABLE_COLUMNS = {
 			{ "taskId", Types.BIGINT },
+			{ "userId", Types.BIGINT },
 			{ "projectId", Types.BIGINT },
 			{ "name", Types.VARCHAR },
 			{ "type_", Types.INTEGER },
 			{ "startDate", Types.TIMESTAMP },
 			{ "endDate", Types.TIMESTAMP }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Timesheet_Task (taskId LONG not null primary key,projectId LONG,name VARCHAR(75) null,type_ INTEGER,startDate DATE null,endDate DATE null)";
+	public static final String TABLE_SQL_CREATE = "create table Timesheet_Task (taskId LONG not null primary key,userId LONG,projectId LONG,name VARCHAR(75) null,type_ INTEGER,startDate DATE null,endDate DATE null)";
 	public static final String TABLE_SQL_DROP = "drop table Timesheet_Task";
 	public static final String ORDER_BY_JPQL = " ORDER BY task.startDate DESC";
 	public static final String ORDER_BY_SQL = " ORDER BY Timesheet_Task.startDate DESC";
@@ -94,6 +97,7 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 		Task model = new TaskImpl();
 
 		model.setTaskId(soapModel.getTaskId());
+		model.setUserId(soapModel.getUserId());
 		model.setProjectId(soapModel.getProjectId());
 		model.setName(soapModel.getName());
 		model.setType(soapModel.getType());
@@ -156,6 +160,23 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 
 	public void setTaskId(long taskId) {
 		_taskId = taskId;
+	}
+
+	@JSON
+	public long getUserId() {
+		return _userId;
+	}
+
+	public void setUserId(long userId) {
+		_userId = userId;
+	}
+
+	public String getUserUuid() throws SystemException {
+		return PortalUtil.getUserValue(getUserId(), "uuid", _userUuid);
+	}
+
+	public void setUserUuid(String userUuid) {
+		_userUuid = userUuid;
 	}
 
 	@JSON
@@ -244,6 +265,7 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 		TaskImpl taskImpl = new TaskImpl();
 
 		taskImpl.setTaskId(getTaskId());
+		taskImpl.setUserId(getUserId());
 		taskImpl.setProjectId(getProjectId());
 		taskImpl.setName(getName());
 		taskImpl.setType(getType());
@@ -309,6 +331,8 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 
 		taskCacheModel.taskId = getTaskId();
 
+		taskCacheModel.userId = getUserId();
+
 		taskCacheModel.projectId = getProjectId();
 
 		taskCacheModel.name = getName();
@@ -344,10 +368,12 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(13);
+		StringBundler sb = new StringBundler(15);
 
 		sb.append("{taskId=");
 		sb.append(getTaskId());
+		sb.append(", userId=");
+		sb.append(getUserId());
 		sb.append(", projectId=");
 		sb.append(getProjectId());
 		sb.append(", name=");
@@ -364,7 +390,7 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(22);
+		StringBundler sb = new StringBundler(25);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.timesheet.model.Task");
@@ -373,6 +399,10 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 		sb.append(
 			"<column><column-name>taskId</column-name><column-value><![CDATA[");
 		sb.append(getTaskId());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>userId</column-name><column-value><![CDATA[");
+		sb.append(getUserId());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>projectId</column-name><column-value><![CDATA[");
@@ -405,6 +435,8 @@ public class TaskModelImpl extends BaseModelImpl<Task> implements TaskModel {
 			Task.class
 		};
 	private long _taskId;
+	private long _userId;
+	private String _userUuid;
 	private long _projectId;
 	private String _name;
 	private int _type;

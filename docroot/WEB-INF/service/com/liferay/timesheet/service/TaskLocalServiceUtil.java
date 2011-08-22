@@ -256,13 +256,41 @@ public class TaskLocalServiceUtil {
 		java.lang.String name, int type, int startDateMonth, int startDateDay,
 		int startDateYear, int startDateHour, int startDateMinute,
 		int endDateMonth, int endDateDay, int endDateYear, int endDateHour,
-		int endDateMinute)
+		int endDateMinute,
+		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService()
 				   .addTask(projectId, name, type, startDateMonth,
 			startDateDay, startDateYear, startDateHour, startDateMinute,
-			endDateMonth, endDateDay, endDateYear, endDateHour, endDateMinute);
+			endDateMonth, endDateDay, endDateYear, endDateHour, endDateMinute,
+			serviceContext);
+	}
+
+	public static void addTaskResources(com.liferay.timesheet.model.Task task,
+		long companyId, long groupId, long userId, boolean addGroupPermissions,
+		boolean addGuestPermissions)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService()
+			.addTaskResources(task, companyId, groupId, userId,
+			addGroupPermissions, addGuestPermissions);
+	}
+
+	public static void addTaskResources(com.liferay.timesheet.model.Task task,
+		long companyId, long groupId, long userId,
+		java.lang.String[] groupPermissions, java.lang.String[] guestPermissions)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService()
+			.addTaskResources(task, companyId, groupId, userId,
+			groupPermissions, guestPermissions);
+	}
+
+	public static void deleteTask(long companyId, long taskId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService().deleteTask(companyId, taskId);
 	}
 
 	public static java.util.List<com.liferay.timesheet.model.Task> getTaskByProjectId(
@@ -271,17 +299,24 @@ public class TaskLocalServiceUtil {
 		return getService().getTaskByProjectId(projectId);
 	}
 
+	public static double getSumHoursByProject(long projectId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getSumHoursByProject(projectId);
+	}
+
 	public static com.liferay.timesheet.model.Task updateTask(long taskId,
 		long projectId, java.lang.String name, int type, int startDateMonth,
 		int startDateDay, int startDateYear, int startDateHour,
 		int startDateMinute, int endDateMonth, int endDateDay, int endDateYear,
-		int endDateHour, int endDateMinute)
+		int endDateHour, int endDateMinute,
+		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService()
 				   .updateTask(taskId, projectId, name, type, startDateMonth,
 			startDateDay, startDateYear, startDateHour, startDateMinute,
-			endDateMonth, endDateDay, endDateYear, endDateHour, endDateMinute);
+			endDateMonth, endDateDay, endDateYear, endDateHour, endDateMinute,
+			serviceContext);
 	}
 
 	public static void clearService() {

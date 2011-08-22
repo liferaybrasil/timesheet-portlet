@@ -25,19 +25,22 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.PortletURLFactoryUtil;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFolderLocalServiceUtil;
-import com.liferay.portlet.imagegallery.NoSuchFolderException;
+import com.liferay.timesheet.InvalidCurrencyFormatException;
 import com.liferay.timesheet.InvalidDatesException;
 import com.liferay.timesheet.InvalidDescriptionException;
-import com.liferay.timesheet.InvalidMoneyFormatException;
 import com.liferay.timesheet.InvalidNameException;
-import com.liferay.timesheet.service.ExpenseLocalServiceUtil;
-import com.liferay.timesheet.service.ProjectLocalServiceUtil;
-import com.liferay.timesheet.service.TaskLocalServiceUtil;
+import com.liferay.timesheet.model.Expense;
+import com.liferay.timesheet.model.Project;
+import com.liferay.timesheet.model.Task;
+import com.liferay.timesheet.service.ExpenseServiceUtil;
+import com.liferay.timesheet.service.ProjectServiceUtil;
+import com.liferay.timesheet.service.TaskServiceUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
 import java.io.File;
@@ -46,6 +49,8 @@ import java.util.Calendar;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletURL;
 
 /**
  * @author Antonio Junior
@@ -56,41 +61,58 @@ public class TimesheetPortlet extends MVCPortlet {
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+
 		long expenseId = ParamUtil.getLong(actionRequest, "expenseId");
 
-		ExpenseLocalServiceUtil.deleteExpense(expenseId);
+		ExpenseServiceUtil.deleteExpense(themeDisplay.getCompanyId(),
+			expenseId);
 	}
 
 	public void deleteProject(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+
 		long projectId = ParamUtil.getLong(actionRequest, "projectId");
 
-		ProjectLocalServiceUtil.deleteProject(projectId);
+		ProjectServiceUtil.deleteProject(themeDisplay.getCompanyId(),
+			projectId);
 	}
 
 	public void deleteTask(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+
 		long taskId = ParamUtil.getLong(actionRequest, "taskId");
 
-		TaskLocalServiceUtil.deleteTask(taskId);
+		TaskServiceUtil.deleteTask(themeDisplay.getCompanyId(), taskId);
 	}
 
 	public void updateExpense(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
-		
+
 		UploadPortletRequest uploadRequest =
 			PortalUtil.getUploadPortletRequest(actionRequest);
-		
+
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);
+
+		String redirect = ParamUtil.getString(uploadRequest, "redirect");
+		long projectId = ParamUtil.getLong(uploadRequest, "projectId");
+		long expenseId = ParamUtil.getLong(uploadRequest, "expenseId");
+
 		try {
-			long expenseId = ParamUtil.getLong(uploadRequest, "expenseId");
-			long projectId = ParamUtil.getLong(uploadRequest, "projectId");
+
 			long fileEntryId = ParamUtil.getLong(uploadRequest, "fileEntryId");
-			
+
 			String description = ParamUtil.getString(
 				uploadRequest, "description");
 
@@ -105,25 +127,21 @@ public class TimesheetPortlet extends MVCPortlet {
 
 			int type = ParamUtil.getInteger(uploadRequest, "type");
 
-			// Uploaded file					
+			// Uploaded file
 
 			File file = uploadRequest.getFile("file");
 			String sourceFileName = uploadRequest.getFileName("file");
 
 			if (Validator.isNotNull(file) &&
 				Validator.isNotNull(sourceFileName)) {
-			
+
 				if (!file.exists()) {
 					file.createNewFile();
 				}
 
-				String contentType = uploadRequest.getContentType("file");			
+				String contentType = uploadRequest.getContentType("file");
 				String title = sourceFileName;
 				String changeLog = StringPool.BLANK;
-
-				ThemeDisplay themeDisplay = 
-					(ThemeDisplay)actionRequest.getAttribute(
-						WebKeys.THEME_DISPLAY);
 
 				long groupId = themeDisplay.getScopeGroupId();
 
@@ -140,21 +158,21 @@ public class TimesheetPortlet extends MVCPortlet {
 					folder = DLFolderLocalServiceUtil.addDLFolder(folder);
 				}
 
-				long folderId = folder.getFolderId();			
+				long folderId = folder.getFolderId();
 
 				ServiceContext serviceContext =
 					ServiceContextFactory.getInstance(
 						DLFileEntry.class.getName(), actionRequest);
 				serviceContext.setAddGroupPermissions(true);
-				serviceContext.setAddGuestPermissions(true);						
+				serviceContext.setAddGuestPermissions(true);
 
 				FileEntry fileEntry = null;
 
-				if(fileEntryId > 0) {
+				if (fileEntryId > 0) {
 					fileEntry = DLAppServiceUtil.updateFileEntry(
 						fileEntryId, sourceFileName, contentType, title,
 						description, changeLog, true, file, serviceContext);
-				} 
+				}
 				else {
 					fileEntry = DLAppServiceUtil.addFileEntry(
 						groupId, folderId, sourceFileName, contentType, title,
@@ -163,28 +181,47 @@ public class TimesheetPortlet extends MVCPortlet {
 
 				fileEntryId = fileEntry.getFileEntryId();
 			}
-			
+
+			ServiceContext serviceContext = ServiceContextFactory.getInstance(
+				Expense.class.getName(), actionRequest);
+
 			if ( expenseId <= 0) {
-				ExpenseLocalServiceUtil.addExpense(
-					projectId, description, purchasedDateMonth, 
-					purchasedDateDay, purchasedDateYear, type, value, 
-					fileEntryId);
+				ExpenseServiceUtil.addExpense(
+					projectId, description, purchasedDateMonth,
+					purchasedDateDay, purchasedDateYear, type, value,
+					fileEntryId, serviceContext);
 			}
 			else {
-				ExpenseLocalServiceUtil.updateExpense(
-					expenseId, projectId, description, purchasedDateMonth, 
-					purchasedDateDay, purchasedDateYear, type, value, 
-					fileEntryId);
+				ExpenseServiceUtil.updateExpense(
+					expenseId, projectId, description, purchasedDateMonth,
+					purchasedDateDay, purchasedDateYear, type, value,
+					fileEntryId, serviceContext);
 			}
+
+			actionResponse.sendRedirect(redirect);
 		}
 		catch (Exception e) {
 			if (e instanceof InvalidDescriptionException ||
-				e instanceof InvalidMoneyFormatException) {
+				e instanceof InvalidCurrencyFormatException) {
 
 				SessionErrors.add(actionRequest, e.getClass().getName());
 
-				_renderPage(
-					actionRequest, actionResponse, "/html/edit_expense.jsp");
+				String portletName = (String)actionRequest.getAttribute(
+					WebKeys.PORTLET_ID);
+
+				PortletURL redirectURL =   PortletURLFactoryUtil.create(
+					PortalUtil.getHttpServletRequest(actionRequest),
+					portletName, themeDisplay.getLayout().getPlid(),
+					PortletRequest.RENDER_PHASE);
+
+				redirectURL.setParameter("jspPage", "/html/edit_expense.jsp");
+				redirectURL.setParameter("projectId",
+					String.valueOf(projectId));
+				redirectURL.setParameter("expenseId",
+					String.valueOf(expenseId));
+				redirectURL.setParameter("redirect", redirect);
+
+				actionResponse.sendRedirect(redirectURL.toString());
 			}
 			else {
 				throw e;
@@ -219,21 +256,26 @@ public class TimesheetPortlet extends MVCPortlet {
 			int endDateYear = ParamUtil.getInteger(
 				actionRequest, "endDateYear");
 
+			ServiceContext serviceContext = ServiceContextFactory.getInstance(
+				Project.class.getName(), actionRequest);
+
 			if ( projectId == 0) {
-				ProjectLocalServiceUtil.addProject(
+				ProjectServiceUtil.addProject(
 					userId, description, endDateMonth, endDateDay, endDateYear,
-					startDateMonth, startDateDay, startDateYear, name, wage);
+					startDateMonth, startDateDay, startDateYear, name, wage,
+					serviceContext);
 			}
 			else {
-				ProjectLocalServiceUtil.updateProject(
+				ProjectServiceUtil.updateProject(
 					projectId, userId, description, endDateMonth, endDateDay,
 					endDateYear, startDateMonth, startDateDay, startDateYear,
-					name, wage);
+					name, wage, serviceContext);
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			if (e instanceof InvalidNameException ||
 				e instanceof InvalidDescriptionException ||
-				e instanceof InvalidMoneyFormatException ||
+				e instanceof InvalidCurrencyFormatException ||
 				e instanceof InvalidDatesException) {
 
 				SessionErrors.add(actionRequest, e.getClass().getName());
@@ -289,19 +331,24 @@ public class TimesheetPortlet extends MVCPortlet {
 				endDateHour += 12;
 			}
 
+			ServiceContext serviceContext = ServiceContextFactory.getInstance(
+				Task.class.getName(), actionRequest);
+
 			int type = ParamUtil.getInteger(actionRequest, "type");
 
 			if ( taskId == 0) {
-				TaskLocalServiceUtil.addTask(
+				TaskServiceUtil.addTask(
 					projectId, name, type, startDateMonth, startDateDay,
 					startDateYear, startDateHour, startDateMinute, endDateMonth,
-					endDateDay, endDateYear, endDateHour, endDateMinute);
+					endDateDay, endDateYear, endDateHour, endDateMinute,
+					serviceContext);
 			}
 			else {
-				TaskLocalServiceUtil.updateTask(
+				TaskServiceUtil.updateTask(
 					taskId, projectId, name, type, startDateMonth, startDateDay,
 					startDateYear, startDateHour, startDateMinute, endDateMonth,
-					endDateDay, endDateYear, endDateHour, endDateMinute);
+					endDateDay, endDateYear, endDateHour, endDateMinute,
+					serviceContext);
 			}
 		}
 		catch (Exception e) {

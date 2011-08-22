@@ -38,6 +38,45 @@ public class ExpenseServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to {@link com.liferay.timesheet.service.impl.ExpenseServiceImpl} and rerun ServiceBuilder to regenerate this class.
 	 */
+	public static com.liferay.timesheet.model.Expense addExpense(
+		long projectId, java.lang.String description, int purchasedDateMonth,
+		int purchasedDateDay, int purchasedDateYear, int type, double value,
+		long fileEntryId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .addExpense(projectId, description, purchasedDateMonth,
+			purchasedDateDay, purchasedDateYear, type, value, fileEntryId,
+			serviceContext);
+	}
+
+	public static void deleteExpense(long companyId, long expenseId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService().deleteExpense(companyId, expenseId);
+	}
+
+	public static com.liferay.timesheet.model.Expense getExpense(long expenseId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException,
+			com.liferay.portal.security.auth.PrincipalException {
+		return getService().getExpense(expenseId);
+	}
+
+	public static com.liferay.timesheet.model.Expense updateExpense(
+		long expenseId, long projectId, java.lang.String description,
+		int purchasedDateMonth, int purchasedDateDay, int purchasedDateYear,
+		int type, double value, long fileEntryId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .updateExpense(expenseId, projectId, description,
+			purchasedDateMonth, purchasedDateDay, purchasedDateYear, type,
+			value, fileEntryId, serviceContext);
+	}
+
 	public static void clearService() {
 		_service = null;
 	}
